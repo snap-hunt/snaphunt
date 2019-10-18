@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:snaphunt/routes.dart';
 import 'package:snaphunt/services/auth.dart';
 import 'package:snaphunt/ui/home_page.dart';
 
@@ -39,12 +40,12 @@ class _AppState extends State<App> {
     // User logged in
     if (currentUser == null && user != null) {
       _navigatorKey.currentState
-          .pushAndRemoveUntil(Main.route(), (route) => false);
+          .pushNamedAndRemoveUntil(Router.home, (route) => false);
     }
     // User logged out
     else if (currentUser != null && user == null) {
       _navigatorKey.currentState
-          .pushAndRemoveUntil(Login.route(), (route) => false);
+          .pushNamedAndRemoveUntil(Router.login, (route) => false);
     }
     currentUser = user;
   }
@@ -71,7 +72,8 @@ class _AppState extends State<App> {
           accentColor: Colors.pink,
         ),
         navigatorKey: _navigatorKey,
-        home: currentUser == null ? const Login() : const Main(),
+        onGenerateRoute: Router.generateRoute,
+        home: currentUser == null ? const Login() : const Home(),
       ),
     );
   }

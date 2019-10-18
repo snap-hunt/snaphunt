@@ -2,12 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:snaphunt/services/auth.dart';
 
 class Login extends StatefulWidget {
-  static Route<dynamic> route() {
-    return MaterialPageRoute(
-      builder: (BuildContext context) => const Login(),
-    );
-  }
-
   const Login({
     Key key,
   }) : super(key: key);

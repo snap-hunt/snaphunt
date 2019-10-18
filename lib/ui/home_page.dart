@@ -3,22 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:snaphunt/services/auth.dart';
 
-class Main extends StatefulWidget {
-  static Route<dynamic> route() {
-    return MaterialPageRoute(
-      builder: (BuildContext context) => const Main(),
-    );
-  }
+class Home extends StatefulWidget {
 
-  const Main({
+  const Home({
     Key key,
   }) : super(key: key);
 
   @override
-  _MainState createState() => _MainState();
+  _HomeState createState() => _HomeState();
 }
 
-class _MainState extends State<Main> {
+class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
