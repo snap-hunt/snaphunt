@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:snaphunt/services/auth.dart';
+import 'package:snaphunt/widgets/fancy_button.dart';
 
 class Login extends StatefulWidget {
   const Login({
@@ -25,10 +26,14 @@ class _LoginState extends State<Login> {
       body: SafeArea(
         child: SizedBox.expand(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.max,
             children: <Widget>[
+              Text(
+                'SnapHunt',
+                style: TextStyle(fontSize: 42),
+              ),
               FutureBuilder(
                 future: _loginFuture,
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -41,9 +46,14 @@ class _LoginState extends State<Login> {
                     padding: const EdgeInsets.symmetric(horizontal: 32.0),
                     child: Column(
                       children: <Widget>[
-                        RaisedButton(
+                        FancyButton(
+                          child: Text(
+                            "LOGIN WITH GOOGLE",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          size: 50,
+                          color: Colors.red,
                           onPressed: _onLoginWithGooglePressed,
-                          child: const Text('LOGIN WITH GOOGLE'),
                         ),
                         if (snapshot.hasError)
                           Container(

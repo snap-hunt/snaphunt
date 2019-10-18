@@ -1,10 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:snaphunt/routes.dart';
 import 'package:snaphunt/services/auth.dart';
+import 'package:snaphunt/widgets/fancy_button.dart';
 
 class Home extends StatefulWidget {
-
   const Home({
     Key key,
   }) : super(key: key);
@@ -27,6 +28,29 @@ class _HomeState extends State<Home> {
               const SizedBox(height: 36.0),
               const UserAvatar(),
               const SizedBox(height: 16.0),
+              FancyButton(
+                child: Text(
+                  "Singleplayer",
+                  style: TextStyle(color: Colors.white),
+                ),
+                size: 70,
+                color: Colors.orange,
+                onPressed: () {
+                  Navigator.of(context).pushNamed(Router.singlePlayer);
+                },
+              ),
+              const SizedBox(height: 16.0),
+              FancyButton(
+                child: Text(
+                  "Multiplayer",
+                  style: TextStyle(color: Colors.white),
+                ),
+                size: 70,
+                color: Colors.blue,
+                onPressed: () {
+                  Navigator.of(context).pushNamed(Router.lobby);
+                },
+              ),
               RaisedButton(
                 onPressed: () {
                   Auth.of(context).logout();

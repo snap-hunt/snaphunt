@@ -3,9 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:snaphunt/routes.dart';
 import 'package:snaphunt/services/auth.dart';
-import 'package:snaphunt/ui/home_page.dart';
-
-import 'ui/login_page.dart';
+import 'package:snaphunt/ui/home.dart';
+import 'package:snaphunt/ui/login.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
