@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:snaphunt/data/repository.dart';
 import 'package:snaphunt/routes.dart';
 import 'package:snaphunt/services/auth.dart';
 import 'package:snaphunt/ui/home.dart';
@@ -36,15 +37,14 @@ class _AppState extends State<App> {
 
   void _onUserChanged() {
     final user = widget.auth.currentUser.value;
-    // User logged in
+
     if (currentUser == null && user != null) {
+      Repository.instance.updateUserData(user);
       _navigatorKey.currentState
-          .pushNamedAndRemoveUntil(Router.home, (route) => false);
-    }
-    // User logged out
-    else if (currentUser != null && user == null) {
+          .pushAndRemoveUntil(Home.route(), (route) => false);
+    } else if (currentUser != null && user == null) {
       _navigatorKey.currentState
-          .pushNamedAndRemoveUntil(Router.login, (route) => false);
+          .pushAndRemoveUntil(Login.route(), (route) => false);
     }
     currentUser = user;
   }
@@ -65,11 +65,7 @@ class _AppState extends State<App> {
       ],
       child: MaterialApp(
         title: 'SnapHunt',
-        theme: ThemeData(
-          brightness: Brightness.dark,
-          primaryColor: Colors.indigo,
-          accentColor: Colors.pink,
-        ),
+        theme: ThemeData(primaryColor: Colors.orange),
         navigatorKey: _navigatorKey,
         onGenerateRoute: Router.generateRoute,
         home: currentUser == null ? const Login() : const Home(),

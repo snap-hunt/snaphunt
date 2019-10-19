@@ -6,6 +6,12 @@ import 'package:snaphunt/services/auth.dart';
 import 'package:snaphunt/widgets/fancy_button.dart';
 
 class Home extends StatefulWidget {
+  static Route<dynamic> route() {
+    return MaterialPageRoute(
+      builder: (BuildContext context) => const Home(),
+    );
+  }
+
   const Home({
     Key key,
   }) : super(key: key);
@@ -51,11 +57,18 @@ class _HomeState extends State<Home> {
                   Navigator.of(context).pushNamed(Router.lobby);
                 },
               ),
-              RaisedButton(
+              const SizedBox(height: 16.0),
+              FancyButton(
+                child: Icon(
+                  Icons.power_settings_new,
+                  color: Colors.white,
+                  size: 18,
+                ),
                 onPressed: () {
                   Auth.of(context).logout();
                 },
-                child: const Text('LOGOUT'),
+                color: Colors.red,
+                size: 40,
               ),
             ],
           ),
