@@ -21,3 +21,19 @@ class Lobby extends StatelessWidget {
     );
   }
 }
+
+class LobbyList extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: StreamBuilder(),
+    );
+  }
+}
+
+class LobbyListTile extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
