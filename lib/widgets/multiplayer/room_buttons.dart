@@ -28,7 +28,7 @@ class LobbyButtons extends StatelessWidget {
               style: fancy_button_style,
             ),
             color: Colors.orange,
-            size: 30,
+            size: 40,
             onPressed: onJoinRoom,
           ),
           FancyButton(
@@ -37,7 +37,7 @@ class LobbyButtons extends StatelessWidget {
               style: fancy_button_style,
             ),
             color: Colors.red,
-            size: 30,
+            size: 40,
             onPressed: onCreateRoom,
           ),
         ],

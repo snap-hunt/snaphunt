@@ -30,6 +30,10 @@ class Repository {
     return ref.documentID;
   }
 
+  Future<Game> joinGame(String roomId) {
+    return null;
+  }
+
   void joinRoom(String roomId, String userId) async {
     await _db
         .document('games/$roomId')

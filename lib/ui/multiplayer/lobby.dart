@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:snaphunt/data/repository.dart';
 import 'package:snaphunt/model/game.dart';
 import 'package:snaphunt/routes.dart';
+import 'package:snaphunt/widgets/multiplayer/join_room_dialog.dart';
 import 'package:snaphunt/widgets/multiplayer/room_buttons.dart';
 
 class Lobby extends StatelessWidget {
@@ -25,7 +26,16 @@ class Lobby extends StatelessWidget {
                 onCreateRoom: () {
                   Navigator.of(context).pushNamed(Router.create);
                 },
-                onJoinRoom: () {},
+                onJoinRoom: () async {
+                  String aa = await showDialog<String>(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (BuildContext context) {
+                      return JoinRoom();
+                    },
+                  );
+                  print(aa);
+                },
               ),
               Expanded(
                 child: LobbyList(),

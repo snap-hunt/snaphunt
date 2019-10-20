@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:snaphunt/stores/game_model.dart';
 import 'package:snaphunt/ui/home.dart';
 import 'package:snaphunt/ui/login.dart';
 import 'package:snaphunt/ui/multiplayer/create_room.dart';
@@ -32,9 +34,12 @@ class Router {
         final args = settings.arguments as List;
 
         return MaterialPageRoute(
-          builder: (_) => Room(
-            game: args[0],
-            isHost: args[1],
+          builder: (_) => ChangeNotifierProvider(
+            builder: (_) => new GameModel(args[0], args[1]),
+            child: Room(
+              game: args[0],
+              isHost: args[1],
+            ),
           ),
         );
 
