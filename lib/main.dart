@@ -6,7 +6,7 @@ import 'package:snaphunt/routes.dart';
 import 'package:snaphunt/services/auth.dart';
 import 'package:snaphunt/ui/home.dart';
 import 'package:snaphunt/ui/login.dart';
-
+  
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -65,7 +65,10 @@ class _AppState extends State<App> {
       ],
       child: MaterialApp(
         title: 'SnapHunt',
-        theme: ThemeData(primaryColor: Colors.orange),
+        theme: ThemeData(
+          primaryColor: Colors.orange,
+          textTheme: TextTheme()
+        ),
         navigatorKey: _navigatorKey,
         onGenerateRoute: Router.generateRoute,
         home: currentUser == null ? const Login() : const Home(),
