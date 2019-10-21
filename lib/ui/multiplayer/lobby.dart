@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:snaphunt/data/repository.dart';
 import 'package:snaphunt/model/game.dart';
 import 'package:snaphunt/routes.dart';
@@ -30,14 +32,14 @@ class Lobby extends StatelessWidget {
                   String roomCode = await showDialog<String>(
                     context: context,
                     barrierDismissible: false,
-                    builder: (BuildContext context) {
-                      return JoinRoom();
-                    },
+                    builder: (BuildContext context) => JoinRoom(),
                   );
-                  print(roomCode);
+
                   final game = await Repository.instance.retrieveGame(roomCode);
-                  Navigator.of(context)
-                      .pushNamed(Router.room, arguments: [game, false]);
+                  final user =
+                      Provider.of<FirebaseUser>(context, listen: false);
+                  Navigator.of(context).pushNamed(Router.room,
+                      arguments: [game, false, user.uid]);
                 },
               ),
               Expanded(
@@ -81,8 +83,10 @@ class LobbyList extends StatelessWidget {
               return LobbyListTile(
                 game: game,
                 onRoomClick: () {
-                  Navigator.of(context)
-                      .pushNamed(Router.room, arguments: [game, false]);
+                  final user =
+                      Provider.of<FirebaseUser>(context, listen: false);
+                  Navigator.of(context).pushNamed(Router.room,
+                      arguments: [game, false, user.uid]);
                 },
               );
             },

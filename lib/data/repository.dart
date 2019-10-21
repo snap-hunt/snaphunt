@@ -41,8 +41,8 @@ class Repository {
     return null;
   }
 
-  void joinRoom(String roomId, String userId) async {
-    await _db
+  Future joinRoom(String roomId, String userId) async {
+    return _db
         .document('games/$roomId')
         .collection('players')
         .document(userId)
