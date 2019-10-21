@@ -27,14 +27,17 @@ class Lobby extends StatelessWidget {
                   Navigator.of(context).pushNamed(Router.create);
                 },
                 onJoinRoom: () async {
-                  String aa = await showDialog<String>(
+                  String roomCode = await showDialog<String>(
                     context: context,
                     barrierDismissible: false,
                     builder: (BuildContext context) {
                       return JoinRoom();
                     },
                   );
-                  print(aa);
+                  print(roomCode);
+                  final game = await Repository.instance.retrieveGame(roomCode);
+                  Navigator.of(context)
+                      .pushNamed(Router.room, arguments: [game, false]);
                 },
               ),
               Expanded(

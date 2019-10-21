@@ -7,6 +7,7 @@ import 'package:snaphunt/constants/app_theme.dart';
 import 'package:snaphunt/data/repository.dart';
 import 'package:snaphunt/model/game.dart';
 import 'package:snaphunt/widgets/fancy_button.dart';
+import 'package:snaphunt/widgets/multiplayer/room_exit_dialog.dart';
 
 class Room extends StatefulWidget {
   final Game game;
@@ -55,53 +56,83 @@ class _RoomState extends State<Room> {
   Widget build(BuildContext context) {
     _user = Provider.of<FirebaseUser>(context, listen: false);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Room',
-          style: TextStyle(color: Colors.white),
-        ),
-        centerTitle: true,
-      ),
-      body: Container(
-        child: FutureBuilder(
-          future: _roomId,
-          builder: (context, data) {
-            if (data.hasData || data.data != null) {
-              widget.game.id = data.data;
-              joinRoom();
-
-              return Column(
-                children: <Widget>[
-                  RoomDetails(game: widget.game),
-                  Expanded(
-                    child: StreamBuilder<QuerySnapshot>(
-                      stream: Firestore.instance
-                          .document('games/${widget.game.id}')
-                          .collection('players')
-                          .snapshots(),
-                      builder: (context, snapshot) {
-                        if (!snapshot.hasData)
-                          return Center(
-                            child: CircularProgressIndicator(),
-                          );
-
-                        if (snapshot.data.documents.isEmpty) {
-                          return Container(
-                            child: Text('empty'),
-                          );
-                        }
-
-                        return RoomBody();
-                      },
-                    ),
-                  )
-                ],
-              );
-            }
-
-            return CircularProgressIndicator();
+    return WillPopScope(
+      onWillPop: () async {
+        final roomCode = await showDialog<bool>(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            final isHost = widget.isHost;
+            return RoomExitDialog(
+              title: isHost ? 'Delete room?' : 'Leave room?',
+              body: isHost
+                  ? 'Room will be deleted aheheheheheh'
+                  : 'Are you sure you want to leave from the room?',
+            );
           },
+        );
+
+        return roomCode;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            'Room',
+            style: TextStyle(color: Colors.white),
+          ),
+          centerTitle: true,
+        ),
+        body: Container(
+          child: FutureBuilder(
+            future: _roomId,
+            builder: (context, data) {
+              if (data.hasData || data.data != null) {
+                widget.game.id = data.data;
+                joinRoom();
+
+                Firestore.instance
+                    .document('games/${widget.game.id}')
+                    .snapshots()
+                    .listen((data) {
+                  print(data.data);
+                });
+
+                return Column(
+                  children: <Widget>[
+                    RoomDetails(game: widget.game),
+                    Expanded(
+                      child: StreamBuilder<QuerySnapshot>(
+                        stream: Firestore.instance
+                            .document('games/${widget.game.id}')
+                            // .snapshots()
+                            .collection('players')
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData)
+                            return Center(
+                              child: CircularProgressIndicator(),
+                            );
+
+                          // var data = snapshot.data.data;
+                          if (snapshot.data.documents.isEmpty) {
+                            return Container(
+                              child: Text('empty'),
+                            );
+                          }
+
+                          return RoomBody();
+                        },
+                      ),
+                    )
+                  ],
+                );
+              }
+
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            },
+          ),
         ),
       ),
     );

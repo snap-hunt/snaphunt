@@ -14,7 +14,7 @@ class Repository {
   final Firestore _db = Firestore.instance;
 
   void updateUserData(FirebaseUser user) async {
-    DocumentReference ref = _db.collection('users').document(user.uid);
+    final DocumentReference ref = _db.collection('users').document(user.uid);
 
     return ref.setData({
       'uid': user.uid,
@@ -26,11 +26,18 @@ class Repository {
   }
 
   Future<String> createRoom(Game game) async {
-    DocumentReference ref = await _db.collection('games').add(game.toJson());
+    final DocumentReference ref =
+        await _db.collection('games').add(game.toJson());
     return ref.documentID;
   }
 
-  Future<Game> joinGame(String roomId) {
+  Future<Game> retrieveGame(String roomId) async {
+    final DocumentSnapshot ref = await _db.document('games/$roomId').get();
+
+    if (ref.data != null) {
+      return Game.fromJson(ref.data)..id = ref.documentID;
+    }
+
     return null;
   }
 
@@ -50,12 +57,13 @@ class Repository {
     await _db
         .document('games/$roomId')
         .collection('players')
-        .document('userId')
+        .document(userId)
         .delete();
   }
 
   Future<String> getUserName(String uuid) async {
-    DocumentSnapshot ref = await _db.collection('users').document(uuid).get();
+    final DocumentSnapshot ref =
+        await _db.collection('users').document(uuid).get();
     return ref['displayName'];
   }
 }

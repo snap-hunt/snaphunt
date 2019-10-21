@@ -1,8 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:snaphunt/constants/app_theme.dart';
 import 'package:snaphunt/widgets/fancy_button.dart';
 
+import 'package:flutter/services.dart';
+
 class JoinRoom extends StatelessWidget {
+  Future<String> scanQR() async {
+    String barcodeScanRes;
+
+    try {
+      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+          "#ff6666", "Cancel", true, ScanMode.QR);
+    } on PlatformException {
+      barcodeScanRes = null;
+    } catch (ex) {
+      barcodeScanRes = null;
+    }
+    return barcodeScanRes;
+  }
+
   @override
   Widget build(BuildContext context) {
     final controller = TextEditingController();
@@ -26,7 +43,7 @@ class JoinRoom extends StatelessWidget {
               color: Colors.deepOrangeAccent,
               onPressed: () {
                 final code = controller.text;
-                if (code.isNotEmpty) {
+                if (code != null && code.isNotEmpty) {
                   Navigator.of(context).pop(code);
                 }
               },
@@ -37,9 +54,9 @@ class JoinRoom extends StatelessWidget {
             DialogFancyButton(
               text: 'Scan QR Code',
               color: Colors.orange,
-              onPressed: () {
-                final code = ''; //get qr camera string
-                if (code.isNotEmpty) {
+              onPressed: () async {
+                final code = await scanQR();
+                if (code != null && code != '-1') {
                   Navigator.of(context).pop(code);
                 }
               },
