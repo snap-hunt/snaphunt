@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:snaphunt/routes.dart';
 import 'package:snaphunt/services/auth.dart';
 import 'package:snaphunt/widgets/fancy_button.dart';
+import 'package:snaphunt/widgets/singleplayer/ml_camera.dart';
 
 class Home extends StatefulWidget {
   static Route<dynamic> route() {
@@ -42,7 +43,11 @@ class _HomeState extends State<Home> {
                 size: 70,
                 color: Colors.orange,
                 onPressed: () {
-                  Navigator.of(context).pushNamed(Router.singlePlayer);
+                  // Navigator.of(context).pushNamed(Router.singlePlayer);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => PictureScanner()),
+                  );
                 },
               ),
               const SizedBox(height: 16.0),
