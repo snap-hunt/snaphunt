@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:snaphunt/constants/game_status_enum.dart';
 import 'package:snaphunt/data/repository.dart';
 import 'package:snaphunt/model/game.dart';
+import 'package:snaphunt/model/player.dart';
 
 class GameModel extends ChangeNotifier {
   Game _game;
@@ -34,6 +35,10 @@ class GameModel extends ChangeNotifier {
   bool get canStartGame => _canStartGame;
 
   StreamSubscription<DocumentSnapshot> gameStream;
+  StreamSubscription<QuerySnapshot> playerStream;
+
+  List<Player> _players = [];
+  List<Player> get players => _players;
 
   final repository = Repository.instance;
 
@@ -55,9 +60,11 @@ class GameModel extends ChangeNotifier {
     }
 
     await joinRoom();
-    initGameStatusListener();
+
     _isLoading = false;
     notifyListeners();
+
+    initStreams();
   }
 
   @override
@@ -66,19 +73,33 @@ class GameModel extends ChangeNotifier {
     super.dispose();
   }
 
-  void initGameStatusListener() {
-    gameStream =
-        repository.gameSnapshot(_game.id).listen((DocumentSnapshot snapshot) {
-      final status = snapshot.data['status'];
-      if (status == 'cancelled') {
-        // _isCancelled = true;
-        _status = GameStatus.cancelled;
-        notifyListeners();
-      } else if (status == 'game') {
-        // _isGameStart = true;
-        _status = GameStatus.game;
-        notifyListeners();
+  void initStreams() {
+    gameStream = repository.gameSnapshot(_game.id).listen(gameStatusListener);
+    playerStream = repository.playersSnapshot(_game.id).listen(playerListener);
+  }
+
+  void gameStatusListener(DocumentSnapshot snapshot) {
+    final status = snapshot.data['status'];
+    if (status == 'cancelled') {
+      _status = GameStatus.cancelled;
+      notifyListeners();
+    } else if (status == 'game') {
+      _status = GameStatus.game;
+      notifyListeners();
+    }
+  }
+
+  void playerListener(QuerySnapshot snapshot) {
+    snapshot.documentChanges.forEach((DocumentChange change) async {
+      print(change.type);
+      print(change.document.documentID);
+
+      if (DocumentChangeType.added == change.type) {
+        players.add(
+            Player(user: await repository.getUser(change.document.documentID)));
       }
+
+      notifyListeners();
     });
   }
 
@@ -90,9 +111,17 @@ class GameModel extends ChangeNotifier {
     }
 
     gameStream.cancel();
+    playerStream.cancel();
   }
 
   Future joinRoom() async {
+    final playerCount = await repository.getGamePlayerCount(_game.id);
+
+    if (playerCount >= _game.maxPlayers) {
+      _status = GameStatus.full;
+      return Future.value(null);
+    }
+
     return repository.joinRoom(_game.id, _userId);
   }
 }

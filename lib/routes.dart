@@ -6,7 +6,7 @@ import 'package:snaphunt/ui/login.dart';
 import 'package:snaphunt/ui/multiplayer/create_room.dart';
 import 'package:snaphunt/ui/multiplayer/game.dart';
 import 'package:snaphunt/ui/multiplayer/lobby.dart';
-import 'package:snaphunt/ui/multiplayer/room_test.dart';
+import 'package:snaphunt/ui/multiplayer/room.dart';
 import 'package:snaphunt/ui/singleplayer/singleplayer.dart';
 
 class Router {
@@ -40,13 +40,8 @@ class Router {
 
         return MaterialPageRoute(
           builder: (_) => ChangeNotifierProvider(
-            builder: (_) => new GameModel(args[0], args[1], args[2]),
-            child: RoomB(),
-            // child: Room(
-            //   game: args[0],
-            //   isHost: args[1],
-            // ),
-          ),
+              builder: (_) => new GameModel(args[0], args[1], args[2]),
+              child: Room()),
         );
 
       case singlePlayer:

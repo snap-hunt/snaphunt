@@ -3,4 +3,5 @@ enum GameStatus {
   game,
   cancelled,
   kicked,
+  full,
 }

@@ -1,60 +1,51 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:snaphunt/constants/app_theme.dart';
-import 'package:snaphunt/data/repository.dart';
+import 'package:snaphunt/constants/game_status_enum.dart';
 import 'package:snaphunt/model/game.dart';
+import 'package:snaphunt/routes.dart';
+import 'package:snaphunt/stores/game_model.dart';
+import 'package:snaphunt/widgets/fancy_alert_dialog.dart';
 import 'package:snaphunt/widgets/fancy_button.dart';
 import 'package:snaphunt/widgets/multiplayer/room_exit_dialog.dart';
 
-class Room extends StatefulWidget {
-  final Game game;
-  final bool isHost;
+class Room extends StatelessWidget {
+  void showAlertDialog(BuildContext context, String title, String body) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) => FancyAlertDialog(
+        title: title,
+        body: body,
+      ),
+    );
+  }
 
-  const Room({Key key, this.game, this.isHost = false}) : super(key: key);
-
-  @override
-  _RoomState createState() => _RoomState();
-}
-
-class _RoomState extends State<Room> {
-  final repository = Repository.instance;
-  Future<String> _roomId;
-  FirebaseUser _user;
-
-  @override
-  void initState() {
-    if (widget.isHost) {
-      initRoom();
-    } else {
-      _roomId = Future.value(widget.game.id);
+  void listener(GameModel model, BuildContext context) {
+    if (GameStatus.full == model.status) {
+      Navigator.of(context).pop();
+      showAlertDialog(context, 'Room Full', 'Room already reached max players');
     }
-    super.initState();
-  }
 
-  void initRoom() async {
-    _roomId = repository.createRoom(widget.game);
-  }
-
-  void joinRoom() async {
-    repository.joinRoom(widget.game.id, _user.uid);
-  }
-
-  @override
-  void dispose() {
-    if (widget.isHost) {
-      repository.cancelRoom(widget.game.id);
-    } else {
-      repository.leaveRoom(widget.game.id, _user.uid);
+    if (GameStatus.game == model.status) {
+      Navigator.of(context).pushReplacementNamed(Router.game);
     }
-    super.dispose();
+
+    if (GameStatus.cancelled == model.status) {
+      Navigator.of(context).pop();
+      showAlertDialog(context, 'Game Cancelled', 'Game was cancelled by host!');
+    }
+
+    if (GameStatus.kicked == model.status) {
+      Navigator.of(context).pop();
+      showAlertDialog(context, 'Kicked', 'You were kicked by the host!');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    _user = Provider.of<FirebaseUser>(context, listen: false);
+    bool _isHost = false;
 
     return WillPopScope(
       onWillPop: () async {
@@ -62,10 +53,9 @@ class _RoomState extends State<Room> {
           context: context,
           barrierDismissible: false,
           builder: (BuildContext context) {
-            final isHost = widget.isHost;
             return RoomExitDialog(
-              title: isHost ? 'Delete room?' : 'Leave room?',
-              body: isHost
+              title: _isHost ? 'Delete room?' : 'Leave room?',
+              body: _isHost
                   ? 'Room will be deleted aheheheheheh'
                   : 'Are you sure you want to leave from the room?',
             );
@@ -83,53 +73,23 @@ class _RoomState extends State<Room> {
           centerTitle: true,
         ),
         body: Container(
-          child: FutureBuilder(
-            future: _roomId,
-            builder: (context, data) {
-              if (data.hasData || data.data != null) {
-                widget.game.id = data.data;
-                joinRoom();
+          child: Consumer<GameModel>(
+            builder: (context, model, child) {
+              _isHost = model.isHost;
 
-                Firestore.instance
-                    .document('games/${widget.game.id}')
-                    .snapshots()
-                    .listen((data) {
-                  print(data.data);
-                });
-
-                return Column(
-                  children: <Widget>[
-                    RoomDetails(game: widget.game),
-                    Expanded(
-                      child: StreamBuilder<QuerySnapshot>(
-                        stream: Firestore.instance
-                            .document('games/${widget.game.id}')
-                            // .snapshots()
-                            .collection('players')
-                            .snapshots(),
-                        builder: (context, snapshot) {
-                          if (!snapshot.hasData)
-                            return Center(
-                              child: CircularProgressIndicator(),
-                            );
-
-                          // var data = snapshot.data.data;
-                          if (snapshot.data.documents.isEmpty) {
-                            return Container(
-                              child: Text('empty'),
-                            );
-                          }
-
-                          return RoomBody();
-                        },
-                      ),
-                    )
-                  ],
+              if (model.isLoading) {
+                return Center(
+                  child: CircularProgressIndicator(),
                 );
               }
 
-              return Center(
-                child: CircularProgressIndicator(),
+              WidgetsBinding.instance
+                  .addPostFrameCallback((_) => listener(model, context));
+
+              return Column(
+                children: <Widget>[
+                  RoomDetails(game: model.game),
+                ],
               );
             },
           ),
@@ -188,7 +148,7 @@ class RoomBody extends StatelessWidget {
             onPressed: () {},
           ),
           SizedBox(height: 10),
-          PlayerRow(players: 0, max: 6),
+          // PlayerRow(players: 0, max: 6),
         ],
       ),
     );

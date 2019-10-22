@@ -35,12 +35,14 @@ class Lobby extends StatelessWidget {
                     builder: (BuildContext context) => JoinRoom(),
                   );
 
-                  final game = await Repository.instance.retrieveGame(roomCode);
-                  final user =
-                      Provider.of<FirebaseUser>(context, listen: false);
-                  await pushGame(game, user.uid, context);
-                  // Navigator.of(context).pushNamed(Router.room,
-                  //     arguments: [game, false, user.uid]);
+                  if (roomCode != null && roomCode.isNotEmpty) {
+                    final game =
+                        await Repository.instance.retrieveGame(roomCode);
+                    final user =
+                        Provider.of<FirebaseUser>(context, listen: false);
+                    Navigator.of(context).pushNamed(Router.room,
+                        arguments: [game, false, user.uid]);
+                  }
                 },
               ),
               Expanded(
@@ -51,24 +53,6 @@ class Lobby extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-
-
-Future pushGame(Game game, String userId, BuildContext context) async {
-  final status = await Navigator.of(context)
-      .pushNamed(Router.room, arguments: [game, false, userId]);
-  if (status != null) {
-    print(status);
-    // await showDialog<String>(
-    //   context: context,
-    //   barrierDismissible: false,
-    //   builder: (BuildContext context) => FancyAlertDialog(
-    //     title: 'Game Cancelled',
-    //     body: 'Game was cancelled by host!',
-    //   ),
-    // );
   }
 }
 
@@ -104,9 +88,8 @@ class LobbyList extends StatelessWidget {
                 onRoomClick: () async {
                   final user =
                       Provider.of<FirebaseUser>(context, listen: false);
-                  await pushGame(game, user.uid, context);
-                  // Navigator.of(context).pushNamed(Router.room,
-                  //     arguments: [game, false, user.uid]);
+                  Navigator.of(context).pushNamed(Router.room,
+                      arguments: [game, false, user.uid]);
                 },
               );
             },
