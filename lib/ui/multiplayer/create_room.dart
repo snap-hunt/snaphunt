@@ -117,7 +117,7 @@ class _CreateRoomState extends State<CreateRoom> {
                 status: 'waiting',
                 createdBy: user.uid,
               );
-              Navigator.of(context).popAndPushNamed(
+              Navigator.of(context).pushReplacementNamed(
                 Router.room,
                 arguments: [game, true, user.uid],
               );

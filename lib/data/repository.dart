@@ -66,4 +66,8 @@ class Repository {
         await _db.collection('users').document(uuid).get();
     return ref['displayName'];
   }
+
+  Stream<DocumentSnapshot> gameSnapshot(String gameId) {
+    return _db.collection('games').document(gameId).snapshots();
+  }
 }

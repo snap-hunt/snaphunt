@@ -6,7 +6,7 @@ import 'package:snaphunt/data/repository.dart';
 import 'package:snaphunt/model/game.dart';
 import 'package:snaphunt/routes.dart';
 import 'package:snaphunt/widgets/multiplayer/join_room_dialog.dart';
-import 'package:snaphunt/widgets/multiplayer/room_buttons.dart';
+import 'package:snaphunt/widgets/multiplayer/lobby_buttons.dart';
 
 class Lobby extends StatelessWidget {
   @override
@@ -38,8 +38,9 @@ class Lobby extends StatelessWidget {
                   final game = await Repository.instance.retrieveGame(roomCode);
                   final user =
                       Provider.of<FirebaseUser>(context, listen: false);
-                  Navigator.of(context).pushNamed(Router.room,
-                      arguments: [game, false, user.uid]);
+                  await pushGame(game, user.uid, context);
+                  // Navigator.of(context).pushNamed(Router.room,
+                  //     arguments: [game, false, user.uid]);
                 },
               ),
               Expanded(
@@ -50,6 +51,24 @@ class Lobby extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+
+
+Future pushGame(Game game, String userId, BuildContext context) async {
+  final status = await Navigator.of(context)
+      .pushNamed(Router.room, arguments: [game, false, userId]);
+  if (status != null) {
+    print(status);
+    // await showDialog<String>(
+    //   context: context,
+    //   barrierDismissible: false,
+    //   builder: (BuildContext context) => FancyAlertDialog(
+    //     title: 'Game Cancelled',
+    //     body: 'Game was cancelled by host!',
+    //   ),
+    // );
   }
 }
 
@@ -82,11 +101,12 @@ class LobbyList extends StatelessWidget {
 
               return LobbyListTile(
                 game: game,
-                onRoomClick: () {
+                onRoomClick: () async {
                   final user =
                       Provider.of<FirebaseUser>(context, listen: false);
-                  Navigator.of(context).pushNamed(Router.room,
-                      arguments: [game, false, user.uid]);
+                  await pushGame(game, user.uid, context);
+                  // Navigator.of(context).pushNamed(Router.room,
+                  //     arguments: [game, false, user.uid]);
                 },
               );
             },
@@ -112,7 +132,8 @@ class LobbyListTile extends StatefulWidget {
 }
 
 class _LobbyListTileState extends State<LobbyListTile> {
-  String createdBy = '';
+  String _createdBy = '';
+  bool _isRoomFull = false;
 
   @override
   void initState() {
@@ -124,7 +145,7 @@ class _LobbyListTileState extends State<LobbyListTile> {
     String name = await Repository.instance.getUserName(widget.game.createdBy);
 
     setState(() {
-      createdBy = name;
+      _createdBy = name;
     });
   }
 
@@ -141,16 +162,35 @@ class _LobbyListTileState extends State<LobbyListTile> {
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
           child: ListTile(
             title: Text(widget.game.name),
-            subtitle: Text(createdBy),
+            subtitle: Text(_createdBy),
             trailing: Column(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text('${widget.game.timeLimit} mins'),
-                Text('0/${widget.game.maxPlayers}'),
+                StreamBuilder<QuerySnapshot>(
+                  stream: Firestore.instance
+                      .collection('games')
+                      .document(widget.game.id)
+                      .collection('players')
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.data == null) {
+                      return Text('0/${widget.game.maxPlayers}');
+                    }
+
+                    final players = snapshot.data.documents.length;
+                    final isRoomFull = players == widget.game.maxPlayers;
+
+                    return Text(
+                      '$players/${widget.game.maxPlayers}',
+                      style: TextStyle(color: isRoomFull ? Colors.red : null),
+                    );
+                  },
+                ),
               ],
             ),
-            onTap: widget.onRoomClick,
+            onTap: _isRoomFull ? null : widget.onRoomClick,
           ),
         ),
       ),
