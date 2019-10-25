@@ -15,6 +15,7 @@ class GameModel extends ChangeNotifier {
   bool get isHost => _isHost;
 
   String _userId;
+  String get userId => _userId;
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
@@ -83,7 +84,7 @@ class GameModel extends ChangeNotifier {
     if (status == 'cancelled') {
       _status = GameStatus.cancelled;
       notifyListeners();
-    } else if (status == 'game') {
+    } else if (status == 'in_game') {
       _status = GameStatus.game;
       notifyListeners();
     }
@@ -97,10 +98,31 @@ class GameModel extends ChangeNotifier {
       if (DocumentChangeType.added == change.type) {
         players.add(
             Player(user: await repository.getUser(change.document.documentID)));
-      }
+      } else if (DocumentChangeType.removed == change.type) {
+        if (change.document.documentID == _userId) {
+          _status = GameStatus.kicked;
+          notifyListeners();
+          return;
+        }
 
+        players.removeWhere(
+            (player) => player.user.uid == change.document.documentID);
+      }
+      checkCanStartGame();
       notifyListeners();
     });
+  }
+
+  void checkCanStartGame() {
+    if (players.length > 2) {
+      _canStartGame = true;
+    } else {
+      _canStartGame = false;
+    }
+  }
+
+  void onKickPlayer(String userId) {
+    repository.kickPlayer(_game.id, userId);
   }
 
   void onDispose() {
@@ -112,6 +134,12 @@ class GameModel extends ChangeNotifier {
 
     gameStream.cancel();
     playerStream.cancel();
+  }
+
+  void onGameStart() {
+    if (_canStartGame) {
+      repository.startGame(_game.id);
+    }
   }
 
   Future joinRoom() async {

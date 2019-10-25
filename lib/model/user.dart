@@ -3,31 +3,31 @@ class User {
   String email;
   String photoUrl;
   String displayName;
-  String lastSeen;
+  // String lastSeen;
 
   User({
     this.uid,
     this.email,
     this.photoUrl,
     this.displayName,
-    this.lastSeen,
+    // this.lastSeen,
   });
 
   User.fromJson(Map<String, dynamic> json) {
     uid = json['uid'];
     email = json['email'];
-    photoUrl = json['photoUrl'];
+    photoUrl = json['photoURL'];
     displayName = json['displayName'];
-    lastSeen = json['lastSeen'];
+    // lastSeen = json['lastSeen'] as String;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['uid'] = this.uid;
     data['email'] = this.email;
-    data['photoUrl'] = this.photoUrl;
+    data['photoURL'] = this.photoUrl;
     data['displayName'] = this.displayName;
-    data['lastSeen'] = this.lastSeen;
+    // data['lastSeen'] = this.lastSeen;
     return data;
   }
 }

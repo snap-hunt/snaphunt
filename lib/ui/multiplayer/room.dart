@@ -3,12 +3,14 @@ import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:snaphunt/constants/app_theme.dart';
 import 'package:snaphunt/constants/game_status_enum.dart';
-import 'package:snaphunt/model/game.dart';
 import 'package:snaphunt/routes.dart';
 import 'package:snaphunt/stores/game_model.dart';
 import 'package:snaphunt/widgets/fancy_alert_dialog.dart';
 import 'package:snaphunt/widgets/fancy_button.dart';
+import 'package:snaphunt/widgets/multiplayer/host_start_button.dart';
+import 'package:snaphunt/widgets/multiplayer/player_await_button.dart';
 import 'package:snaphunt/widgets/multiplayer/room_exit_dialog.dart';
+import 'package:snaphunt/widgets/multiplayer/room_loading.dart';
 
 class Room extends StatelessWidget {
   void showAlertDialog(BuildContext context, String title, String body) {
@@ -22,7 +24,7 @@ class Room extends StatelessWidget {
     );
   }
 
-  void listener(GameModel model, BuildContext context) {
+  void gameStatusListener(GameModel model, BuildContext context) {
     if (GameStatus.full == model.status) {
       Navigator.of(context).pop();
       showAlertDialog(context, 'Room Full', 'Room already reached max players');
@@ -78,20 +80,22 @@ class Room extends StatelessWidget {
               _isHost = model.isHost;
 
               if (model.isLoading) {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
+                return RoomLoading();
               }
 
-              WidgetsBinding.instance
-                  .addPostFrameCallback((_) => listener(model, context));
-
-              return Column(
-                children: <Widget>[
-                  RoomDetails(game: model.game),
-                ],
+              WidgetsBinding.instance.addPostFrameCallback(
+                (_) => gameStatusListener(model, context),
               );
+
+              return child;
             },
+            child: Column(
+              children: <Widget>[
+                RoomDetails(),
+                PlayerRow(),
+                PlayerList(),
+              ],
+            ),
           ),
         ),
       ),
@@ -100,87 +104,128 @@ class Room extends StatelessWidget {
 }
 
 class RoomDetails extends StatelessWidget {
-  final Game game;
-
-  const RoomDetails({Key key, this.game}) : super(key: key);
+  const RoomDetails({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: MediaQuery.of(context).size.height * 0.5,
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Text(game.name),
-          Text('${game.timeLimit} min'),
-          Text('Hunt time'),
-          QrImage(
-            data: game.id,
-            version: QrVersions.auto,
-            size: 150.0,
-          ),
-          Text(game.id)
-        ],
-      ),
-    );
+    return Consumer<GameModel>(builder: (context, model, child) {
+      return Container(
+        height: MediaQuery.of(context).size.height * 0.5,
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Text(model.game.name),
+            Text('${model.game.timeLimit} min'),
+            Text('Hunt time'),
+            QrImage(
+              data: model.game.id,
+              version: QrVersions.auto,
+              size: 150.0,
+            ),
+            Text(model.game.id)
+          ],
+        ),
+      );
+    });
   }
 }
 
 class RoomBody extends StatelessWidget {
+  const RoomBody({Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          FancyButton(
-            child: Text(
-              'BEGIN HUNT',
-              style: fancy_button_style,
-            ),
-            color: Colors.deepOrangeAccent,
-            size: 60,
-            onPressed: () {},
-          ),
-          SizedBox(height: 10),
-          // PlayerRow(players: 0, max: 6),
-        ],
-      ),
+    return Consumer<GameModel>(
+      builder: (context, model, child) {
+        if (!model.isHost) {
+          return PlayerAwaitButton(
+            canStartGame: model.canStartGame,
+          );
+        }
+
+        return HostStartButton(
+          canStartGame: model.canStartGame,
+          onGameStart: model.onGameStart,
+        );
+      },
     );
   }
 }
 
 class PlayerRow extends StatelessWidget {
-  final int players;
-  final int max;
-
-  const PlayerRow({Key key, this.players, this.max}) : super(key: key);
+  const PlayerRow({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.grey[600],
-      height: 45,
-      padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 24.0),
-      child: Row(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Text(
-            'PLAYERS',
-            style: TextStyle(color: Colors.white),
+    return Consumer<GameModel>(
+      builder: (context, model, child) {
+        return Container(
+          color: Colors.grey[600],
+          height: 45,
+          padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 24.0),
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(
+                'PLAYERS',
+                style: TextStyle(color: Colors.white),
+              ),
+              Text(
+                '${model.players.length}/${model.game.maxPlayers}',
+                style: TextStyle(color: Colors.white),
+              ),
+            ],
           ),
-          Text(
-            '$players/$max',
-            style: TextStyle(color: Colors.white),
+        );
+      },
+    );
+  }
+}
+
+class PlayerList extends StatelessWidget {
+  const PlayerList({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<GameModel>(
+      builder: (context, model, child) {
+        return Container(
+          height: 200, //TODO dynamic height
+          child: ListView.builder(
+            itemCount: model.players.length,
+            itemBuilder: (context, index) {
+              final player = model.players[index];
+              final isMe = player.user.uid == model.userId;
+
+              return ListTile(
+                title: Text(player.user.displayName),
+                leading: CircleAvatar(
+                  backgroundImage: NetworkImage(player.user.photoUrl),
+                ),
+                trailing: model.isHost
+                    ? !isMe
+                        ? FancyButton(
+                            child: Text(
+                              'REMOVE',
+                              style: fancy_button_style,
+                            ),
+                            color: Colors.red,
+                            size: 30,
+                            onPressed: () =>
+                                model.onKickPlayer(player.user.uid),
+                          )
+                        : Container()
+                    : Container(),
+              );
+            },
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

@@ -74,3 +74,4 @@
 
 google-services.json
 android/key\.properties
+*.jks

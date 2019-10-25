@@ -62,6 +62,10 @@ class Repository {
         .delete();
   }
 
+  void startGame(String roomId) async {
+    await _db.document('games/$roomId').updateData({'status': 'in_game'});
+  }
+
   Future<String> getUserName(String uuid) async {
     final DocumentSnapshot ref =
         await _db.collection('users').document(uuid).get();
