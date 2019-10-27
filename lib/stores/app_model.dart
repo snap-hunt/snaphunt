@@ -1,3 +1,3 @@
 import 'package:flutter/material.dart';
 
-class AppModel extends ChangeNotifier {}
+class AppModel with ChangeNotifier {}

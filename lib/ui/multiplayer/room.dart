@@ -5,29 +5,22 @@ import 'package:snaphunt/constants/app_theme.dart';
 import 'package:snaphunt/constants/game_status_enum.dart';
 import 'package:snaphunt/routes.dart';
 import 'package:snaphunt/stores/game_model.dart';
-import 'package:snaphunt/widgets/fancy_alert_dialog.dart';
-import 'package:snaphunt/widgets/fancy_button.dart';
+import 'package:snaphunt/utils/utils.dart';
+import 'package:snaphunt/widgets/common/fancy_button.dart';
 import 'package:snaphunt/widgets/multiplayer/host_start_button.dart';
 import 'package:snaphunt/widgets/multiplayer/player_await_button.dart';
 import 'package:snaphunt/widgets/multiplayer/room_exit_dialog.dart';
 import 'package:snaphunt/widgets/multiplayer/room_loading.dart';
 
 class Room extends StatelessWidget {
-  void showAlertDialog(BuildContext context, String title, String body) {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) => FancyAlertDialog(
-        title: title,
-        body: body,
-      ),
-    );
-  }
-
   void gameStatusListener(GameModel model, BuildContext context) {
     if (GameStatus.full == model.status) {
       Navigator.of(context).pop();
-      showAlertDialog(context, 'Room Full', 'Room already reached max players');
+      showAlertDialog(
+        context: context,
+        title: 'Room Full',
+        body: 'Room already reached max players',
+      );
     }
 
     if (GameStatus.game == model.status) {
@@ -36,12 +29,20 @@ class Room extends StatelessWidget {
 
     if (GameStatus.cancelled == model.status) {
       Navigator.of(context).pop();
-      showAlertDialog(context, 'Game Cancelled', 'Game was cancelled by host!');
+      showAlertDialog(
+        context: context,
+        title: 'Game Cancelled',
+        body: 'Game was cancelled by host!',
+      );
     }
 
     if (GameStatus.kicked == model.status) {
       Navigator.of(context).pop();
-      showAlertDialog(context, 'Kicked', 'You were kicked by the host!');
+      showAlertDialog(
+        context: context,
+        title: 'Kicked',
+        body: 'You were kicked by the host!',
+      );
     }
   }
 
@@ -219,8 +220,14 @@ class PlayerList extends StatelessWidget {
                             onPressed: () =>
                                 model.onKickPlayer(player.user.uid),
                           )
-                        : Container()
-                    : Container(),
+                        : Container(
+                            height: 0,
+                            width: 0,
+                          )
+                    : Container(
+                        height: 0,
+                        width: 0,
+                      ),
               );
             },
           ),

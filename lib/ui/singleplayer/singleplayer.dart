@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:snaphunt/widgets/fancy_button.dart';
+import 'package:snaphunt/widgets/common/fancy_button.dart';
 
 class SinglePlayer extends StatelessWidget {
   @override

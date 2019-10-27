@@ -7,7 +7,7 @@ import 'package:snaphunt/data/repository.dart';
 import 'package:snaphunt/model/game.dart';
 import 'package:snaphunt/model/player.dart';
 
-class GameModel extends ChangeNotifier {
+class GameModel with ChangeNotifier {
   Game _game;
   Game get game => _game;
 

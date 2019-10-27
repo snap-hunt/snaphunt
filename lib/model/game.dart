@@ -6,6 +6,8 @@ class Game {
   int timeLimit;
   int noOfItems;
   String status;
+  DateTime timeCreated;
+  DateTime gameStartTime;
 
   Game({
     this.id,
@@ -15,6 +17,8 @@ class Game {
     this.timeLimit,
     this.noOfItems,
     this.status,
+    this.timeCreated,
+    this.gameStartTime,
   });
 
   Game.fromJson(Map<String, dynamic> json) {
@@ -25,6 +29,8 @@ class Game {
     timeLimit = json['timeLimit'];
     noOfItems = json['noOfItems'];
     status = json['status'];
+    timeCreated = json['timeCreated'];
+    gameStartTime = json['gameStartTime'];
   }
 
   Map<String, dynamic> toJson() {
@@ -36,6 +42,8 @@ class Game {
     data['timeLimit'] = this.timeLimit;
     data['noOfItems'] = this.noOfItems;
     data['status'] = this.status;
+    data['timeCreated'] = this.timeCreated;
+    data['gameStartTime'] = this.gameStartTime;
     return data;
   }
 }
