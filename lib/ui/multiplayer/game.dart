@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:snaphunt/widgets/common/fancy_button.dart';
 
-class SinglePlayer extends StatelessWidget {
+class GameRoom extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('game'),
+      ),
       body: Center(
         child: FancyButton(
           child: Text(

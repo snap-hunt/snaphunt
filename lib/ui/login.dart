@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:snaphunt/services/auth.dart';
-import 'package:snaphunt/widgets/fancy_button.dart';
+import 'package:snaphunt/widgets/common/fancy_button.dart';
 
 class Login extends StatefulWidget {
+  static Route<dynamic> route() {
+    return MaterialPageRoute(
+      builder: (BuildContext context) => const Login(),
+    );
+  }
+
   const Login({
     Key key,
   }) : super(key: key);
@@ -48,10 +54,10 @@ class _LoginState extends State<Login> {
                       children: <Widget>[
                         FancyButton(
                           child: Text(
-                            "LOGIN WITH GOOGLE",
+                            'Login with Google',
                             style: TextStyle(color: Colors.white),
                           ),
-                          size: 50,
+                          size: 60,
                           color: Colors.red,
                           onPressed: _onLoginWithGooglePressed,
                         ),
