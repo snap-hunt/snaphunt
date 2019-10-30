@@ -33,13 +33,17 @@ class Repository {
   }
 
   Future<Game> retrieveGame(String roomId) async {
-    final DocumentSnapshot ref = await _db.document('games/$roomId').get();
+    Game game;
 
-    if (ref.data != null) {
-      return Game.fromJson(ref.data)..id = ref.documentID;
-    }
+    try {
+      final DocumentSnapshot ref = await _db.document('games/$roomId').get();
 
-    return null;
+      if (ref.data != null) {
+        game = Game.fromJson(ref.data)..id = ref.documentID;
+      }
+    } catch (e) {}
+
+    return game;
   }
 
   Future joinRoom(String roomId, String userId) async {

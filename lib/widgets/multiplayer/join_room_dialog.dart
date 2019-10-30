@@ -118,7 +118,7 @@ class DialogCardTextField extends StatelessWidget {
         horizontal: 8.0,
         vertical: 2.0,
       ),
-      height: 55,
+      height: 65,
       child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8.0),
@@ -133,9 +133,9 @@ class DialogCardTextField extends StatelessWidget {
             textBaseline: TextBaseline.alphabetic,
             children: <Widget>[
               Expanded(
-                flex: 5,
                 child: Container(
                   child: TextField(
+                    textAlign: TextAlign.center,
                     controller: controller,
                     keyboardType: TextInputType.text,
                     maxLines: 1,

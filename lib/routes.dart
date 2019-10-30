@@ -7,6 +7,7 @@ import 'package:snaphunt/ui/multiplayer/create_room.dart';
 import 'package:snaphunt/ui/multiplayer/game.dart';
 import 'package:snaphunt/ui/multiplayer/lobby.dart';
 import 'package:snaphunt/ui/multiplayer/room.dart';
+import 'package:snaphunt/ui/singleplayer/single_result.dart';
 import 'package:snaphunt/ui/singleplayer/singleplayer.dart';
 
 class Router {
@@ -20,6 +21,7 @@ class Router {
   static const String game = '/game';
 
   static const String singlePlayer = '/singleplayer';
+  static const String resultSingle = '/singleplayerResult';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -46,6 +48,9 @@ class Router {
 
       case singlePlayer:
         return MaterialPageRoute(builder: (_) => SinglePlayer());
+
+      case resultSingle:
+        return MaterialPageRoute(builder: (_) => ResultScreenSinglePlayer());
 
       case login:
       default:
