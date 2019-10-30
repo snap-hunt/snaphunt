@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:snaphunt/routes.dart';
 import 'package:snaphunt/services/auth.dart';
+import 'package:snaphunt/services/connectivity.dart';
+import 'package:snaphunt/utils/utils.dart';
 import 'package:snaphunt/widgets/common/fancy_button.dart';
 
 class Home extends StatefulWidget {
@@ -23,6 +25,8 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
+    var connectionStatus = Provider.of<ConnectivityStatus>(context);
+
     return Scaffold(
       body: SafeArea(
         child: SizedBox.expand(
@@ -52,10 +56,20 @@ class _HomeState extends State<Home> {
                   style: TextStyle(color: Colors.white),
                 ),
                 size: 70,
-                color: Colors.blue,
-                onPressed: () {
-                  Navigator.of(context).pushNamed(Router.lobby);
-                },
+                color: connectionStatus == ConnectivityStatus.Offline
+                    ? Colors.grey
+                    : Colors.blue,
+                onPressed: connectionStatus == ConnectivityStatus.Offline
+                    ? () {
+                        showAlertDialog(
+                          context: context,
+                          title: 'You are offline!',
+                          body: 'Internet connection is needed to play online',
+                        );
+                      }
+                    : () {
+                        Navigator.of(context).pushNamed(Router.lobby);
+                      },
               ),
               const SizedBox(height: 16.0),
               FancyButton(

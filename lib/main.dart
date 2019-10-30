@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:snaphunt/data/repository.dart';
 import 'package:snaphunt/routes.dart';
 import 'package:snaphunt/services/auth.dart';
+import 'package:snaphunt/services/connectivity.dart';
 import 'package:snaphunt/ui/home.dart';
 import 'package:snaphunt/ui/login.dart';
 
@@ -62,6 +63,10 @@ class _AppState extends State<App> {
         Provider<Auth>.value(value: widget.auth),
         ValueListenableProvider<FirebaseUser>.value(
             value: widget.auth.currentUser),
+        StreamProvider<ConnectivityStatus>.controller(
+          builder: (context) =>
+              ConnectivityService().connectionStatusController,
+        )
       ],
       child: MaterialApp(
         title: 'SnapHunt',

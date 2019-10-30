@@ -6,6 +6,7 @@ import 'package:snaphunt/stores/hunt_model.dart';
 import 'package:snaphunt/utils/utils.dart';
 import 'package:snaphunt/widgets/common/camera.dart';
 import 'package:snaphunt/widgets/common/countdown.dart';
+import 'package:snaphunt/widgets/multiplayer/room_exit_dialog.dart';
 
 class SinglePlayer extends StatelessWidget {
   final test = [
@@ -55,7 +56,21 @@ class HuntGame extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () async => false,
+      onWillPop: () async {
+        final roomCode = await showDialog<bool>(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return RoomExitDialog(
+              title: 'Leave game?',
+              body:
+                  'Are you sure you want to leave the game? Your progress will be lost',
+            );
+          },
+        );
+
+        return roomCode;
+      },
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
@@ -131,6 +146,7 @@ class WordTile extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
+        Icon(Icons.check_circle),
         Text(
           word.word,
           style: TextStyle(

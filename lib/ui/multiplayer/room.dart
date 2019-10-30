@@ -93,6 +93,7 @@ class Room extends StatelessWidget {
             child: Column(
               children: <Widget>[
                 RoomDetails(),
+                RoomBody(),
                 PlayerRow(),
                 PlayerList(),
               ],
@@ -196,7 +197,7 @@ class PlayerList extends StatelessWidget {
     return Consumer<GameModel>(
       builder: (context, model, child) {
         return Container(
-          height: 200, //TODO dynamic height
+          height: 150, //TODO dynamic height
           child: ListView.builder(
             itemCount: model.players.length,
             itemBuilder: (context, index) {

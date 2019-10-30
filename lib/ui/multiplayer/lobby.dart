@@ -92,7 +92,9 @@ class LobbyList extends StatelessWidget {
 
           if (snapshot.data.documents.isEmpty) {
             return Container(
-              child: Text('empty'),
+              child: Center(
+                child: Text('empty'),
+              ),
             );
           }
 

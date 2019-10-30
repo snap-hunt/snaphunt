@@ -87,10 +87,10 @@ class HuntModel with ChangeNotifier {
   }
 
   void successVibrate() {
-    Vibration.vibrate(pattern: [250, 500, 250, 500]);
+    Vibration.vibrate(pattern: [0, 250, 250, 250]);
   }
 
   void failVibrate() {
-    Vibration.vibrate();
+    Vibration.vibrate(pattern: [0, 250]);
   }
 }
