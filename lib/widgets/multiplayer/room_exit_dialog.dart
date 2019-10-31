@@ -14,7 +14,7 @@ class RoomExitDialog extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(18.0),
       ),
-      elevation: 0,
+      elevation: 5,
       title: Center(
         child: Text(title),
       ),

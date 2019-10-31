@@ -19,6 +19,8 @@ class HuntModel with ChangeNotifier {
 
   bool isHuntComplete = false;
 
+  final Stopwatch duration = Stopwatch();
+
   @override
   void addListener(listener) {
     super.addListener(listener);
@@ -26,11 +28,14 @@ class HuntModel with ChangeNotifier {
   }
 
   void init() {
-    final now = DateTime.now();
-    final limit = Duration(seconds: timeLimit.difference(now).inSeconds);
+    final limit =
+        Duration(seconds: timeLimit.difference(DateTime.now()).inSeconds);
+    duration.start();
     Timer(limit, () {
       isTimeUp = true;
+
       notifyListeners();
+      duration.stop();
     });
   }
 

@@ -42,15 +42,27 @@ class Router {
 
         return MaterialPageRoute(
           builder: (_) => ChangeNotifierProvider(
-              builder: (_) => new GameModel(args[0], args[1], args[2]),
-              child: Room()),
+            builder: (_) => new GameModel(
+              args[0],
+              args[1],
+              args[2],
+            ),
+            child: Room(),
+          ),
         );
 
       case singlePlayer:
         return MaterialPageRoute(builder: (_) => SinglePlayer());
 
       case resultSingle:
-        return MaterialPageRoute(builder: (_) => ResultScreenSinglePlayer());
+        final args = settings.arguments as List;
+        return MaterialPageRoute(
+          builder: (_) => ResultScreenSinglePlayer(
+            isHuntFinished: args[0],
+            objects: args[1],
+            duration: args[2],
+          ),
+        );
 
       case login:
       default:

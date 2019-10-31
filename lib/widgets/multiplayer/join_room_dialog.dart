@@ -28,7 +28,7 @@ class JoinRoom extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(18.0),
       ),
-      elevation: 0,
+      elevation: 5,
       title: Center(child: Text('Enter Room Code')),
       content: SingleChildScrollView(
         scrollDirection: Axis.vertical,

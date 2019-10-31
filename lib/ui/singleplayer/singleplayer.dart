@@ -28,7 +28,7 @@ class SinglePlayer extends StatelessWidget {
     return ChangeNotifierProvider(
       builder: (_) => new HuntModel(
         objects: test,
-        timeLimit: DateTime.now().add(Duration(minutes: 3)),
+        timeLimit: DateTime.now().add(Duration(minutes: 2)),
       ),
       child: HuntGame(
         title: 'SinglePlayer!',
@@ -44,14 +44,28 @@ class HuntGame extends StatelessWidget {
 
   void statusListener(HuntModel model, BuildContext context) {
     if (model.isTimeUp) {
-      Navigator.of(context).pushReplacementNamed(Router.resultSingle);
+      Navigator.of(context).pushReplacementNamed(
+        Router.resultSingle,
+        arguments: [
+          model.isHuntComplete,
+          model.objects,
+          model.duration.elapsed,
+        ],
+      );
       showAlertDialog(
         context: context,
         title: 'Times up!',
         body: 'Times up! Hunting stops now!',
       );
     } else if (model.isHuntComplete) {
-      Navigator.of(context).pushReplacementNamed(Router.resultSingle);
+      Navigator.of(context).pushReplacementNamed(
+        Router.resultSingle,
+        arguments: [
+          model.isHuntComplete,
+          model.objects,
+          model.duration.elapsed,
+        ],
+      );
       showAlertDialog(
         context: context,
         title: 'Congrats!',
@@ -132,6 +146,7 @@ class WordList extends StatelessWidget {
           constraints: BoxConstraints(maxHeight: size.height * 0.2),
           padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 8),
           child: ListView(
+            shrinkWrap: true,
             children: [
               Wrap(
                 alignment: WrapAlignment.center,
