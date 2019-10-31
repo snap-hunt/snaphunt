@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:snaphunt/model/hunt.dart';
@@ -11,15 +12,15 @@ import 'package:snaphunt/widgets/multiplayer/room_exit_dialog.dart';
 class SinglePlayer extends StatelessWidget {
   final test = [
     Hunt(word: 'chair'),
-    // Hunt(word: 'sky'),
-    // Hunt(word: 'table'),
+    Hunt(word: 'sky'),
+    Hunt(word: 'table'),
     Hunt(word: 'room'),
-    // Hunt(word: 'bag'),
-    // Hunt(word: 'mobile phone'),
-    // Hunt(word: 'food'),
-    // Hunt(word: 'dog'),
-    // Hunt(word: 'cat'),
-    // Hunt(word: 'musicial instrument'),
+    Hunt(word: 'bag'),
+    Hunt(word: 'mobile phone'),
+    Hunt(word: 'food'),
+    Hunt(word: 'dog'),
+    Hunt(word: 'cat'),
+    Hunt(word: 'musicial instrument'),
   ];
 
   @override
@@ -29,12 +30,18 @@ class SinglePlayer extends StatelessWidget {
         objects: test,
         timeLimit: DateTime.now().add(Duration(minutes: 3)),
       ),
-      child: HuntGame(),
+      child: HuntGame(
+        title: 'SinglePlayer!',
+      ),
     );
   }
 }
 
 class HuntGame extends StatelessWidget {
+  final String title;
+
+  const HuntGame({Key key, this.title}) : super(key: key);
+
   void statusListener(HuntModel model, BuildContext context) {
     if (model.isTimeUp) {
       Navigator.of(context).pushReplacementNamed(Router.resultSingle);
@@ -76,7 +83,7 @@ class HuntGame extends StatelessWidget {
           automaticallyImplyLeading: false,
           elevation: 0,
           title: Text(
-            'SnapHunt!',
+            title,
             style: TextStyle(
               color: Colors.white,
               fontSize: 24,
@@ -99,12 +106,10 @@ class HuntGame extends StatelessWidget {
           },
           child: Container(
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
-                Container(
-                  height: 400,
-                  child: CameraScreen(),
-                ),
-                WordList()
+                WordList(),
+                Expanded(child: CameraScreen()),
               ],
             ),
           ),
@@ -117,17 +122,29 @@ class HuntGame extends StatelessWidget {
 class WordList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
     return Consumer<HuntModel>(
       builder: (context, model, child) {
         return Container(
-          height: 200,
-          child: Wrap(
-            direction: Axis.vertical,
-            children: <Widget>[
-              for (Hunt word in model.objects)
-                WordTile(
-                  word: word,
-                ),
+          width: double.infinity,
+          color: Colors.grey[800],
+          constraints: BoxConstraints(maxHeight: size.height * 0.2),
+          padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 8),
+          child: ListView(
+            children: [
+              Wrap(
+                alignment: WrapAlignment.center,
+                spacing: 24,
+                runSpacing: 14,
+                direction: Axis.horizontal,
+                children: <Widget>[
+                  for (Hunt word in model.objects)
+                    WordTile(
+                      word: word,
+                    ),
+                ],
+              )
             ],
           ),
         );
@@ -143,17 +160,28 @@ class WordTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        Icon(Icons.check_circle),
-        Text(
-          word.word,
-          style: TextStyle(
-            decoration: word.isFound ? TextDecoration.lineThrough : null,
+    return Container(
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Icon(
+            word.isFound ? Icons.check : Icons.fiber_manual_record,
+            color: word.isFound ? Colors.green : Colors.red,
           ),
-        ),
-      ],
+          SizedBox(width: 10),
+          AutoSizeText(
+            word.word,
+            maxLines: 1,
+            minFontSize: 10,
+            style: TextStyle(
+              fontSize: 20,
+              color: Colors.white,
+              decoration: word.isFound ? TextDecoration.lineThrough : null,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

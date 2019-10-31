@@ -20,7 +20,7 @@ class _CameraScreenState extends State<CameraScreen> {
       await _controller.dispose();
     }
 
-    _controller = CameraController(cameraDescription, ResolutionPreset.medium);
+    _controller = CameraController(cameraDescription, ResolutionPreset.high);
 
     _controller.addListener(() {
       if (mounted) {
@@ -117,22 +117,32 @@ class CameraButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<HuntModel>(
-      builder: (context, model, child) {
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            FloatingActionButton(
-              child: Icon(Icons.camera),
-              backgroundColor: Colors.blueGrey,
-              onPressed: () async {
-                model.onCameraPressed(await onCapturePressed());
-              },
-            )
-          ],
-        );
-      },
+    final model = Provider.of<HuntModel>(context, listen: false);
+
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      color: Colors.black.withOpacity(0.4),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          InkWell(
+            onTap: () async {
+              model.onCameraPressed(await onCapturePressed());
+            },
+            child: Container(
+              padding: const EdgeInsets.all(6),
+              height: 60,
+              width: 60,
+              decoration:
+                  BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+              child: Container(
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle, color: Colors.grey)),
+            ),
+          )
+        ],
+      ),
     );
   }
 }
