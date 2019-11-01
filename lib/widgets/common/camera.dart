@@ -74,9 +74,7 @@ class _CameraScreenState extends State<CameraScreen> {
         CameraPreview(_controller),
         Align(
           alignment: Alignment.bottomCenter,
-          child: CameraButton(
-            controller: _controller,
-          ),
+          child: CameraRow(controller: _controller),
         )
       ],
     );
@@ -90,10 +88,10 @@ class _CameraScreenState extends State<CameraScreen> {
   }
 }
 
-class CameraButton extends StatelessWidget {
+class CameraRow extends StatelessWidget {
   final CameraController controller;
 
-  const CameraButton({
+  const CameraRow({
     Key key,
     this.controller,
   }) : super(key: key);
@@ -130,18 +128,31 @@ class CameraButton extends StatelessWidget {
             onTap: () async {
               model.onCameraPressed(await onCapturePressed());
             },
-            child: Container(
-              padding: const EdgeInsets.all(6),
-              height: 60,
-              width: 60,
-              decoration:
-                  BoxDecoration(shape: BoxShape.circle, color: Colors.white),
-              child: Container(
-                  decoration: BoxDecoration(
-                      shape: BoxShape.circle, color: Colors.grey)),
-            ),
+            child: const CameraButton(),
           )
         ],
+      ),
+    );
+  }
+}
+
+class CameraButton extends StatelessWidget {
+  const CameraButton({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(6),
+      height: 60,
+      width: 60,
+      decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+      child: Container(
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: Colors.grey,
+        ),
       ),
     );
   }

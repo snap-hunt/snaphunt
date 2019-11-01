@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:hive/hive.dart';
 import 'package:snaphunt/model/game.dart';
 import 'package:snaphunt/model/user.dart';
 
@@ -110,5 +111,19 @@ class Repository {
         .collection('players')
         .getDocuments();
     return players.documents.length;
+  }
+
+  void updateLocalWords() async {
+    final box = Hive.box('words');
+
+    final DocumentSnapshot doc = await _db.document('words/words').get();
+
+    final localVersion = box.get('version');
+    final onlineVersion = doc.data['version'];
+
+    if (localVersion != onlineVersion) {
+      box.put('words', doc.data['words']);
+      box.put('version', doc.data['version']);
+    }
   }
 }

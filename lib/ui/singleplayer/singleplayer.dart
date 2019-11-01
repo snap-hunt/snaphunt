@@ -10,25 +10,12 @@ import 'package:snaphunt/widgets/common/countdown.dart';
 import 'package:snaphunt/widgets/multiplayer/room_exit_dialog.dart';
 
 class SinglePlayer extends StatelessWidget {
-  final test = [
-    Hunt(word: 'chair'),
-    Hunt(word: 'sky'),
-    Hunt(word: 'table'),
-    Hunt(word: 'room'),
-    Hunt(word: 'bag'),
-    Hunt(word: 'mobile phone'),
-    Hunt(word: 'food'),
-    Hunt(word: 'dog'),
-    Hunt(word: 'cat'),
-    Hunt(word: 'musicial instrument'),
-  ];
-
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       builder: (_) => new HuntModel(
-        objects: test,
-        timeLimit: DateTime.now().add(Duration(minutes: 2)),
+        objects: generateWords(5),
+        timeLimit: DateTime.now().add(Duration(minutes: 3)),
       ),
       child: HuntGame(
         title: 'SinglePlayer!',

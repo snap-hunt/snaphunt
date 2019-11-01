@@ -7,11 +7,14 @@ import 'package:snaphunt/services/auth.dart';
 import 'package:snaphunt/services/connectivity.dart';
 import 'package:snaphunt/ui/home.dart';
 import 'package:snaphunt/ui/login.dart';
+import 'package:snaphunt/utils/utils.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  runApp(App(auth: await Auth.create()));
+  openDB().then((_) async {
+    initDB();
+    runApp(App(auth: await Auth.create()));
+  });
 }
 
 class App extends StatefulWidget {
@@ -33,6 +36,7 @@ class _AppState extends State<App> {
   @override
   void initState() {
     super.initState();
+    Repository.instance.updateLocalWords();
     currentUser = widget.auth.init(_onUserChanged);
   }
 
