@@ -9,6 +9,7 @@ class MultiPlayer extends StatelessWidget {
   final List<Hunt> huntOjects;
   final DateTime timeLimit;
   final String gameId;
+  final String userId;
 
   const MultiPlayer({
     Key key,
@@ -16,6 +17,7 @@ class MultiPlayer extends StatelessWidget {
     this.huntOjects,
     this.gameId,
     this.timeLimit,
+    this.userId,
   }) : super(key: key);
 
   @override
@@ -26,6 +28,7 @@ class MultiPlayer extends StatelessWidget {
         timeLimit: timeLimit,
         isMultiplayer: true,
         gameId: gameId,
+        userId: userId,
       ),
       child: HuntGame(
         title: roomTitle,

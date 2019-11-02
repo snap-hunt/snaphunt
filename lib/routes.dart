@@ -42,6 +42,7 @@ class Router {
             huntOjects: args[1],
             timeLimit: args[2],
             gameId: args[3],
+            userId: args[4],
           ),
         );
 

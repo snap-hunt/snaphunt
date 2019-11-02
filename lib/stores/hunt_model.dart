@@ -3,24 +3,29 @@ import 'dart:io';
 
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:flutter/material.dart';
+import 'package:snaphunt/data/repository.dart';
 import 'package:snaphunt/model/hunt.dart';
 import 'package:vibration/vibration.dart';
 
 class HuntModel with ChangeNotifier {
   HuntModel({
-    this.isMultiplayer = false,
-    this.gameId,
     this.objects,
     this.timeLimit,
+    this.isMultiplayer = false,
+    this.gameId,
+    this.userId,
   });
 
   final List<Hunt> objects;
 
   final DateTime timeLimit;
 
+  // multi
   final bool isMultiplayer;
 
   final String gameId;
+
+  final String userId;
 
   final ImageLabeler _imageLabeler = FirebaseVision.instance.imageLabeler();
 
@@ -29,6 +34,8 @@ class HuntModel with ChangeNotifier {
   bool isHuntComplete = false;
 
   final Stopwatch duration = Stopwatch();
+
+  final repository = Repository.instance;
 
   //multiplayer
 
@@ -40,6 +47,13 @@ class HuntModel with ChangeNotifier {
     if (isMultiplayer) {
       initMultiplayer();
     }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    if (isMultiplayer) {}
   }
 
   void init() {
@@ -55,8 +69,12 @@ class HuntModel with ChangeNotifier {
   }
 
   void initMultiplayer() {
-    //get game
-    //get stream
+    //get playerstream listener
+  }
+
+  void disposeMultiplayer() {
+    //dispose stream
+    //change status to done
   }
 
   void _scanImage(File image) async {
@@ -68,8 +86,10 @@ class HuntModel with ChangeNotifier {
 
   void checkWords(List<ImageLabel> scanResults) {
     hasMatch(scanResults).then((result) {
-      if (result) {
+      if (result != 0) {
         successVibrate();
+        incrementScore(result);
+
         checkComplete().then((complete) {
           if (complete) {
             isHuntComplete = true;
@@ -82,19 +102,25 @@ class HuntModel with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> hasMatch(List<ImageLabel> scanResults) async {
-    bool hasMatch = false;
+  Future<int> hasMatch(List<ImageLabel> scanResults) async {
+    int count = 0;
 
     scanResults.forEach((results) {
       objects.where((hunt) => !hunt.isFound).forEach((words) {
         if (results.text.toLowerCase() == words.word.toLowerCase()) {
-          hasMatch = true;
+          count++;
           words.isFound = true;
         }
       });
     });
 
-    return hasMatch;
+    return count;
+  }
+
+  void incrementScore(int increment) {
+    if (isMultiplayer && increment != 0) {
+      repository.updateUserScore(gameId, userId, increment);
+    }
   }
 
   Future<bool> checkComplete() async {

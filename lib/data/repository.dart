@@ -148,4 +148,11 @@ class Repository {
 
     return gameStartDate.add(Duration(minutes: durationInMinutes));
   }
+
+  Future updateUserScore(String gameId, String userId, int increment) async {
+    final DocumentReference ref = _db.document('games/$gameId/players/$userId');
+    return ref.updateData({
+      'score': FieldValue.increment(increment),
+    });
+  }
 }

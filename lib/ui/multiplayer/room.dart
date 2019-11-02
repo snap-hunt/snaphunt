@@ -30,7 +30,8 @@ class Room extends StatelessWidget {
           model.game.name,
           model.huntObjects,
           model.timeLimit,
-          model.game.id
+          model.game.id,
+          model.userId
         ],
       );
     }
