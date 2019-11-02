@@ -24,7 +24,15 @@ class Room extends StatelessWidget {
     }
 
     if (GameStatus.game == model.status) {
-      Navigator.of(context).pushReplacementNamed(Router.game);
+      Navigator.of(context).pushReplacementNamed(
+        Router.game,
+        arguments: [
+          model.game.name,
+          model.huntObjects,
+          model.timeLimit,
+          model.game.id
+        ],
+      );
     }
 
     if (GameStatus.cancelled == model.status) {
@@ -150,7 +158,8 @@ class RoomBody extends StatelessWidget {
         }
 
         return HostStartButton(
-          canStartGame: model.canStartGame,
+          // canStartGame: model.canStartGame,
+          canStartGame: true,
           onGameStart: model.onGameStart,
         );
       },

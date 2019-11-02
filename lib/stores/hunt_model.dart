@@ -7,11 +7,20 @@ import 'package:snaphunt/model/hunt.dart';
 import 'package:vibration/vibration.dart';
 
 class HuntModel with ChangeNotifier {
-  HuntModel({this.objects, this.timeLimit});
+  HuntModel({
+    this.isMultiplayer = false,
+    this.gameId,
+    this.objects,
+    this.timeLimit,
+  });
 
   final List<Hunt> objects;
 
   final DateTime timeLimit;
+
+  final bool isMultiplayer;
+
+  final String gameId;
 
   final ImageLabeler _imageLabeler = FirebaseVision.instance.imageLabeler();
 
@@ -21,10 +30,16 @@ class HuntModel with ChangeNotifier {
 
   final Stopwatch duration = Stopwatch();
 
+  //multiplayer
+
   @override
   void addListener(listener) {
     super.addListener(listener);
     init();
+
+    if (isMultiplayer) {
+      initMultiplayer();
+    }
   }
 
   void init() {
@@ -37,6 +52,11 @@ class HuntModel with ChangeNotifier {
       notifyListeners();
       duration.stop();
     });
+  }
+
+  void initMultiplayer() {
+    //get game
+    //get stream
   }
 
   void _scanImage(File image) async {

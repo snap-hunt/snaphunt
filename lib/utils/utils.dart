@@ -42,13 +42,25 @@ void initDB() async {
   }
 }
 
-List<Hunt> generateWords([int numOfWords = 8]) {
+List<String> generateWords([int numOfWords = 8]) {
   final box = Hive.box('words');
 
   final List words = box.get('words');
   words.shuffle();
 
+  return List<String>.generate(numOfWords, (index) => words[index]);
+}
+
+List<Hunt> generateHuntObjects([int numOfWords = 8]) {
+  final List words = generateWords(numOfWords);
+
   return new List<Hunt>.generate(numOfWords, (index) {
+    return Hunt(word: words[index]);
+  });
+}
+
+List<Hunt> generateHuntObjectsFromList(List<String> words) {
+  return new List<Hunt>.generate(words.length, (index) {
     return Hunt(word: words[index]);
   });
 }
