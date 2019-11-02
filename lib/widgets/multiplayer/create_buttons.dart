@@ -4,8 +4,15 @@ import 'package:snaphunt/widgets/common/fancy_button.dart';
 
 class CreateButtons extends StatelessWidget {
   final Function onCreate;
+  final String cancelLabel;
+  final String createLabel;
 
-  const CreateButtons({Key key, this.onCreate}) : super(key: key);
+  const CreateButtons({
+    Key key,
+    this.onCreate,
+    this.cancelLabel = 'Cancel',
+    this.createLabel = 'Create Room',
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +27,7 @@ class CreateButtons extends StatelessWidget {
             child: FancyButton(
               child: Center(
                 child: Text(
-                  'Cancel',
+                  cancelLabel,
                   style: fancy_button_style,
                 ),
               ),
@@ -36,7 +43,7 @@ class CreateButtons extends StatelessWidget {
             child: FancyButton(
               child: Center(
                 child: Text(
-                  'Create Room',
+                  createLabel,
                   style: fancy_button_style,
                 ),
               ),

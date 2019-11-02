@@ -5,12 +5,18 @@ import 'package:snaphunt/utils/utils.dart';
 import 'package:snaphunt/widgets/common/hunt_game.dart';
 
 class SinglePlayer extends StatelessWidget {
+  final int numOfObjects;
+  final int duration;
+
+  const SinglePlayer({Key key, this.numOfObjects, this.duration})
+      : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       builder: (_) => new HuntModel(
-        objects: generateHuntObjects(5),
-        timeLimit: DateTime.now().add(Duration(minutes: 3)),
+        objects: generateHuntObjects(numOfObjects),
+        timeLimit: DateTime.now().add(Duration(minutes: duration)),
       ),
       child: HuntGame(
         title: 'SinglePlayer!',

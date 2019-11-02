@@ -46,7 +46,7 @@ class _HomeState extends State<Home> {
                 size: 70,
                 color: Colors.orange,
                 onPressed: () {
-                  Navigator.of(context).pushNamed(Router.singlePlayer);
+                  Navigator.of(context).pushNamed(Router.singlePlayerSettings);
                 },
               ),
               const SizedBox(height: 16.0),

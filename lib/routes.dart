@@ -8,6 +8,7 @@ import 'package:snaphunt/ui/multiplayer/lobby.dart';
 import 'package:snaphunt/ui/multiplayer/multiplayer.dart';
 import 'package:snaphunt/ui/multiplayer/room.dart';
 import 'package:snaphunt/ui/singleplayer/single_result.dart';
+import 'package:snaphunt/ui/singleplayer/single_settings.dart';
 import 'package:snaphunt/ui/singleplayer/singleplayer.dart';
 
 class Router {
@@ -20,6 +21,7 @@ class Router {
   static const String room = '/room';
   static const String game = '/game';
 
+  static const String singlePlayerSettings = '/singleplayerSettings';
   static const String singlePlayer = '/singleplayer';
   static const String resultSingle = '/singleplayerResult';
 
@@ -36,6 +38,7 @@ class Router {
 
       case game:
         final args = settings.arguments as List;
+
         return MaterialPageRoute(
           builder: (_) => MultiPlayer(
             roomTitle: args[0],
@@ -51,7 +54,7 @@ class Router {
 
         return MaterialPageRoute(
           builder: (_) => ChangeNotifierProvider(
-            builder: (_) => new GameModel(
+            builder: (_) => GameModel(
               args[0],
               args[1],
               args[2],
@@ -59,12 +62,22 @@ class Router {
             child: Room(),
           ),
         );
+      case singlePlayerSettings:
+        return MaterialPageRoute(builder: (_) => SinglePlayerSettings());
 
       case singlePlayer:
-        return MaterialPageRoute(builder: (_) => SinglePlayer());
+        final args = settings.arguments as List;
+
+        return MaterialPageRoute(
+          builder: (_) => SinglePlayer(
+            numOfObjects: args[0],
+            duration: args[1],
+          ),
+        );
 
       case resultSingle:
         final args = settings.arguments as List;
+
         return MaterialPageRoute(
           builder: (_) => ResultScreenSinglePlayer(
             isHuntFinished: args[0],

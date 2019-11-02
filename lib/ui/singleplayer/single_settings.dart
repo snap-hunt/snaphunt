@@ -1,48 +1,36 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:snaphunt/model/game.dart';
 import 'package:snaphunt/routes.dart';
 import 'package:snaphunt/widgets/common/card_textfield.dart';
 import 'package:snaphunt/widgets/multiplayer/create_buttons.dart';
 
-class CreateRoom extends StatefulWidget {
+class SinglePlayerSettings extends StatefulWidget {
   @override
-  _CreateRoomState createState() => _CreateRoomState();
+  _SinglePlayerSettingsState createState() => _SinglePlayerSettingsState();
 }
 
-class _CreateRoomState extends State<CreateRoom> {
-  final nameController = TextEditingController();
-  final maxPlayersController = TextEditingController();
+class _SinglePlayerSettingsState extends State<SinglePlayerSettings> {
   final itemsController = TextEditingController();
   int dropdownValue = 10;
 
   @override
   void initState() {
-    nameController.text = 'Snap Hunt!';
-    maxPlayersController.text = '5';
     itemsController.text = '8';
     super.initState();
   }
 
   @override
   void dispose() {
-    nameController.dispose();
-    maxPlayersController.dispose();
     itemsController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<FirebaseUser>(context, listen: false);
-
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       appBar: AppBar(
         title: Text(
-          'New Hunt Room',
+          'Settings',
           style: TextStyle(color: Colors.white),
         ),
         leading: Container(),
@@ -53,28 +41,6 @@ class _CreateRoomState extends State<CreateRoom> {
         physics: NeverScrollableScrollPhysics(),
         children: <Widget>[
           const SizedBox(height: 10),
-          CardTextField(
-            label: 'Room Name',
-            widget: TextField(
-              controller: nameController,
-              keyboardType: TextInputType.text,
-              maxLines: 1,
-              decoration: InputDecoration(
-                border: InputBorder.none,
-              ),
-            ),
-          ),
-          CardTextField(
-            label: 'Max Players',
-            widget: TextField(
-              controller: maxPlayersController,
-              keyboardType: TextInputType.number,
-              maxLines: 1,
-              decoration: InputDecoration(
-                border: InputBorder.none,
-              ),
-            ),
-          ),
           CardTextField(
             label: 'Time Limit',
             widget: DropdownButton<int>(
@@ -110,20 +76,14 @@ class _CreateRoomState extends State<CreateRoom> {
           ),
           const SizedBox(height: 20),
           CreateButtons(
-            onCreate: () async {
-              Game game = Game(
-                name: nameController.text,
-                maxPlayers: int.parse(maxPlayersController.text),
-                noOfItems: int.parse(itemsController.text),
-                timeLimit: dropdownValue,
-                status: 'waiting',
-                createdBy: user.uid,
-                timeCreated: DateTime.fromMillisecondsSinceEpoch(
-                    Timestamp.now().millisecondsSinceEpoch),
-              );
+            createLabel: 'Play!',
+            onCreate: () {
               Navigator.of(context).pushReplacementNamed(
-                Router.room,
-                arguments: [game, true, user.uid],
+                Router.singlePlayer,
+                arguments: [
+                  int.parse(itemsController.text),
+                  dropdownValue,
+                ],
               );
             },
           )
