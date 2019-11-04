@@ -1,0 +1,224 @@
+import 'package:flutter/material.dart';
+import 'package:snaphunt/data/repository.dart';
+import 'package:snaphunt/model/player.dart';
+import 'package:snaphunt/ui/home.dart';
+import 'package:snaphunt/widgets/common/fancy_button.dart';
+import 'package:snaphunt/widgets/multiplayer/room_loading.dart';
+
+class ResultMultiPlayer extends StatefulWidget {
+  final String gameId;
+
+  const ResultMultiPlayer({Key key, this.gameId}) : super(key: key);
+
+  @override
+  _ResultMultiPlayerState createState() => _ResultMultiPlayerState();
+}
+
+class _ResultMultiPlayerState extends State<ResultMultiPlayer> {
+  List<Player> _players;
+
+  @override
+  void initState() {
+    super.initState();
+    initPlayers();
+  }
+
+  void initPlayers() async {
+    final players = await Repository.instance.getPlayers(widget.gameId);
+    players.sort((a, b) => b.score.compareTo(a.score));
+    setState(() {
+      _players = players;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: _players == null
+            ? RoomLoading()
+            : Container(
+                width: double.infinity,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.max,
+                  children: <Widget>[
+                    ResultHeader(
+                      title: 'Snap Attack 19',
+                      duration: 10,
+                    ),
+                    ResultWinner(winner: _players.first),
+                    Divider(
+                      color: Colors.grey,
+                      thickness: 2,
+                      indent: 0,
+                      endIndent: 0,
+                    ),
+                    ResultPlayers(
+                      players: _players.sublist(1, _players.length),
+                    ),
+                    FancyButton(
+                      color: Colors.orange,
+                      size: 40,
+                      child: Text('Return to Lobby'),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    )
+                  ],
+                ),
+              ),
+      ),
+    );
+  }
+}
+
+class ResultHeader extends StatelessWidget {
+  final String title;
+  final int duration;
+
+  const ResultHeader({Key key, this.title, this.duration}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16.0),
+      height: MediaQuery.of(context).size.height * 0.2,
+      color: Colors.orange,
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            child: ResultHeaderLogo(),
+          ),
+          Expanded(
+            flex: 2,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: <Widget>[
+                Text(
+                  title,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 10),
+                Text(
+                  '$duration min',
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                Text(
+                  'Hunt Time',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                )
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class ResultHeaderLogo extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      elevation: 4.0,
+      shape: const CircleBorder(
+        side: BorderSide(color: Colors.transparent),
+      ),
+      child: Container(
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: Colors.deepPurple[300],
+        ),
+        height: 120,
+        width: 120,
+        alignment: Alignment.center,
+        child: Icon(
+          Icons.local_florist,
+          color: Colors.white,
+          size: 60,
+        ),
+      ),
+    );
+  }
+}
+
+class ResultWinner extends StatelessWidget {
+  final Player winner;
+
+  const ResultWinner({Key key, this.winner}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.2,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              UserAvatar(
+                photoUrl: winner.user.photoUrl,
+                height: 100,
+              ),
+            ],
+          ),
+          SizedBox(width: 20),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text('WINNER'),
+              Text('${winner.user.displayName}'),
+              Text('${winner.score} point')
+            ],
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class ResultPlayers extends StatelessWidget {
+  final List<Player> players;
+
+  const ResultPlayers({Key key, this.players}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16.0),
+      height: MediaQuery.of(context).size.height * 0.2,
+      child: ListView.builder(
+        itemCount: players.length,
+        itemBuilder: (context, index) {
+          final player = players[index];
+
+          return ListTile(
+            leading: UserAvatar(
+              photoUrl: player.user.photoUrl,
+              height: 50,
+            ),
+            title: Text(player.user.displayName),
+            trailing: Text('${player.score} point'),
+          );
+        },
+      ),
+    );
+  }
+}

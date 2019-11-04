@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hive/hive.dart';
 import 'package:snaphunt/model/game.dart';
+import 'package:snaphunt/model/player.dart';
 import 'package:snaphunt/model/user.dart';
 import 'package:snaphunt/utils/utils.dart';
 
@@ -67,6 +68,10 @@ class Repository {
         .collection('players')
         .document(userId)
         .delete();
+  }
+
+  void endGame(String roomId) async {
+    await _db.document('games/$roomId').updateData({'status': 'end'});
   }
 
   void startGame(String roomId, {int numOfItems = 8}) async {
@@ -138,5 +143,23 @@ class Repository {
     return ref.updateData({
       'score': FieldValue.increment(increment),
     });
+  }
+
+  Future<List<Player>> getPlayers(String gameId) async {
+    List<Player> players = [];
+    final QuerySnapshot ref = await _db
+        .collection('games')
+        .document(gameId)
+        .collection('players')
+        .getDocuments();
+
+    for (var document in ref.documents) {
+      final DocumentSnapshot userRef =
+          await _db.collection('users').document(document.documentID).get();
+
+      players.add(Player.fromJson(document.data, userRef.data));
+    }
+
+    return players;
   }
 }

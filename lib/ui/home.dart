@@ -141,9 +141,9 @@ class UserAvatar extends StatelessWidget {
     return Column(
       children: <Widget>[
         Material(
-          elevation: 4.0,
+          elevation: 2.0,
           shape: const CircleBorder(
-            side: BorderSide(color: Colors.orange, width: 6.0),
+            side: BorderSide(color: Colors.orange, width: 3.0),
           ),
           color: Colors.black,
           clipBehavior: Clip.antiAlias,

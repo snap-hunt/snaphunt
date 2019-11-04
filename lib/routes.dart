@@ -6,6 +6,7 @@ import 'package:snaphunt/ui/login.dart';
 import 'package:snaphunt/ui/multiplayer/create_room.dart';
 import 'package:snaphunt/ui/multiplayer/lobby.dart';
 import 'package:snaphunt/ui/multiplayer/multiplayer.dart';
+import 'package:snaphunt/ui/multiplayer/multiplayer_result.dart';
 import 'package:snaphunt/ui/multiplayer/room.dart';
 import 'package:snaphunt/ui/singleplayer/single_result.dart';
 import 'package:snaphunt/ui/singleplayer/single_settings.dart';
@@ -20,6 +21,7 @@ class Router {
   static const String create = '/createRoom';
   static const String room = '/room';
   static const String game = '/game';
+  static const String resultMulti = '/multiplayerResult';
 
   static const String singlePlayerSettings = '/singleplayerSettings';
   static const String singlePlayer = '/singleplayer';
@@ -60,6 +62,16 @@ class Router {
             child: Room(),
           ),
         );
+
+      case resultMulti:
+        final args = settings.arguments as List;
+
+        return MaterialPageRoute(
+          builder: (_) => ResultMultiPlayer(
+            gameId: args[0],
+          ),
+        );
+
       case singlePlayerSettings:
         return MaterialPageRoute(builder: (_) => SinglePlayerSettings());
 

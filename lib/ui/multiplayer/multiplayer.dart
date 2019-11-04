@@ -30,6 +30,7 @@ class MultiPlayer extends StatelessWidget {
       ),
       child: HuntGame(
         title: game.name,
+        players: players,
       ),
     );
   }

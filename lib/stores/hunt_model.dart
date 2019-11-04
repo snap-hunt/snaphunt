@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:flutter/material.dart';
 import 'package:snaphunt/data/repository.dart';
@@ -27,7 +28,15 @@ class HuntModel with ChangeNotifier {
 
   final String userId;
 
-  final ImageLabeler _imageLabeler = FirebaseVision.instance.imageLabeler();
+  bool isGameEnd = false;
+
+  StreamSubscription<DocumentSnapshot> gameStream;
+
+  final ImageLabeler _imageLabeler = FirebaseVision.instance.imageLabeler(
+    ImageLabelerOptions(
+      confidenceThreshold: 0.65,
+    ),
+  );
 
   bool isTimeUp = false;
 
@@ -51,7 +60,9 @@ class HuntModel with ChangeNotifier {
   void dispose() {
     super.dispose();
 
-    if (isMultiplayer) {}
+    if (isMultiplayer) {
+      disposeMultiplayer();
+    }
   }
 
   void init() {
@@ -61,18 +72,28 @@ class HuntModel with ChangeNotifier {
     Timer(limit, () {
       isTimeUp = true;
 
+      if (isMultiplayer) {
+        repository.endGame(gameId);
+      }
       notifyListeners();
       duration.stop();
     });
   }
 
   void initMultiplayer() {
-    //get playerstream listener
+    gameStream = repository.gameSnapshot(gameId).listen(gameStatusListener);
   }
 
   void disposeMultiplayer() {
-    //dispose stream
-    //change status to done
+    gameStream.cancel();
+  }
+
+  void gameStatusListener(DocumentSnapshot snapshot) async {
+    final status = snapshot.data['status'];
+    if (status == 'end') {
+      isGameEnd = true;
+      notifyListeners();
+    }
   }
 
   void _scanImage(File image) async {
@@ -91,6 +112,10 @@ class HuntModel with ChangeNotifier {
         checkComplete().then((complete) {
           if (complete) {
             isHuntComplete = true;
+
+            if (isMultiplayer) {
+              repository.endGame(gameId);
+            }
           }
         });
       } else {

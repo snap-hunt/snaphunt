@@ -34,15 +34,20 @@ class PlayHuntModel with ChangeNotifier {
 
   void playerListener(QuerySnapshot snapshot) {
     snapshot.documentChanges.forEach((DocumentChange change) async {
-      print(change.type);
-      print(change.document.documentID);
+      if (DocumentChangeType.modified == change.type) {
+        int index = players.indexWhere(
+            (player) => player.user.uid == change.document.documentID);
 
-      // if (DocumentChangeType.added == change.type) {
-      //   players.add(
-      //       Player(user: await repository.getUser(change.document.documentID)));
-      // } else if (DocumentChangeType.removed == change.type) {}
-
-      // notifyListeners();
+        if (index != -1) {
+          players[index].score = change.document.data['score'];
+          sort();
+          notifyListeners();
+        }
+      }
     });
+  }
+
+  void sort() {
+    players.sort((a, b) => b.score.compareTo(a.score));
   }
 }

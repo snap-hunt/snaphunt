@@ -6,6 +6,7 @@ import 'package:snaphunt/model/player.dart';
 import 'package:snaphunt/routes.dart';
 import 'package:snaphunt/stores/hunt_model.dart';
 import 'package:snaphunt/stores/player_hunt_model.dart';
+import 'package:snaphunt/ui/home.dart';
 import 'package:snaphunt/utils/utils.dart';
 import 'package:snaphunt/widgets/common/camera.dart';
 import 'package:snaphunt/widgets/common/countdown.dart';
@@ -18,35 +19,86 @@ class HuntGame extends StatelessWidget {
   const HuntGame({Key key, this.title, this.players}) : super(key: key);
 
   void statusListener(HuntModel model, BuildContext context) {
-    if (model.isTimeUp) {
-      Navigator.of(context).pushReplacementNamed(
-        Router.resultSingle,
-        arguments: [
-          model.isHuntComplete,
-          model.objects,
-          model.duration.elapsed,
-        ],
-      );
-      showAlertDialog(
-        context: context,
-        title: 'Times up!',
-        body: 'Times up! Hunting stops now!',
-      );
-    } else if (model.isHuntComplete) {
-      Navigator.of(context).pushReplacementNamed(
-        Router.resultSingle,
-        arguments: [
-          model.isHuntComplete,
-          model.objects,
-          model.duration.elapsed,
-        ],
-      );
-      showAlertDialog(
-        context: context,
-        title: 'Congrats!',
-        body: 'All items found! You are a champion!',
-      );
+    if (model.isMultiplayer) {
+      if (model.isTimeUp) {
+        pushMultiPlayerResult(
+          model,
+          context,
+          title: 'Times up!',
+          body: 'Times up! Hunting stops now!',
+        );
+      } else if (model.isGameEnd && model.isHuntComplete) {
+        pushMultiPlayerResult(
+          model,
+          context,
+          title: 'Congrats!',
+          body: 'All items found! You are a champion!',
+        );
+      } else if (model.isGameEnd && !model.isHuntComplete) {
+        pushMultiPlayerResult(
+          model,
+          context,
+          title: 'Hunt Ended!',
+          body: 'Someone completed the hunt!',
+        );
+      }
+    } else {
+      if (model.isTimeUp) {
+        pushSinglePlayerResult(
+          model,
+          context,
+          title: 'Times up!',
+          body: 'Times up! Hunting stops now!',
+        );
+      } else if (model.isHuntComplete) {
+        pushSinglePlayerResult(
+          model,
+          context,
+          title: 'Congrats!',
+          body: 'All items found! You are a champion!',
+        );
+      }
     }
+  }
+
+  void pushSinglePlayerResult(
+    HuntModel model,
+    BuildContext context, {
+    String title,
+    String body,
+  }) {
+    Navigator.of(context).pushReplacementNamed(
+      Router.resultSingle,
+      arguments: [
+        model.isHuntComplete,
+        model.objects,
+        model.duration.elapsed,
+      ],
+    );
+
+    showAlertDialog(
+      context: context,
+      title: title,
+      body: body,
+    );
+  }
+
+  void pushMultiPlayerResult(
+    HuntModel model,
+    BuildContext context, {
+    String title,
+    String body,
+  }) {
+    Navigator.of(context).pushReplacementNamed(
+      Router.resultMulti,
+      arguments: [model.gameId],
+    );
+
+    showAlertDialog(
+      context: context,
+      title: title,
+      body: body,
+    );
   }
 
   @override
@@ -206,21 +258,71 @@ class PlayerUpdate extends StatelessWidget {
         builder: (context, model, child) {
           return Container(
             margin: const EdgeInsets.all(8.0),
-            height: 40,
+            height: 60,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: model.players.length,
               itemBuilder: (context, index) {
                 final player = model.players[index];
-
-                return Stack(
-                  children: <Widget>[],
+                return ScoreAvatar(
+                  photoUrl: player.user.photoUrl,
+                  score: player.score,
                 );
               },
             ),
           );
         },
       ),
+    );
+  }
+}
+
+class ScoreAvatar extends StatelessWidget {
+  final String photoUrl;
+  final int score;
+
+  const ScoreAvatar({Key key, this.photoUrl, this.score}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 4.0),
+      child: Stack(
+        children: <Widget>[
+          UserAvatar(
+            photoUrl: photoUrl,
+            height: 50,
+          ),
+          Positioned.fill(
+            child: Align(
+              alignment: Alignment.bottomRight,
+              child: AvatarScore(
+                score: score,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class AvatarScore extends StatelessWidget {
+  final int score;
+
+  const AvatarScore({Key key, this.score}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 20,
+      width: 20,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        shape: BoxShape.circle,
+      ),
+      alignment: Alignment.center,
+      padding: const EdgeInsets.all(2),
+      child: Text('$score'),
     );
   }
 }
