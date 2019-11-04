@@ -170,7 +170,6 @@ class CardTextField extends StatelessWidget {
               ),
               const VerticalDivider(
                 width: 10,
-                thickness: 1,
               ),
               Expanded(
                 flex: 5,

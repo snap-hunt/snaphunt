@@ -50,13 +50,17 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
 
+  # wave
+  wave: ^0.0.8
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
 flutter:
-
   uses-material-design: true
 
   assets:
     - assets/default.json
+    - assets/top.png
+    - assets/main.png
