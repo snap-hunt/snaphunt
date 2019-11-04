@@ -69,14 +69,12 @@ class Repository {
         .delete();
   }
 
-  Future<Game> startGame(String roomId, {int numOfItems = 8}) async {
+  void startGame(String roomId, {int numOfItems = 8}) async {
     await _db.document('games/$roomId').updateData({
       'status': 'in_game',
       'gameStartTime': Timestamp.now(),
       'words': generateWords(numOfItems)
     });
-
-    return null;
   }
 
   Future<String> getUserName(String uuid) async {
@@ -133,20 +131,6 @@ class Repository {
       box.put('words', doc.data['words']);
       box.put('version', doc.data['version']);
     }
-  }
-
-  Future<List<String>> getWordsFromGame(String gameId) async {
-    final DocumentSnapshot ref = await _db.document('games/$gameId').get();
-
-    return ref.data['words'].cast<String>();
-  }
-
-  Future<DateTime> getTimeLimit(String gameId, int durationInMinutes) async {
-    final DocumentSnapshot ref = await _db.document('games/$gameId').get();
-    final gameStartDate = DateTime.fromMillisecondsSinceEpoch(
-        (ref.data['gameStartTime'] as Timestamp).millisecondsSinceEpoch);
-
-    return gameStartDate.add(Duration(minutes: durationInMinutes));
   }
 
   Future updateUserScore(String gameId, String userId, int increment) async {

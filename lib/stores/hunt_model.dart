@@ -37,8 +37,6 @@ class HuntModel with ChangeNotifier {
 
   final repository = Repository.instance;
 
-  //multiplayer
-
   @override
   void addListener(listener) {
     super.addListener(listener);

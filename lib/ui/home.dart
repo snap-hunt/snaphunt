@@ -128,10 +128,12 @@ class UserInfo extends StatelessWidget {
 /// Displays the user's image
 class UserAvatar extends StatelessWidget {
   final String photoUrl;
+  final double height;
 
   const UserAvatar({
     Key key,
     this.photoUrl,
+    this.height = 96.0,
   }) : super(key: key);
 
   @override
@@ -146,8 +148,8 @@ class UserAvatar extends StatelessWidget {
           color: Colors.black,
           clipBehavior: Clip.antiAlias,
           child: SizedBox(
-            width: 96.0,
-            height: 96.0,
+            width: height,
+            height: height,
             child: photoUrl != null
                 ? Image.network(photoUrl)
                 : Icon(

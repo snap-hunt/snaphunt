@@ -41,11 +41,9 @@ class Router {
 
         return MaterialPageRoute(
           builder: (_) => MultiPlayer(
-            roomTitle: args[0],
-            huntOjects: args[1],
-            timeLimit: args[2],
-            gameId: args[3],
-            userId: args[4],
+            game: args[0],
+            userId: args[1],
+            players: args[2],
           ),
         );
 

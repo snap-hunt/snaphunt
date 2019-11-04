@@ -2,8 +2,10 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:snaphunt/model/hunt.dart';
+import 'package:snaphunt/model/player.dart';
 import 'package:snaphunt/routes.dart';
 import 'package:snaphunt/stores/hunt_model.dart';
+import 'package:snaphunt/stores/player_hunt_model.dart';
 import 'package:snaphunt/utils/utils.dart';
 import 'package:snaphunt/widgets/common/camera.dart';
 import 'package:snaphunt/widgets/common/countdown.dart';
@@ -11,8 +13,9 @@ import 'package:snaphunt/widgets/multiplayer/room_exit_dialog.dart';
 
 class HuntGame extends StatelessWidget {
   final String title;
+  final List<Player> players;
 
-  const HuntGame({Key key, this.title}) : super(key: key);
+  const HuntGame({Key key, this.title, this.players}) : super(key: key);
 
   void statusListener(HuntModel model, BuildContext context) {
     if (model.isTimeUp) {
@@ -88,6 +91,18 @@ class HuntGame extends StatelessWidget {
             WidgetsBinding.instance.addPostFrameCallback(
               (_) => statusListener(model, context),
             );
+
+            if (model.isMultiplayer) {
+              return Stack(
+                children: <Widget>[
+                  child,
+                  PlayerUpdate(
+                    gameId: model.gameId,
+                    players: players,
+                  ),
+                ],
+              );
+            }
             return child;
           },
           child: Container(
@@ -168,6 +183,43 @@ class WordTile extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class PlayerUpdate extends StatelessWidget {
+  final String gameId;
+
+  final List<Player> players;
+
+  const PlayerUpdate({Key key, this.gameId, this.players}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      builder: (_) => PlayHuntModel(
+        gameId: gameId,
+        players: players,
+      ),
+      child: Consumer<PlayHuntModel>(
+        builder: (context, model, child) {
+          return Container(
+            margin: const EdgeInsets.all(8.0),
+            height: 40,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: model.players.length,
+              itemBuilder: (context, index) {
+                final player = model.players[index];
+
+                return Stack(
+                  children: <Widget>[],
+                );
+              },
+            ),
+          );
+        },
       ),
     );
   }
