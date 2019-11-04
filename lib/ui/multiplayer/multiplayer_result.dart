@@ -1,4 +1,9 @@
+import 'dart:io';
+
+import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:flutter/material.dart';
+import 'package:screenshot/screenshot.dart';
+import 'package:snaphunt/constants/app_theme.dart';
 import 'package:snaphunt/data/repository.dart';
 import 'package:snaphunt/model/player.dart';
 import 'package:snaphunt/ui/home.dart';
@@ -16,6 +21,7 @@ class ResultMultiPlayer extends StatefulWidget {
 
 class _ResultMultiPlayerState extends State<ResultMultiPlayer> {
   List<Player> _players;
+  ScreenshotController screenshotController = ScreenshotController();
 
   @override
   void initState() {
@@ -35,40 +41,100 @@ class _ResultMultiPlayerState extends State<ResultMultiPlayer> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: _players == null
-            ? RoomLoading()
-            : Container(
-                width: double.infinity,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.max,
+        child: Container(
+          color: Colors.white,
+          child: _players == null
+              ? RoomLoading()
+              : Column(
                   children: <Widget>[
-                    ResultHeader(
-                      title: 'Snap Attack 19',
-                      duration: 10,
+                    Screenshot(
+                      controller: screenshotController,
+                      child: Container(
+                        color: Colors.white,
+                        width: double.infinity,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.max,
+                          children: <Widget>[
+                            ResultHeader(
+                              title: 'Snap Attack 19',
+                              duration: 10,
+                            ),
+                            ResultWinner(winner: _players.first),
+                            Divider(
+                              color: Colors.grey,
+                              thickness: 2,
+                              indent: 0,
+                              endIndent: 0,
+                            ),
+                            ResultPlayers(
+                              players: _players.sublist(1, _players.length),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
-                    ResultWinner(winner: _players.first),
-                    Divider(
-                      color: Colors.grey,
-                      thickness: 2,
-                      indent: 0,
-                      endIndent: 0,
-                    ),
-                    ResultPlayers(
-                      players: _players.sublist(1, _players.length),
-                    ),
+                    SizedBox(height: 40),
                     FancyButton(
                       color: Colors.orange,
                       size: 40,
-                      child: Text('Return to Lobby'),
+                      child: Container(
+                        width: 150,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.all(0),
+                              child: Icon(Icons.share, color: Colors.white),
+                            ),
+                            Text(
+                              'Share!',
+                              style: fancy_button_style,
+                            )
+                          ],
+                        ),
+                      ),
+                      onPressed: () async {
+                        screenshotController.capture().then((File image) async {
+                          await Share.file(
+                              'SnapHunt',
+                              'snaphunt.png',
+                              image.readAsBytesSync().buffer.asUint8List(),
+                              'image/png');
+                        }).catchError((onError) {
+                          print(onError);
+                        });
+                      },
+                    ),
+                    SizedBox(height: 20),
+                    FancyButton(
+                      color: Colors.deepOrange,
+                      size: 40,
+                      child: Container(
+                        width: 150,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.all(0),
+                              child:
+                                  Icon(Icons.arrow_back, color: Colors.white),
+                            ),
+                            Text(
+                              'Return to Lobby',
+                              style: fancy_button_style,
+                            )
+                          ],
+                        ),
+                      ),
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
-                    )
+                    ),
                   ],
                 ),
-              ),
+        ),
       ),
     );
   }
@@ -184,9 +250,30 @@ class ResultWinner extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Text('WINNER'),
-              Text('${winner.user.displayName}'),
-              Text('${winner.score} point')
+              Text(
+                'WINNER',
+                style: TextStyle(
+                  color: Colors.red,
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: 10),
+              Text(
+                '${winner.user.displayName}',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Text(
+                '${winner.score} point',
+                style: TextStyle(
+                  color: Colors.orange,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w300,
+                ),
+              )
             ],
           )
         ],
@@ -203,7 +290,7 @@ class ResultPlayers extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(16.0),
-      height: MediaQuery.of(context).size.height * 0.2,
+      height: MediaQuery.of(context).size.height * 0.25,
       child: ListView.builder(
         itemCount: players.length,
         itemBuilder: (context, index) {
@@ -214,8 +301,22 @@ class ResultPlayers extends StatelessWidget {
               photoUrl: player.user.photoUrl,
               height: 50,
             ),
-            title: Text(player.user.displayName),
-            trailing: Text('${player.score} point'),
+            title: Text(
+              player.user.displayName,
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 18,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+            trailing: Text(
+              '${player.score} point',
+              style: TextStyle(
+                color: Colors.orange,
+                fontSize: 16,
+                fontWeight: FontWeight.w300,
+              ),
+            ),
           );
         },
       ),
