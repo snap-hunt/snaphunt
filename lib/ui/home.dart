@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:snaphunt/routes.dart';
 import 'package:snaphunt/services/auth.dart';
-import 'package:snaphunt/widgets/fancy_button.dart';
-import 'package:snaphunt/widgets/singleplayer/ml_camera.dart';
+import 'package:snaphunt/services/connectivity.dart';
+import 'package:snaphunt/utils/utils.dart';
+import 'package:snaphunt/widgets/common/fancy_button.dart';
 
 class Home extends StatefulWidget {
   static Route<dynamic> route() {
@@ -24,6 +25,8 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
+    var connectionStatus = Provider.of<ConnectivityStatus>(context);
+
     return Scaffold(
       body: SafeArea(
         child: SizedBox.expand(
@@ -33,7 +36,7 @@ class _HomeState extends State<Home> {
             mainAxisSize: MainAxisSize.max,
             children: <Widget>[
               const SizedBox(height: 36.0),
-              const UserAvatar(),
+              const UserInfo(),
               const SizedBox(height: 16.0),
               FancyButton(
                 child: Text(
@@ -43,11 +46,7 @@ class _HomeState extends State<Home> {
                 size: 70,
                 color: Colors.orange,
                 onPressed: () {
-                  // Navigator.of(context).pushNamed(Router.singlePlayer);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => PictureScanner()),
-                  );
+                  Navigator.of(context).pushNamed(Router.singlePlayer);
                 },
               ),
               const SizedBox(height: 16.0),
@@ -57,10 +56,20 @@ class _HomeState extends State<Home> {
                   style: TextStyle(color: Colors.white),
                 ),
                 size: 70,
-                color: Colors.blue,
-                onPressed: () {
-                  Navigator.of(context).pushNamed(Router.lobby);
-                },
+                color: connectionStatus == ConnectivityStatus.Offline
+                    ? Colors.grey
+                    : Colors.blue,
+                onPressed: connectionStatus == ConnectivityStatus.Offline
+                    ? () {
+                        showAlertDialog(
+                          context: context,
+                          title: 'You are offline!',
+                          body: 'Internet connection is needed to play online',
+                        );
+                      }
+                    : () {
+                        Navigator.of(context).pushNamed(Router.lobby);
+                      },
               ),
               const SizedBox(height: 16.0),
               FancyButton(
@@ -83,29 +92,64 @@ class _HomeState extends State<Home> {
   }
 }
 
-/// Displays the user's image
-class UserAvatar extends StatelessWidget {
-  const UserAvatar({
+class UserInfo extends StatelessWidget {
+  const UserInfo({
     Key key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<FirebaseUser>(context, listen: false);
+
+    return Container(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.max,
+        children: <Widget>[
+          UserAvatar(
+            photoUrl: user.photoUrl,
+          ),
+          SizedBox(width: 15),
+          Text(
+            user.displayName,
+            style: TextStyle(
+              fontSize: 32,
+              fontWeight: FontWeight.w400,
+            ),
+            maxLines: 2,
+          )
+        ],
+      ),
+    );
+  }
+}
+
+/// Displays the user's image
+class UserAvatar extends StatelessWidget {
+  final String photoUrl;
+
+  const UserAvatar({
+    Key key,
+    this.photoUrl,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
         Material(
           elevation: 4.0,
           shape: const CircleBorder(
-            side: BorderSide(color: Colors.blue, width: 6.0),
+            side: BorderSide(color: Colors.orange, width: 6.0),
           ),
           color: Colors.black,
           clipBehavior: Clip.antiAlias,
           child: SizedBox(
             width: 96.0,
             height: 96.0,
-            child: user?.photoUrl != null
-                ? Image.network(user.photoUrl)
+            child: photoUrl != null
+                ? Image.network(photoUrl)
                 : Icon(
                     Icons.person,
                     color: Colors.white,
@@ -113,8 +157,6 @@ class UserAvatar extends StatelessWidget {
                   ),
           ),
         ),
-        SizedBox(height: 10),
-        Text(user.displayName)
       ],
     );
   }

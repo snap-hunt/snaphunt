@@ -5,9 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:snaphunt/constants/game_status_enum.dart';
 import 'package:snaphunt/data/repository.dart';
 import 'package:snaphunt/model/game.dart';
+import 'package:snaphunt/model/hunt.dart';
 import 'package:snaphunt/model/player.dart';
+import 'package:snaphunt/utils/utils.dart';
 
-class GameModel extends ChangeNotifier {
+class GameModel with ChangeNotifier {
   Game _game;
   Game get game => _game;
 
@@ -42,6 +44,10 @@ class GameModel extends ChangeNotifier {
   List<Player> get players => _players;
 
   final repository = Repository.instance;
+
+  List<Hunt> huntObjects;
+
+  DateTime timeLimit;
 
   GameModel(this._game, this._isHost, this._userId);
 
@@ -85,8 +91,10 @@ class GameModel extends ChangeNotifier {
       _status = GameStatus.cancelled;
       notifyListeners();
     } else if (status == 'in_game') {
-      _status = GameStatus.game;
-      notifyListeners();
+      initGameStart().then((_) {
+        _status = GameStatus.game;
+        notifyListeners();
+      });
     }
   }
 
@@ -126,20 +134,42 @@ class GameModel extends ChangeNotifier {
   }
 
   void onDispose() {
-    if (_isHost) {
-      repository.cancelRoom(_game.id);
-    } else {
-      repository.leaveRoom(_game.id, _userId);
+    if (!_isGameStart) {
+      if (_isHost) {
+        repository.cancelRoom(_game.id);
+      } else {
+        repository.leaveRoom(_game.id, _userId);
+      }
     }
 
     gameStream.cancel();
     playerStream.cancel();
   }
 
-  void onGameStart() {
-    if (_canStartGame) {
-      repository.startGame(_game.id);
-    }
+  void onGameStart() async {
+    // if (_canStartGame) { //TODO uncomment, for debug onli
+    _isGameStart = true;
+    repository.startGame(_game.id, numOfItems: _game.noOfItems);
+    // }
+  }
+
+  Future initGameStart() async {
+    await fetchHuntObjects();
+    await fetchTimeLimit();
+  }
+
+  Future fetchHuntObjects() async {
+    final List<String> list =
+        await Repository.instance.getWordsFromGame(_game.id);
+
+    huntObjects = generateHuntObjectsFromList(list);
+  }
+
+  Future fetchTimeLimit() async {
+    final dateTime =
+        await Repository.instance.getTimeLimit(_game.id, _game.timeLimit);
+
+    timeLimit = dateTime;
   }
 
   Future joinRoom() async {

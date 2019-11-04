@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:snaphunt/constants/app_theme.dart';
-import 'package:snaphunt/widgets/fancy_button.dart';
+import 'package:snaphunt/widgets/common/fancy_button.dart';
 
 class FancyAlertDialog extends StatelessWidget {
   final String title;
@@ -14,7 +14,7 @@ class FancyAlertDialog extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(18.0),
       ),
-      elevation: 0,
+      elevation: 5,
       title: Center(
         child: Text(title),
       ),

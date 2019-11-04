@@ -4,13 +4,17 @@ import 'package:provider/provider.dart';
 import 'package:snaphunt/data/repository.dart';
 import 'package:snaphunt/routes.dart';
 import 'package:snaphunt/services/auth.dart';
+import 'package:snaphunt/services/connectivity.dart';
 import 'package:snaphunt/ui/home.dart';
 import 'package:snaphunt/ui/login.dart';
-  
+import 'package:snaphunt/utils/utils.dart';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  runApp(App(auth: await Auth.create()));
+  openDB().then((_) async {
+    initDB();
+    runApp(App(auth: await Auth.create()));
+  });
 }
 
 class App extends StatefulWidget {
@@ -32,6 +36,7 @@ class _AppState extends State<App> {
   @override
   void initState() {
     super.initState();
+    Repository.instance.updateLocalWords();
     currentUser = widget.auth.init(_onUserChanged);
   }
 
@@ -62,13 +67,14 @@ class _AppState extends State<App> {
         Provider<Auth>.value(value: widget.auth),
         ValueListenableProvider<FirebaseUser>.value(
             value: widget.auth.currentUser),
+        StreamProvider<ConnectivityStatus>.controller(
+          builder: (context) =>
+              ConnectivityService().connectionStatusController,
+        )
       ],
       child: MaterialApp(
         title: 'SnapHunt',
-        theme: ThemeData(
-          primaryColor: Colors.orange,
-          textTheme: TextTheme()
-        ),
+        theme: ThemeData(primaryColor: Colors.orange, textTheme: TextTheme()),
         navigatorKey: _navigatorKey,
         onGenerateRoute: Router.generateRoute,
         home: currentUser == null ? const Login() : const Home(),

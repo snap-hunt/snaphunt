@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:snaphunt/data/repository.dart';
 import 'package:snaphunt/model/game.dart';
 import 'package:snaphunt/routes.dart';
+import 'package:snaphunt/utils/utils.dart';
 import 'package:snaphunt/widgets/multiplayer/join_room_dialog.dart';
 import 'package:snaphunt/widgets/multiplayer/lobby_buttons.dart';
 
@@ -38,10 +39,28 @@ class Lobby extends StatelessWidget {
                   if (roomCode != null && roomCode.isNotEmpty) {
                     final game =
                         await Repository.instance.retrieveGame(roomCode);
-                    final user =
-                        Provider.of<FirebaseUser>(context, listen: false);
-                    Navigator.of(context).pushNamed(Router.room,
-                        arguments: [game, false, user.uid]);
+
+                    if (game == null) {
+                      showAlertDialog(
+                        context: context,
+                        title: 'Invalid Code',
+                        body: 'Invalid code. Game does not exist!',
+                      );
+                    } else {
+                      if (game.status != 'waiting') {
+                        showAlertDialog(
+                          context: context,
+                          title: 'Game not available!',
+                          body: 'Game has already started or ended!',
+                        );
+                      } else {
+                        final user =
+                            Provider.of<FirebaseUser>(context, listen: false);
+
+                        Navigator.of(context).pushNamed(Router.room,
+                            arguments: [game, false, user.uid]);
+                      }
+                    }
                   }
                 },
               ),
@@ -73,7 +92,9 @@ class LobbyList extends StatelessWidget {
 
           if (snapshot.data.documents.isEmpty) {
             return Container(
-              child: Text('empty'),
+              child: Center(
+                child: Text('empty'),
+              ),
             );
           }
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:snaphunt/constants/app_theme.dart';
-import 'package:snaphunt/widgets/fancy_button.dart';
+import 'package:snaphunt/widgets/common/fancy_button.dart';
 
 class HostStartButton extends StatelessWidget {
   final bool canStartGame;

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:snaphunt/constants/app_theme.dart';
-import 'package:snaphunt/widgets/fancy_button.dart';
+import 'package:snaphunt/widgets/common/fancy_button.dart';
 
 import 'package:flutter/services.dart';
 
@@ -28,7 +28,7 @@ class JoinRoom extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(18.0),
       ),
-      elevation: 0,
+      elevation: 5,
       title: Center(child: Text('Enter Room Code')),
       content: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -118,7 +118,7 @@ class DialogCardTextField extends StatelessWidget {
         horizontal: 8.0,
         vertical: 2.0,
       ),
-      height: 55,
+      height: 65,
       child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8.0),
@@ -133,9 +133,9 @@ class DialogCardTextField extends StatelessWidget {
             textBaseline: TextBaseline.alphabetic,
             children: <Widget>[
               Expanded(
-                flex: 5,
                 child: Container(
                   child: TextField(
+                    textAlign: TextAlign.center,
                     controller: controller,
                     keyboardType: TextInputType.text,
                     maxLines: 1,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:snaphunt/services/auth.dart';
-import 'package:snaphunt/widgets/fancy_button.dart';
+import 'package:snaphunt/widgets/common/fancy_button.dart';
 
 class Login extends StatefulWidget {
   static Route<dynamic> route() {

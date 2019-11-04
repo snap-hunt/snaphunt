@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:hive/hive.dart';
 import 'package:snaphunt/model/game.dart';
 import 'package:snaphunt/model/user.dart';
+import 'package:snaphunt/utils/utils.dart';
 
 class Repository {
   static final Repository _singleton = Repository._();
@@ -22,7 +24,6 @@ class Repository {
       'email': user.email,
       'photoURL': user.photoUrl,
       'displayName': user.displayName,
-      'lastSeen': DateTime.now()
     }, merge: true);
   }
 
@@ -33,13 +34,19 @@ class Repository {
   }
 
   Future<Game> retrieveGame(String roomId) async {
-    final DocumentSnapshot ref = await _db.document('games/$roomId').get();
+    Game game;
 
-    if (ref.data != null) {
-      return Game.fromJson(ref.data)..id = ref.documentID;
+    try {
+      final DocumentSnapshot ref = await _db.document('games/$roomId').get();
+
+      if (ref.data != null) {
+        game = Game.fromJson(ref.data)..id = ref.documentID;
+      }
+    } catch (e) {
+      print(e);
     }
 
-    return null;
+    return game;
   }
 
   Future joinRoom(String roomId, String userId) async {
@@ -62,8 +69,14 @@ class Repository {
         .delete();
   }
 
-  void startGame(String roomId) async {
-    await _db.document('games/$roomId').updateData({'status': 'in_game'});
+  Future<Game> startGame(String roomId, {int numOfItems = 8}) async {
+    await _db.document('games/$roomId').updateData({
+      'status': 'in_game',
+      'gameStartTime': Timestamp.now(),
+      'words': generateWords(numOfItems)
+    });
+
+    return null;
   }
 
   Future<String> getUserName(String uuid) async {
@@ -78,8 +91,8 @@ class Repository {
     return User.fromJson(ref.data);
   }
 
-  Stream<DocumentSnapshot> gameSnapshot(String gameId) {
-    return _db.collection('games').document(gameId).snapshots();
+  Stream<DocumentSnapshot> gameSnapshot(String roomId) {
+    return _db.collection('games').document(roomId).snapshots();
   }
 
   Stream<QuerySnapshot> playersSnapshot(String gameId) {
@@ -106,5 +119,33 @@ class Repository {
         .collection('players')
         .getDocuments();
     return players.documents.length;
+  }
+
+  void updateLocalWords() async {
+    final box = Hive.box('words');
+
+    final DocumentSnapshot doc = await _db.document('words/words').get();
+
+    final localVersion = box.get('version');
+    final onlineVersion = doc.data['version'];
+
+    if (localVersion != onlineVersion) {
+      box.put('words', doc.data['words']);
+      box.put('version', doc.data['version']);
+    }
+  }
+
+  Future<List<String>> getWordsFromGame(String gameId) async {
+    final DocumentSnapshot ref = await _db.document('games/$gameId').get();
+
+    return ref.data['words'].cast<String>();
+  }
+
+  Future<DateTime> getTimeLimit(String gameId, int durationInMinutes) async {
+    final DocumentSnapshot ref = await _db.document('games/$gameId').get();
+    final gameStartDate = DateTime.fromMillisecondsSinceEpoch(
+        (ref.data['gameStartTime'] as Timestamp).millisecondsSinceEpoch);
+
+    return gameStartDate.add(Duration(minutes: durationInMinutes));
   }
 }
