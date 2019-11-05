@@ -46,6 +46,8 @@ class HuntModel with ChangeNotifier {
 
   final repository = Repository.instance;
 
+  Timer timer;
+
   @override
   void addListener(listener) {
     super.addListener(listener);
@@ -60,6 +62,8 @@ class HuntModel with ChangeNotifier {
   void dispose() {
     super.dispose();
 
+    timer?.cancel();
+
     if (isMultiplayer) {
       disposeMultiplayer();
     }
@@ -69,7 +73,7 @@ class HuntModel with ChangeNotifier {
     final limit =
         Duration(seconds: timeLimit.difference(DateTime.now()).inSeconds);
     duration.start();
-    Timer(limit, () {
+    timer = Timer(limit, () {
       isTimeUp = true;
 
       if (isMultiplayer) {

@@ -140,9 +140,9 @@ class Repository {
 
   Future updateUserScore(String gameId, String userId, int increment) async {
     final DocumentReference ref = _db.document('games/$gameId/players/$userId');
-    return ref.updateData({
+    return ref.setData({
       'score': FieldValue.increment(increment),
-    });
+    }, merge: true);
   }
 
   Future<List<Player>> getPlayers(String gameId) async {

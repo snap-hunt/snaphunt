@@ -122,7 +122,7 @@ class GameModel with ChangeNotifier {
   }
 
   void onDispose() {
-    if (!_isGameStart) {
+    if (GameStatus.game != _status) {
       if (_isHost) {
         repository.cancelRoom(_game.id);
       } else {
