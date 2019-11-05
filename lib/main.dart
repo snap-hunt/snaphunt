@@ -79,7 +79,11 @@ class _AppState extends State<App> {
       ],
       child: MaterialApp(
         title: 'SnapHunt',
-        theme: ThemeData(primaryColor: Colors.orange, textTheme: TextTheme()),
+        theme: ThemeData(
+          primaryColor: Colors.orange,
+          textTheme: TextTheme(),
+          fontFamily: 'SF_Atarian_System',
+        ),
         navigatorKey: _navigatorKey,
         onGenerateRoute: Router.generateRoute,
         home: currentUser == null ? const Login() : const Home(),

@@ -72,3 +72,10 @@ flutter:
     - assets/default.json
     - assets/top.png
     - assets/main.png
+  
+  fonts:
+  - family: SF_Atarian_System
+    fonts:
+    - asset: assets/fonts/SF_Atarian_System.ttf
+    - asset: assets/fonts/SF_Atarian_System_Bold.ttf
+      weight: 700
