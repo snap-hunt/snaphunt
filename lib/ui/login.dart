@@ -59,8 +59,6 @@ class _LoginState extends State<Login> {
     });
   }
 
-  void _onHowToPlayPressed() {}
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -95,14 +93,13 @@ class _LoginState extends State<Login> {
                         margin: const EdgeInsets.only(top: 18.0),
                         child: LoginFancyButton(
                           text: 'How to Play',
-                          color: Colors.grey,
-                          onPressed: _onHowToPlayPressed,
+                          color: Colors.grey
                         ),
                       ),
                       if (snapshot.hasError)
                         Container(
                           width: double.infinity,
-                          margin: const EdgeInsets.symmetric(vertical: 36.0),
+                          margin: const EdgeInsets.symmetric(vertical: 16.0),
                           padding: const EdgeInsets.all(12.0),
                           decoration: BoxDecoration(
                             border:
@@ -128,11 +125,14 @@ class _LoginState extends State<Login> {
             Container(
                 alignment: Alignment.bottomCenter,
                 child: Column(children: <Widget>[
-                  Text("Flutter PH Hackathon Entry",
+                  Container(
+                    margin: EdgeInsets.only(bottom: 12),
+                    child: Text("Flutter PH Hackathon Entry",
                       style: TextStyle(
                           color: Colors.grey,
                           fontSize: 16,
                           fontWeight: FontWeight.bold)),
+                  ),
                   CustomWaveWidget(),
                 ])),
           ],
