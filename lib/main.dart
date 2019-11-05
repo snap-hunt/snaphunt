@@ -1,3 +1,4 @@
+import 'package:camera/camera.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -9,8 +10,12 @@ import 'package:snaphunt/ui/home.dart';
 import 'package:snaphunt/ui/login.dart';
 import 'package:snaphunt/utils/utils.dart';
 
+List<CameraDescription> cameras;
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  cameras = await availableCameras();
   openDB().then((_) async {
     initDB();
     runApp(App(auth: await Auth.create()));
@@ -74,7 +79,11 @@ class _AppState extends State<App> {
       ],
       child: MaterialApp(
         title: 'SnapHunt',
-        theme: ThemeData(primaryColor: Colors.orange, textTheme: TextTheme()),
+        theme: ThemeData(
+          primaryColor: Colors.orange,
+          textTheme: TextTheme(),
+          fontFamily: 'SF_Atarian_System',
+        ),
         navigatorKey: _navigatorKey,
         onGenerateRoute: Router.generateRoute,
         home: currentUser == null ? const Login() : const Home(),

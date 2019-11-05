@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:snaphunt/main.dart';
 import 'package:snaphunt/stores/hunt_model.dart';
 
 class CameraScreen extends StatefulWidget {
@@ -12,86 +13,162 @@ class CameraScreen extends StatefulWidget {
   _CameraScreenState createState() => _CameraScreenState();
 }
 
-class _CameraScreenState extends State<CameraScreen> {
-  CameraController _controller;
+class _CameraScreenState extends State<CameraScreen>
+    with WidgetsBindingObserver {
+  CameraController controller;
+  String imagePath;
+  int selectedCameraIdx = 0;
 
-  Future _initCameraController(CameraDescription cameraDescription) async {
-    if (_controller != null) {
-      await _controller.dispose();
+  @override
+  void initState() {
+    super.initState();
+    onNewCameraSelected(cameras[selectedCameraIdx]);
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (controller == null || !controller.value.isInitialized) {
+      return;
+    }
+    if (state == AppLifecycleState.inactive) {
+      controller?.dispose();
+    } else if (state == AppLifecycleState.resumed) {
+      if (controller != null) {
+        onNewCameraSelected(cameras[selectedCameraIdx]);
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Stack(
+        children: <Widget>[
+          Container(
+            width: double.infinity,
+            height: double.infinity,
+            child: controller != null || controller.value.isInitialized
+                ? AspectRatio(
+                    aspectRatio: controller.value.aspectRatio,
+                    child: CameraPreview(controller),
+                  )
+                : Center(child: CircularProgressIndicator()),
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: CameraRow(
+              controller: controller,
+              onCameraSwitch: _onSwitchCamera,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _onSwitchCamera() {
+    selectedCameraIdx =
+        selectedCameraIdx < cameras.length - 1 ? selectedCameraIdx + 1 : 0;
+    onNewCameraSelected(cameras[selectedCameraIdx]);
+  }
+
+  void onNewCameraSelected(CameraDescription cameraDescription) async {
+    if (controller != null) {
+      await controller.dispose();
     }
 
-    _controller = CameraController(cameraDescription, ResolutionPreset.high);
+    controller = CameraController(
+      cameraDescription,
+      ResolutionPreset.high,
+    );
 
-    _controller.addListener(() {
-      if (mounted) {
-        setState(() {});
-      }
-
-      if (_controller.value.hasError) {
-        print('Camera error ${_controller.value.errorDescription}');
-      }
+    controller.addListener(() {
+      if (mounted) setState(() {});
     });
 
     try {
-      await _controller.initialize();
+      await controller.initialize();
     } on CameraException catch (e) {
-      _showCameraException(e);
+      print(e.description);
     }
 
     if (mounted) {
       setState(() {});
     }
   }
-
-  @override
-  void initState() {
-    super.initState();
-    availableCameras().then((availableCameras) {
-      if (availableCameras.isNotEmpty) {
-        _initCameraController(availableCameras.first);
-      } else {
-        print("No camera available");
-      }
-    }).catchError((err) {
-      print('Error: $err.code\nError Message: $err.message');
-    });
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (_controller == null || !_controller.value.isInitialized) {
-      return const Center(child: CircularProgressIndicator());
-    }
-
-    return Stack(
-      children: <Widget>[
-        CameraPreview(_controller),
-        Align(
-          alignment: Alignment.bottomCenter,
-          child: CameraRow(controller: _controller),
-        )
-      ],
-    );
-  }
-
-  void _showCameraException(CameraException e) {
-    String errorText = 'Error: ${e.code}\nError Message: ${e.description}';
-    print(errorText);
-
-    print('Error: ${e.code}\n${e.description}');
-  }
 }
 
 class CameraRow extends StatelessWidget {
   final CameraController controller;
+  final Function onCameraSwitch;
 
   const CameraRow({
+    Key key,
+    this.controller,
+    this.onCameraSwitch,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.black.withOpacity(0.4),
+      height: 100,
+      child: Stack(
+        children: <Widget>[
+          Align(
+            alignment: Alignment.center,
+            child: CameraButton(controller: controller),
+          ),
+          Positioned(
+            child: CameraSwapButton(
+              onPressed: onCameraSwitch,
+            ),
+            height: 100,
+            left: MediaQuery.of(context).size.width * 0.75,
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class CameraSwapButton extends StatelessWidget {
+  final Function onPressed;
+
+  const CameraSwapButton({Key key, this.onPressed}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(
+          width: 1,
+          color: Colors.white,
+        ),
+      ),
+      child: IconButton(
+        icon: Icon(
+          Icons.switch_camera,
+          color: Colors.white,
+        ),
+        onPressed: onPressed,
+      ),
+    );
+  }
+}
+
+class CameraButton extends StatelessWidget {
+  final CameraController controller;
+
+  const CameraButton({
     Key key,
     this.controller,
   }) : super(key: key);
@@ -116,42 +193,23 @@ class CameraRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final model = Provider.of<HuntModel>(context, listen: false);
-
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      color: Colors.black.withOpacity(0.4),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          InkWell(
-            onTap: () async {
-              model.onCameraPressed(await onCapturePressed());
-            },
-            child: const CameraButton(),
-          )
-        ],
-      ),
-    );
-  }
-}
-
-class CameraButton extends StatelessWidget {
-  const CameraButton({
-    Key key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(6),
-      height: 60,
-      width: 60,
-      decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+    return InkWell(
+      onTap: () async {
+        model.onCameraPressed(await onCapturePressed());
+      },
       child: Container(
+        padding: const EdgeInsets.all(6),
+        height: 70,
+        width: 70,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: Colors.grey,
+          color: Colors.deepOrange,
+        ),
+        child: Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: Colors.white,
+          ),
         ),
       ),
     );

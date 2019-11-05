@@ -27,10 +27,9 @@ class Room extends StatelessWidget {
       Navigator.of(context).pushReplacementNamed(
         Router.game,
         arguments: [
-          model.game.name,
-          model.huntObjects,
-          model.timeLimit,
-          model.game.id
+          model.game,
+          model.userId,
+          model.players,
         ],
       );
     }

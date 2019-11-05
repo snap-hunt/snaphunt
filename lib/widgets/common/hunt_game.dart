@@ -1,9 +1,14 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:snaphunt/constants/app_theme.dart';
 import 'package:snaphunt/model/hunt.dart';
+import 'package:snaphunt/model/player.dart';
 import 'package:snaphunt/routes.dart';
 import 'package:snaphunt/stores/hunt_model.dart';
+import 'package:snaphunt/stores/player_hunt_model.dart';
+import 'package:snaphunt/ui/home.dart';
 import 'package:snaphunt/utils/utils.dart';
 import 'package:snaphunt/widgets/common/camera.dart';
 import 'package:snaphunt/widgets/common/countdown.dart';
@@ -11,39 +16,91 @@ import 'package:snaphunt/widgets/multiplayer/room_exit_dialog.dart';
 
 class HuntGame extends StatelessWidget {
   final String title;
+  final List<Player> players;
 
-  const HuntGame({Key key, this.title}) : super(key: key);
+  const HuntGame({Key key, this.title, this.players}) : super(key: key);
 
   void statusListener(HuntModel model, BuildContext context) {
-    if (model.isTimeUp) {
-      Navigator.of(context).pushReplacementNamed(
-        Router.resultSingle,
-        arguments: [
-          model.isHuntComplete,
-          model.objects,
-          model.duration.elapsed,
-        ],
-      );
-      showAlertDialog(
-        context: context,
-        title: 'Times up!',
-        body: 'Times up! Hunting stops now!',
-      );
-    } else if (model.isHuntComplete) {
-      Navigator.of(context).pushReplacementNamed(
-        Router.resultSingle,
-        arguments: [
-          model.isHuntComplete,
-          model.objects,
-          model.duration.elapsed,
-        ],
-      );
-      showAlertDialog(
-        context: context,
-        title: 'Congrats!',
-        body: 'All items found! You are a champion!',
-      );
+    if (model.isMultiplayer) {
+      if (model.isTimeUp) {
+        pushMultiPlayerResult(
+          model,
+          context,
+          title: 'Times up!',
+          body: 'Times up! Hunting stops now!',
+        );
+      } else if (model.isGameEnd && model.isHuntComplete) {
+        pushMultiPlayerResult(
+          model,
+          context,
+          title: 'Congrats!',
+          body: 'All items found! You are a champion!',
+        );
+      } else if (model.isGameEnd && !model.isHuntComplete) {
+        pushMultiPlayerResult(
+          model,
+          context,
+          title: 'Hunt Ended!',
+          body: 'Someone completed the hunt!',
+        );
+      }
+    } else {
+      if (model.isTimeUp) {
+        pushSinglePlayerResult(
+          model,
+          context,
+          title: 'Times up!',
+          body: 'Times up! Hunting stops now!',
+        );
+      } else if (model.isHuntComplete) {
+        pushSinglePlayerResult(
+          model,
+          context,
+          title: 'Congrats!',
+          body: 'All items found! You are a champion!',
+        );
+      }
     }
+  }
+
+  void pushSinglePlayerResult(
+    HuntModel model,
+    BuildContext context, {
+    String title,
+    String body,
+  }) {
+    Navigator.of(context).pushReplacementNamed(
+      Router.resultSingle,
+      arguments: [
+        model.isHuntComplete,
+        model.objects,
+        model.duration.elapsed,
+      ],
+    );
+
+    showAlertDialog(
+      context: context,
+      title: title,
+      body: body,
+    );
+  }
+
+  void pushMultiPlayerResult(
+    HuntModel model,
+    BuildContext context, {
+    String title,
+    String body,
+  }) {
+    Navigator.of(context).pushReplacementNamed(
+      Router.resultMulti,
+      arguments: [model.gameId],
+    );
+
+    showAlertDialog(
+      context: context,
+      title: title,
+      body: body,
+    );
   }
 
   @override
@@ -65,41 +122,122 @@ class HuntGame extends StatelessWidget {
         return roomCode;
       },
       child: Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          elevation: 0,
-          title: Text(
+        body: Consumer<HuntModel>(
+          builder: (context, model, child) {
+            WidgetsBinding.instance.addPostFrameCallback(
+              (_) => statusListener(model, context),
+            );
+
+            return Stack(
+              children: <Widget>[
+                child,
+                HeaderRow(
+                  title: title,
+                  timeLimit: model.timeLimit,
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top: 90),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      if (model.isMultiplayer)
+                        PlayerUpdate(
+                          gameId: model.gameId,
+                          players: players,
+                        ),
+                      ExpandedWordList(
+                        objectsFound: model.objectsFound,
+                        totalObjects: model.objects.length,
+                        hunt: model.nextNotFound,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            );
+          },
+          child: CameraScreen(),
+        ),
+      ),
+    );
+  }
+}
+
+class HeaderRow extends StatelessWidget {
+  final String title;
+  final DateTime timeLimit;
+
+  const HeaderRow({Key key, this.title, this.timeLimit}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 75,
+      padding: EdgeInsets.only(
+        top: MediaQuery.of(context).padding.top + 8.0,
+        left: 24.0,
+        right: 24.0,
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Text(
             title,
             style: TextStyle(
               color: Colors.white,
               fontSize: 24,
             ),
           ),
-          actions: <Widget>[
-            Consumer<HuntModel>(
-              builder: (widget, model, child) {
-                return CountDownTimer(timeLimit: model.timeLimit);
-              },
-            )
-          ],
-        ),
-        body: Consumer<HuntModel>(
-          builder: (context, model, child) {
-            WidgetsBinding.instance.addPostFrameCallback(
-              (_) => statusListener(model, context),
-            );
-            return child;
-          },
-          child: Container(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                WordList(),
-                Expanded(child: CameraScreen()),
-              ],
-            ),
+          CountDownTimer(timeLimit: timeLimit)
+        ],
+      ),
+    );
+  }
+}
+
+class ExpandedWordList extends StatelessWidget {
+  final int objectsFound;
+
+  final int totalObjects;
+
+  final Hunt hunt;
+
+  const ExpandedWordList({
+    Key key,
+    this.objectsFound,
+    this.totalObjects,
+    this.hunt,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      // margin: const EdgeInsets.only(top: 2.0),
+      child: ExpandablePanel(
+        collapsed: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(
+                'Items ($objectsFound/$totalObjects)',
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.white,
+                ),
+              ),
+              WordTile(word: hunt)
+            ],
           ),
         ),
+        expanded: WordList(),
+        headerAlignment: ExpandablePanelHeaderAlignment.center,
+        tapBodyToCollapse: true,
+        tapHeaderToExpand: true,
+        hasIcon: true,
+        iconColor: Colors.white,
       ),
     );
   }
@@ -114,9 +252,9 @@ class WordList extends StatelessWidget {
       builder: (context, model, child) {
         return Container(
           width: double.infinity,
-          color: Colors.grey[800],
-          constraints: BoxConstraints(maxHeight: size.height * 0.2),
-          padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 8),
+          color: Colors.transparent,
+          constraints: BoxConstraints(maxHeight: size.height * 0.4),
+          padding: const EdgeInsets.only(left: 16.0),
           child: ListView(
             shrinkWrap: true,
             children: [
@@ -169,6 +307,100 @@ class WordTile extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class PlayerUpdate extends StatelessWidget {
+  final String gameId;
+
+  final List<Player> players;
+
+  const PlayerUpdate({Key key, this.gameId, this.players}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      builder: (_) => PlayHuntModel(
+        gameId: gameId,
+        players: players,
+      ),
+      child: Consumer<PlayHuntModel>(
+        builder: (context, model, child) {
+          return Container(
+            margin: const EdgeInsets.all(8),
+            height: 60,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: model.players.length,
+              itemBuilder: (context, index) {
+                final player = model.players[index];
+                return ScoreAvatar(
+                  photoUrl: player.user.photoUrl,
+                  score: player.score,
+                  userBorderColor: user_colors[index],
+                );
+              },
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class ScoreAvatar extends StatelessWidget {
+  final String photoUrl;
+  final int score;
+  final Color userBorderColor;
+
+  const ScoreAvatar({Key key, this.photoUrl, this.score, this.userBorderColor})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          UserAvatar(
+            borderColor: userBorderColor,
+            photoUrl: photoUrl,
+            height: 50,
+          ),
+          SizedBox(width: 10),
+          Text(
+            '$score',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class AvatarScore extends StatelessWidget {
+  final int score;
+
+  const AvatarScore({Key key, this.score}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 20,
+      width: 20,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        shape: BoxShape.circle,
+      ),
+      alignment: Alignment.center,
+      padding: const EdgeInsets.all(2),
+      child: Text('$score'),
     );
   }
 }

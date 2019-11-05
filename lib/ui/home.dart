@@ -46,7 +46,7 @@ class _HomeState extends State<Home> {
                 size: 70,
                 color: Colors.orange,
                 onPressed: () {
-                  Navigator.of(context).pushNamed(Router.singlePlayer);
+                  Navigator.of(context).pushNamed(Router.singlePlayerSettings);
                 },
               ),
               const SizedBox(height: 16.0),
@@ -128,10 +128,14 @@ class UserInfo extends StatelessWidget {
 /// Displays the user's image
 class UserAvatar extends StatelessWidget {
   final String photoUrl;
+  final double height;
+  final Color borderColor;
 
   const UserAvatar({
     Key key,
     this.photoUrl,
+    this.height = 96.0,
+    this.borderColor = Colors.orange,
   }) : super(key: key);
 
   @override
@@ -139,15 +143,15 @@ class UserAvatar extends StatelessWidget {
     return Column(
       children: <Widget>[
         Material(
-          elevation: 4.0,
-          shape: const CircleBorder(
-            side: BorderSide(color: Colors.orange, width: 6.0),
+          elevation: 2.0,
+          shape: CircleBorder(
+            side: BorderSide(color: borderColor, width: 3.0),
           ),
           color: Colors.black,
           clipBehavior: Clip.antiAlias,
           child: SizedBox(
-            width: 96.0,
-            height: 96.0,
+            width: height,
+            height: height,
             child: photoUrl != null
                 ? Image.network(photoUrl)
                 : Icon(

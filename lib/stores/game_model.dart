@@ -5,9 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:snaphunt/constants/game_status_enum.dart';
 import 'package:snaphunt/data/repository.dart';
 import 'package:snaphunt/model/game.dart';
-import 'package:snaphunt/model/hunt.dart';
 import 'package:snaphunt/model/player.dart';
-import 'package:snaphunt/utils/utils.dart';
 
 class GameModel with ChangeNotifier {
   Game _game;
@@ -25,12 +23,6 @@ class GameModel with ChangeNotifier {
   GameStatus _status = GameStatus.waiting;
   GameStatus get status => _status;
 
-  bool _isCancelled = false;
-  bool get isCancelled => _isCancelled;
-
-  bool _isKicked = false;
-  bool get isKicked => _isKicked;
-
   bool _isGameStart = false;
   bool get isGameStart => _isGameStart;
 
@@ -44,10 +36,6 @@ class GameModel with ChangeNotifier {
   List<Player> get players => _players;
 
   final repository = Repository.instance;
-
-  List<Hunt> huntObjects;
-
-  DateTime timeLimit;
 
   GameModel(this._game, this._isHost, this._userId);
 
@@ -85,16 +73,16 @@ class GameModel with ChangeNotifier {
     playerStream = repository.playersSnapshot(_game.id).listen(playerListener);
   }
 
-  void gameStatusListener(DocumentSnapshot snapshot) {
+  void gameStatusListener(DocumentSnapshot snapshot) async {
     final status = snapshot.data['status'];
     if (status == 'cancelled') {
       _status = GameStatus.cancelled;
       notifyListeners();
     } else if (status == 'in_game') {
-      initGameStart().then((_) {
-        _status = GameStatus.game;
-        notifyListeners();
-      });
+      _status = GameStatus.game;
+      _game = Game.fromJson(snapshot.data);
+      _game.id = snapshot.documentID;
+      notifyListeners();
     }
   }
 
@@ -134,7 +122,7 @@ class GameModel with ChangeNotifier {
   }
 
   void onDispose() {
-    if (!_isGameStart) {
+    if (GameStatus.game != _status) {
       if (_isHost) {
         repository.cancelRoom(_game.id);
       } else {
@@ -146,30 +134,12 @@ class GameModel with ChangeNotifier {
     playerStream.cancel();
   }
 
-  void onGameStart() async {
+  void onGameStart() {
     // if (_canStartGame) { //TODO uncomment, for debug onli
     _isGameStart = true;
     repository.startGame(_game.id, numOfItems: _game.noOfItems);
+
     // }
-  }
-
-  Future initGameStart() async {
-    await fetchHuntObjects();
-    await fetchTimeLimit();
-  }
-
-  Future fetchHuntObjects() async {
-    final List<String> list =
-        await Repository.instance.getWordsFromGame(_game.id);
-
-    huntObjects = generateHuntObjectsFromList(list);
-  }
-
-  Future fetchTimeLimit() async {
-    final dateTime =
-        await Repository.instance.getTimeLimit(_game.id, _game.timeLimit);
-
-    timeLimit = dateTime;
   }
 
   Future joinRoom() async {

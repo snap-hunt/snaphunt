@@ -5,5 +5,19 @@ class Player {
   int score;
   String status;
 
-  Player({this.user, this.score, this.status});
+  Player({this.user, this.score = 0, this.status = 'active'});
+
+  Player.fromJson(Map<String, dynamic> json, Map<String, dynamic> userJson) {
+    user = User.fromJson(userJson);
+    score = json['score'];
+    status = json['status'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['user'] = this.user.toJson();
+    data['score'] = this.score;
+    data['status'] = this.status;
+    return data;
+  }
 }

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hive/hive.dart';
 import 'package:snaphunt/model/game.dart';
+import 'package:snaphunt/model/player.dart';
 import 'package:snaphunt/model/user.dart';
 import 'package:snaphunt/utils/utils.dart';
 
@@ -69,14 +70,16 @@ class Repository {
         .delete();
   }
 
-  Future<Game> startGame(String roomId, {int numOfItems = 8}) async {
+  void endGame(String roomId) async {
+    await _db.document('games/$roomId').updateData({'status': 'end'});
+  }
+
+  void startGame(String roomId, {int numOfItems = 8}) async {
     await _db.document('games/$roomId').updateData({
       'status': 'in_game',
       'gameStartTime': Timestamp.now(),
       'words': generateWords(numOfItems)
     });
-
-    return null;
   }
 
   Future<String> getUserName(String uuid) async {
@@ -135,17 +138,28 @@ class Repository {
     }
   }
 
-  Future<List<String>> getWordsFromGame(String gameId) async {
-    final DocumentSnapshot ref = await _db.document('games/$gameId').get();
-
-    return ref.data['words'].cast<String>();
+  Future updateUserScore(String gameId, String userId, int increment) async {
+    final DocumentReference ref = _db.document('games/$gameId/players/$userId');
+    return ref.setData({
+      'score': FieldValue.increment(increment),
+    }, merge: true);
   }
 
-  Future<DateTime> getTimeLimit(String gameId, int durationInMinutes) async {
-    final DocumentSnapshot ref = await _db.document('games/$gameId').get();
-    final gameStartDate = DateTime.fromMillisecondsSinceEpoch(
-        (ref.data['gameStartTime'] as Timestamp).millisecondsSinceEpoch);
+  Future<List<Player>> getPlayers(String gameId) async {
+    List<Player> players = [];
+    final QuerySnapshot ref = await _db
+        .collection('games')
+        .document(gameId)
+        .collection('players')
+        .getDocuments();
 
-    return gameStartDate.add(Duration(minutes: durationInMinutes));
+    for (var document in ref.documents) {
+      final DocumentSnapshot userRef =
+          await _db.collection('users').document(document.documentID).get();
+
+      players.add(Player.fromJson(document.data, userRef.data));
+    }
+
+    return players;
   }
 }
