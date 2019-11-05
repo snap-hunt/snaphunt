@@ -19,6 +19,10 @@ class HuntModel with ChangeNotifier {
 
   final List<Hunt> objects;
 
+  int get objectsFound => objects.where((hunt) => hunt.isFound).length;
+
+  Hunt get nextNotFound => objects.where((hunt) => !hunt.isFound).first;
+
   final DateTime timeLimit;
 
   // multi

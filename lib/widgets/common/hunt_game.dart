@@ -1,6 +1,8 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:snaphunt/constants/app_theme.dart';
 import 'package:snaphunt/model/hunt.dart';
 import 'package:snaphunt/model/player.dart';
 import 'package:snaphunt/routes.dart';
@@ -120,53 +122,122 @@ class HuntGame extends StatelessWidget {
         return roomCode;
       },
       child: Scaffold(
-        // appBar: AppBar(
-        //   automaticallyImplyLeading: false,
-        //   elevation: 0,
-        //   title: Text(
-        //     title,
-        //     style: TextStyle(
-        //       color: Colors.white,
-        //       fontSize: 24,
-        //     ),
-        //   ),
-        //   actions: <Widget>[
-        //     Consumer<HuntModel>(
-        //       builder: (widget, model, child) {
-        //         return CountDownTimer(timeLimit: model.timeLimit);
-        //       },
-        //     )
-        //   ],
-        // ),
         body: Consumer<HuntModel>(
           builder: (context, model, child) {
             WidgetsBinding.instance.addPostFrameCallback(
               (_) => statusListener(model, context),
             );
 
-            if (model.isMultiplayer) {
-              return Stack(
-                children: <Widget>[
-                  child,
-                  PlayerUpdate(
-                    gameId: model.gameId,
-                    players: players,
-                  ),
-                ],
-              );
-            }
-            return child;
-          },
-          child: Container(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
+            return Stack(
               children: <Widget>[
-                // WordList(),
-                Expanded(child: CameraScreen()),
+                child,
+                HeaderRow(
+                  title: title,
+                  timeLimit: model.timeLimit,
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top: 90),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      if (model.isMultiplayer)
+                        PlayerUpdate(
+                          gameId: model.gameId,
+                          players: players,
+                        ),
+                      ExpandedWordList(
+                        objectsFound: model.objectsFound,
+                        totalObjects: model.objects.length,
+                        hunt: model.nextNotFound,
+                      ),
+                    ],
+                  ),
+                ),
               ],
+            );
+          },
+          child: CameraScreen(),
+        ),
+      ),
+    );
+  }
+}
+
+class HeaderRow extends StatelessWidget {
+  final String title;
+  final DateTime timeLimit;
+
+  const HeaderRow({Key key, this.title, this.timeLimit}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 75,
+      padding: EdgeInsets.only(
+        top: MediaQuery.of(context).padding.top + 8.0,
+        left: 24.0,
+        right: 24.0,
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Text(
+            title,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 24,
             ),
           ),
+          CountDownTimer(timeLimit: timeLimit)
+        ],
+      ),
+    );
+  }
+}
+
+class ExpandedWordList extends StatelessWidget {
+  final int objectsFound;
+
+  final int totalObjects;
+
+  final Hunt hunt;
+
+  const ExpandedWordList({
+    Key key,
+    this.objectsFound,
+    this.totalObjects,
+    this.hunt,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      // margin: const EdgeInsets.only(top: 2.0),
+      child: ExpandablePanel(
+        collapsed: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(
+                'Items ($objectsFound/$totalObjects)',
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.white,
+                ),
+              ),
+              WordTile(word: hunt)
+            ],
+          ),
         ),
+        expanded: WordList(),
+        headerAlignment: ExpandablePanelHeaderAlignment.center,
+        tapBodyToCollapse: true,
+        tapHeaderToExpand: true,
+        hasIcon: true,
+        iconColor: Colors.white,
       ),
     );
   }
@@ -181,9 +252,9 @@ class WordList extends StatelessWidget {
       builder: (context, model, child) {
         return Container(
           width: double.infinity,
-          color: Colors.grey[800],
-          constraints: BoxConstraints(maxHeight: size.height * 0.2),
-          padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 8),
+          color: Colors.transparent,
+          constraints: BoxConstraints(maxHeight: size.height * 0.4),
+          padding: const EdgeInsets.only(left: 16.0),
           child: ListView(
             shrinkWrap: true,
             children: [
@@ -257,7 +328,7 @@ class PlayerUpdate extends StatelessWidget {
       child: Consumer<PlayHuntModel>(
         builder: (context, model, child) {
           return Container(
-            margin: const EdgeInsets.all(8.0),
+            margin: const EdgeInsets.all(8),
             height: 60,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
@@ -267,6 +338,7 @@ class PlayerUpdate extends StatelessWidget {
                 return ScoreAvatar(
                   photoUrl: player.user.photoUrl,
                   score: player.score,
+                  userBorderColor: user_colors[index],
                 );
               },
             ),
@@ -280,25 +352,31 @@ class PlayerUpdate extends StatelessWidget {
 class ScoreAvatar extends StatelessWidget {
   final String photoUrl;
   final int score;
+  final Color userBorderColor;
 
-  const ScoreAvatar({Key key, this.photoUrl, this.score}) : super(key: key);
+  const ScoreAvatar({Key key, this.photoUrl, this.score, this.userBorderColor})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 4.0),
-      child: Stack(
+      margin: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           UserAvatar(
+            borderColor: userBorderColor,
             photoUrl: photoUrl,
             height: 50,
           ),
-          Positioned.fill(
-            child: Align(
-              alignment: Alignment.bottomRight,
-              child: AvatarScore(
-                score: score,
-              ),
+          SizedBox(width: 10),
+          Text(
+            '$score',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
             ),
           ),
         ],

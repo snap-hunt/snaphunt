@@ -129,11 +129,13 @@ class UserInfo extends StatelessWidget {
 class UserAvatar extends StatelessWidget {
   final String photoUrl;
   final double height;
+  final Color borderColor;
 
   const UserAvatar({
     Key key,
     this.photoUrl,
     this.height = 96.0,
+    this.borderColor = Colors.orange,
   }) : super(key: key);
 
   @override
@@ -142,8 +144,8 @@ class UserAvatar extends StatelessWidget {
       children: <Widget>[
         Material(
           elevation: 2.0,
-          shape: const CircleBorder(
-            side: BorderSide(color: Colors.orange, width: 3.0),
+          shape: CircleBorder(
+            side: BorderSide(color: borderColor, width: 3.0),
           ),
           color: Colors.black,
           clipBehavior: Clip.antiAlias,
