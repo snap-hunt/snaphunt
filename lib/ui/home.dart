@@ -6,6 +6,7 @@ import 'package:snaphunt/services/auth.dart';
 import 'package:snaphunt/services/connectivity.dart';
 import 'package:snaphunt/utils/utils.dart';
 import 'package:snaphunt/widgets/common/fancy_button.dart';
+import 'package:snaphunt/widgets/common/wave.dart';
 
 class Home extends StatefulWidget {
   static Route<dynamic> route() {
@@ -22,68 +23,124 @@ class Home extends StatefulWidget {
   _HomeState createState() => _HomeState();
 }
 
+class HomeFancyButton extends StatelessWidget {
+  final String text;
+  final Color color;
+  final Function onPressed;
+  final Object child;
+
+  const HomeFancyButton(
+      {Key key, this.text, this.color, this.onPressed, this.child})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return FancyButton(
+      child: SizedBox(
+        width: 220,
+        child: child,
+      ),
+      size: 70,
+      color: color,
+      onPressed: onPressed,
+    );
+  }
+}
+
 class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     var connectionStatus = Provider.of<ConnectivityStatus>(context);
 
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: SizedBox.expand(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.max,
             children: <Widget>[
-              const SizedBox(height: 36.0),
-              const UserInfo(),
-              const SizedBox(height: 16.0),
-              FancyButton(
-                child: Text(
-                  "Singleplayer",
-                  style: TextStyle(color: Colors.white),
-                ),
-                size: 70,
-                color: Colors.orange,
-                onPressed: () {
-                  Navigator.of(context).pushNamed(Router.singlePlayerSettings);
-                },
+              Container(
+                padding: EdgeInsets.only(left: 30, right: 30, top: 50),
+                color: Colors.white,
+                child: Image.asset('assets/main.png', height: 185),
               ),
-              const SizedBox(height: 16.0),
-              FancyButton(
-                child: Text(
-                  "Multiplayer",
-                  style: TextStyle(color: Colors.white),
-                ),
-                size: 70,
-                color: connectionStatus == ConnectivityStatus.Offline
-                    ? Colors.grey
-                    : Colors.blue,
-                onPressed: connectionStatus == ConnectivityStatus.Offline
-                    ? () {
-                        showAlertDialog(
-                          context: context,
-                          title: 'You are offline!',
-                          body: 'Internet connection is needed to play online',
-                        );
-                      }
-                    : () {
-                        Navigator.of(context).pushNamed(Router.lobby);
+              Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  const UserInfo(),
+                  const SizedBox(height: 32.0),
+                  HomeFancyButton(
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            "Singleplayer",
+                            style: TextStyle(color: Colors.white, fontSize: 18),
+                          ),
+                        ]),
+                    color: Colors.orange,
+                    onPressed: () {
+                      Navigator.of(context)
+                          .pushNamed(Router.singlePlayerSettings);
+                    },
+                  ),
+                  const SizedBox(height: 18.0),
+                  HomeFancyButton(
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            "Multiplayer",
+                            style: TextStyle(color: Colors.white, fontSize: 18),
+                          ),
+                        ]),
+                    color: connectionStatus == ConnectivityStatus.Offline
+                        ? Colors.grey
+                        : Colors.blue,
+                    onPressed: connectionStatus == ConnectivityStatus.Offline
+                        ? () {
+                            showAlertDialog(
+                              context: context,
+                              title: 'You are offline!',
+                              body:
+                                  'Internet connection is needed to play online',
+                            );
+                          }
+                        : () {
+                            Navigator.of(context).pushNamed(Router.lobby);
+                          },
+                  ),
+                  const SizedBox(height: 18.0),
+                  Container(
+                    child: HomeFancyButton(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Icon(
+                            Icons.power_settings_new,
+                            color: Colors.white,
+                            size: 18,
+                          ),
+                          Container(
+                              margin: EdgeInsets.only(left: 2),
+                              child: Text(
+                                "Logout",
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 18),
+                              ))
+                        ],
+                      ),
+                      onPressed: () {
+                        Auth.of(context).logout();
                       },
+                      color: Colors.red,
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(height: 16.0),
-              FancyButton(
-                child: Icon(
-                  Icons.power_settings_new,
-                  color: Colors.white,
-                  size: 18,
-                ),
-                onPressed: () {
-                  Auth.of(context).logout();
-                },
-                color: Colors.red,
-                size: 40,
-              ),
+              CustomWaveWidget()
             ],
           ),
         ),
@@ -102,7 +159,7 @@ class UserInfo extends StatelessWidget {
     final user = Provider.of<FirebaseUser>(context, listen: false);
 
     return Container(
-      child: Row(
+        child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisSize: MainAxisSize.max,
@@ -114,7 +171,7 @@ class UserInfo extends StatelessWidget {
           Text(
             user.displayName,
             style: TextStyle(
-              fontSize: 32,
+              fontSize: 22,
               fontWeight: FontWeight.w400,
             ),
             maxLines: 2,
@@ -134,7 +191,7 @@ class UserAvatar extends StatelessWidget {
   const UserAvatar({
     Key key,
     this.photoUrl,
-    this.height = 96.0,
+    this.height = 70.0,
     this.borderColor = Colors.orange,
   }) : super(key: key);
 
