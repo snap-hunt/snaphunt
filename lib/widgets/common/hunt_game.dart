@@ -120,24 +120,24 @@ class HuntGame extends StatelessWidget {
         return roomCode;
       },
       child: Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          elevation: 0,
-          title: Text(
-            title,
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 24,
-            ),
-          ),
-          actions: <Widget>[
-            Consumer<HuntModel>(
-              builder: (widget, model, child) {
-                return CountDownTimer(timeLimit: model.timeLimit);
-              },
-            )
-          ],
-        ),
+        // appBar: AppBar(
+        //   automaticallyImplyLeading: false,
+        //   elevation: 0,
+        //   title: Text(
+        //     title,
+        //     style: TextStyle(
+        //       color: Colors.white,
+        //       fontSize: 24,
+        //     ),
+        //   ),
+        //   actions: <Widget>[
+        //     Consumer<HuntModel>(
+        //       builder: (widget, model, child) {
+        //         return CountDownTimer(timeLimit: model.timeLimit);
+        //       },
+        //     )
+        //   ],
+        // ),
         body: Consumer<HuntModel>(
           builder: (context, model, child) {
             WidgetsBinding.instance.addPostFrameCallback(
@@ -161,7 +161,7 @@ class HuntGame extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
-                WordList(),
+                // WordList(),
                 Expanded(child: CameraScreen()),
               ],
             ),
