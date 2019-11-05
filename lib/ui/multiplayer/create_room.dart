@@ -16,7 +16,7 @@ class _CreateRoomState extends State<CreateRoom> {
   final nameController = TextEditingController();
   final maxPlayersController = TextEditingController();
   final itemsController = TextEditingController();
-  int dropdownValue = 3;
+  int dropdownValue = 10;
 
   @override
   void initState() {
@@ -88,7 +88,7 @@ class _CreateRoomState extends State<CreateRoom> {
                   dropdownValue = newVal;
                 });
               },
-              items: <int>[3, 5, 8, 12, 16]
+              items: <int>[5, 10, 15, 30, 60]
                   .map<DropdownMenuItem<int>>((int value) {
                 return DropdownMenuItem<int>(
                   value: value,
