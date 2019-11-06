@@ -5,6 +5,7 @@ import 'package:snaphunt/constants/app_theme.dart';
 import 'package:snaphunt/constants/game_status_enum.dart';
 import 'package:snaphunt/routes.dart';
 import 'package:snaphunt/stores/game_model.dart';
+import 'package:snaphunt/ui/home.dart';
 import 'package:snaphunt/utils/utils.dart';
 import 'package:snaphunt/widgets/common/fancy_button.dart';
 import 'package:snaphunt/widgets/multiplayer/host_start_button.dart';
@@ -64,9 +65,9 @@ class Room extends StatelessWidget {
           barrierDismissible: false,
           builder: (BuildContext context) {
             return RoomExitDialog(
-              title: _isHost ? 'Delete room?' : 'Leave room?',
+              title: _isHost ? 'Delete room' : 'Leave room',
               body: _isHost
-                  ? 'Room will be deleted aheheheheheh'
+                  ? 'Leaving the room will cancel the game'
                   : 'Are you sure you want to leave from the room?',
             );
           },
@@ -76,11 +77,15 @@ class Room extends StatelessWidget {
       },
       child: Scaffold(
         appBar: AppBar(
+          iconTheme: IconThemeData(
+            color: Colors.white,
+          ),
           title: Text(
             'Room',
             style: TextStyle(color: Colors.white),
           ),
           centerTitle: true,
+          elevation: 0,
         ),
         body: Container(
           child: Consumer<GameModel>(
@@ -157,8 +162,8 @@ class RoomBody extends StatelessWidget {
         }
 
         return HostStartButton(
-          // canStartGame: model.canStartGame,
-          canStartGame: true,
+          canStartGame: model.canStartGame,
+          // canStartGame: true,
           onGameStart: model.onGameStart,
         );
       },
@@ -183,11 +188,19 @@ class PlayerRow extends StatelessWidget {
             children: <Widget>[
               Text(
                 'PLAYERS',
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
               ),
               Text(
                 '${model.players.length}/${model.game.maxPlayers}',
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
               ),
             ],
           ),
@@ -212,31 +225,45 @@ class PlayerList extends StatelessWidget {
               final player = model.players[index];
               final isMe = player.user.uid == model.userId;
 
-              return ListTile(
-                title: Text(player.user.displayName),
-                leading: CircleAvatar(
-                  backgroundImage: NetworkImage(player.user.photoUrl),
+              return Container(
+                padding: EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+                child: ListTile(
+                  title: Text(
+                    player.user.displayName,
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  leading: UserAvatar(
+                    photoUrl: player.user.photoUrl,
+                    height: 45,
+                    borderColor: user_colors[index % 4],
+                  ),
+                  // leading: CircleAvatar(
+                  //   backgroundImage: NetworkImage(player.user.photoUrl),
+                  // ),
+                  trailing: model.isHost
+                      ? !isMe
+                          ? FancyButton(
+                              child: Text(
+                                'REMOVE',
+                                style: fancy_button_style,
+                              ),
+                              color: Colors.red,
+                              size: 30,
+                              onPressed: () =>
+                                  model.onKickPlayer(player.user.uid),
+                            )
+                          : Container(
+                              height: 0,
+                              width: 0,
+                            )
+                      : Container(
+                          height: 0,
+                          width: 0,
+                        ),
                 ),
-                trailing: model.isHost
-                    ? !isMe
-                        ? FancyButton(
-                            child: Text(
-                              'REMOVE',
-                              style: fancy_button_style,
-                            ),
-                            color: Colors.red,
-                            size: 30,
-                            onPressed: () =>
-                                model.onKickPlayer(player.user.uid),
-                          )
-                        : Container(
-                            height: 0,
-                            width: 0,
-                          )
-                    : Container(
-                        height: 0,
-                        width: 0,
-                      ),
               );
             },
           ),

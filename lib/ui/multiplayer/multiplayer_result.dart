@@ -12,8 +12,15 @@ import 'package:snaphunt/widgets/multiplayer/room_loading.dart';
 
 class ResultMultiPlayer extends StatefulWidget {
   final String gameId;
+  final String title;
+  final int duration;
 
-  const ResultMultiPlayer({Key key, this.gameId}) : super(key: key);
+  const ResultMultiPlayer({
+    Key key,
+    this.gameId,
+    this.title,
+    this.duration,
+  }) : super(key: key);
 
   @override
   _ResultMultiPlayerState createState() => _ResultMultiPlayerState();
@@ -58,8 +65,8 @@ class _ResultMultiPlayerState extends State<ResultMultiPlayer> {
                           mainAxisSize: MainAxisSize.max,
                           children: <Widget>[
                             ResultHeader(
-                              title: 'Snap Attack 19',
-                              duration: 10,
+                              title: widget.title,
+                              duration: widget.duration,
                             ),
                             ResultWinner(winner: _players.first),
                             Divider(
@@ -75,10 +82,10 @@ class _ResultMultiPlayerState extends State<ResultMultiPlayer> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 40),
+                    const SizedBox(height: 40),
                     FancyButton(
                       color: Colors.orange,
-                      size: 40,
+                      size: 50,
                       child: Container(
                         width: 150,
                         child: Row(
@@ -89,7 +96,7 @@ class _ResultMultiPlayerState extends State<ResultMultiPlayer> {
                               child: Icon(Icons.share, color: Colors.white),
                             ),
                             Text(
-                              'Share!',
+                              'Share',
                               style: fancy_button_style,
                             )
                           ],
@@ -107,10 +114,10 @@ class _ResultMultiPlayerState extends State<ResultMultiPlayer> {
                         });
                       },
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     FancyButton(
                       color: Colors.deepOrange,
-                      size: 40,
+                      size: 50,
                       child: Container(
                         width: 150,
                         child: Row(
@@ -171,7 +178,7 @@ class ResultHeader extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 20),
                 Text(
                   '$duration min',
                   style: TextStyle(
@@ -180,6 +187,7 @@ class ResultHeader extends StatelessWidget {
                     fontWeight: FontWeight.w700,
                   ),
                 ),
+                const SizedBox(height: 4),
                 Text(
                   'Hunt Time',
                   style: TextStyle(
@@ -254,23 +262,24 @@ class ResultWinner extends StatelessWidget {
                 'WINNER',
                 style: TextStyle(
                   color: Colors.red,
-                  fontSize: 24,
+                  fontSize: 32,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 10),
+              SizedBox(height: 20),
               Text(
                 '${winner.user.displayName}',
                 style: TextStyle(
-                  fontSize: 20,
+                  fontSize: 24,
                   fontWeight: FontWeight.w500,
                 ),
               ),
+              const SizedBox(height: 10.0),
               Text(
-                '${winner.score} point',
+                '${winner.score} points',
                 style: TextStyle(
                   color: Colors.orange,
-                  fontSize: 16,
+                  fontSize: 18,
                   fontWeight: FontWeight.w300,
                 ),
               )
@@ -310,7 +319,7 @@ class ResultPlayers extends StatelessWidget {
               ),
             ),
             trailing: Text(
-              '${player.score} point',
+              '${player.score} points',
               style: TextStyle(
                 color: Colors.orange,
                 fontSize: 16,

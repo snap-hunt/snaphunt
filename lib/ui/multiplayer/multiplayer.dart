@@ -27,6 +27,7 @@ class MultiPlayer extends StatelessWidget {
         isMultiplayer: true,
         gameId: game.id,
         userId: userId,
+        timeDuration: game.timeLimit,
       ),
       child: HuntGame(
         title: game.name,

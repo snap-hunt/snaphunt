@@ -33,7 +33,13 @@ class CardTextField extends StatelessWidget {
               Expanded(
                 flex: 2,
                 child: Center(
-                  child: Text(label),
+                  child: Text(
+                    label,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold
+                    ),
+                  ),
                 ),
               ),
               const VerticalDivider(

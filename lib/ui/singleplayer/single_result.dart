@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:snaphunt/model/hunt.dart';
 import 'package:snaphunt/ui/home.dart';
 import 'package:snaphunt/widgets/common/fancy_button.dart';
+import 'package:snaphunt/widgets/common/wave.dart';
 
 class ResultScreenSinglePlayer extends StatelessWidget {
   final bool isHuntFinished;
@@ -33,46 +34,60 @@ class ResultScreenSinglePlayer extends StatelessWidget {
     final found = objects.where((hunt) => hunt.isFound).length;
     return Scaffold(
       body: Container(
+          color: Colors.white,
+          height: double.infinity,
           child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          const UserInfo(),
-          SizedBox(height: 30),
-          Text(
-            isHuntFinished ? 'Congrats!' : 'Better luck next time!',
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.w300,
-            ),
-          ),
-          Text(
-            '$found/${objects.length} found',
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.w300,
-            ),
-          ),
-          Text(
-            'in ${formatHHMMSS(duration.inSeconds)}!',
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.w300,
-            ),
-          ),
-          SizedBox(height: 30),
-          FancyButton(
-            child: Text(
-              "Back",
-              style: TextStyle(color: Colors.white),
-            ),
-            size: 50,
-            color: Colors.blue,
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-        ],
-      )),
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Image.asset('assets/top.png', scale: 1),
+              // Image.asset('assets/main.png', height: 185),
+
+              const SizedBox(height: 15),
+              const UserInfo(),
+              const SizedBox(height: 20),
+              Text(
+                isHuntFinished
+                    ? 'Congrats! You found all items'
+                    : 'Better luck next time!',
+                maxLines: 2,
+                style: TextStyle(
+                  fontSize: 32,
+                  fontWeight: FontWeight.w300,
+                ),
+              ),
+              const SizedBox(height: 25),
+              Text(
+                '$found/${objects.length} found',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w300,
+                ),
+              ),
+              Text(
+                'in ${formatHHMMSS(duration.inSeconds)}!',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w300,
+                ),
+              ),
+              const SizedBox(height: 20),
+              FancyButton(
+                child: Text(
+                  "Back",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                  ),
+                ),
+                size: 70,
+                color: Colors.blue,
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              CustomWaveWidget()
+            ],
+          )),
     );
   }
 }

@@ -32,7 +32,7 @@ class CreateButtons extends StatelessWidget {
                 ),
               ),
               color: Colors.blueGrey,
-              size: 40,
+              size: 60,
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -48,7 +48,7 @@ class CreateButtons extends StatelessWidget {
                 ),
               ),
               color: Colors.deepOrangeAccent,
-              size: 40,
+              size: 60,
               onPressed: onCreate,
             ),
           ),

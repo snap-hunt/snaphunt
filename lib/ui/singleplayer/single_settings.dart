@@ -10,7 +10,7 @@ class SinglePlayerSettings extends StatefulWidget {
 
 class _SinglePlayerSettingsState extends State<SinglePlayerSettings> {
   final itemsController = TextEditingController();
-  int dropdownValue = 10;
+  int dropdownValue = 3;
 
   @override
   void initState() {
@@ -30,7 +30,7 @@ class _SinglePlayerSettingsState extends State<SinglePlayerSettings> {
       resizeToAvoidBottomPadding: false,
       appBar: AppBar(
         title: Text(
-          'Settings',
+          'Single player',
           style: TextStyle(color: Colors.white),
         ),
         leading: Container(),
@@ -54,11 +54,16 @@ class _SinglePlayerSettingsState extends State<SinglePlayerSettings> {
                   dropdownValue = newVal;
                 });
               },
-              items: <int>[5, 10, 15, 30, 60]
+              items: <int>[3, 5, 8, 12, 15]
                   .map<DropdownMenuItem<int>>((int value) {
                 return DropdownMenuItem<int>(
                   value: value,
-                  child: Text('$value mins'),
+                  child: Text(
+                    '$value mins',
+                    style: TextStyle(
+                      fontSize: 16,
+                    ),
+                  ),
                 );
               }).toList(),
             ),

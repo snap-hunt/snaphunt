@@ -27,17 +27,23 @@ class HomeFancyButton extends StatelessWidget {
   final String text;
   final Color color;
   final Function onPressed;
-  final Object child;
+  final Widget child;
+  final double width;
 
   const HomeFancyButton(
-      {Key key, this.text, this.color, this.onPressed, this.child})
+      {Key key,
+      this.text,
+      this.color,
+      this.onPressed,
+      this.child,
+      this.width = 220})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return FancyButton(
       child: SizedBox(
-        width: 220,
+        width: width,
         child: child,
       ),
       size: 70,
@@ -115,13 +121,17 @@ class _HomeState extends State<Home> {
                   const SizedBox(height: 18.0),
                   Container(
                     child: HomeFancyButton(
+                      width: 125,
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
-                          Icon(
-                            Icons.power_settings_new,
-                            color: Colors.white,
-                            size: 18,
+                          Padding(
+                            padding: const EdgeInsets.all(0),
+                            child: Icon(
+                              Icons.power_settings_new,
+                              color: Colors.white,
+                              size: 18,
+                            ),
                           ),
                           Container(
                               margin: EdgeInsets.only(left: 2),
@@ -159,7 +169,7 @@ class UserInfo extends StatelessWidget {
     final user = Provider.of<FirebaseUser>(context, listen: false);
 
     return Container(
-        child: Row(
+      child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisSize: MainAxisSize.max,
@@ -171,7 +181,7 @@ class UserInfo extends StatelessWidget {
           Text(
             user.displayName,
             style: TextStyle(
-              fontSize: 22,
+              fontSize: 28,
               fontWeight: FontWeight.w400,
             ),
             maxLines: 2,

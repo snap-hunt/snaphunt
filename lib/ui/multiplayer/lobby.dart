@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:provider/provider.dart';
 import 'package:snaphunt/data/repository.dart';
 import 'package:snaphunt/model/game.dart';
@@ -15,9 +16,11 @@ class Lobby extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'SNAPHUNT',
+          'SNAPHUNT LOBBY',
           style: TextStyle(color: Colors.white),
         ),
+        automaticallyImplyLeading: false,
+        centerTitle: true,
         elevation: 0,
       ),
       body: SafeArea(
@@ -25,6 +28,12 @@ class Lobby extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: Column(
             children: <Widget>[
+              Expanded(
+                child: LobbyList(),
+              ),
+              Divider(
+                thickness: 1.5,
+              ),
               LobbyButtons(
                 onCreateRoom: () {
                   Navigator.of(context).pushNamed(Router.create);
@@ -64,9 +73,6 @@ class Lobby extends StatelessWidget {
                   }
                 },
               ),
-              Expanded(
-                child: LobbyList(),
-              )
             ],
           ),
         ),
@@ -93,27 +99,38 @@ class LobbyList extends StatelessWidget {
           if (snapshot.data.documents.isEmpty) {
             return Container(
               child: Center(
-                child: Text('empty'),
+                child: Text('No rooms available'),
               ),
             );
           }
 
-          return ListView.builder(
-            itemCount: snapshot.data.documents.length,
-            itemBuilder: (context, index) {
-              final game = Game.fromJson(snapshot.data.documents[index].data);
-              game.id = snapshot.data.documents[index].documentID;
+          return AnimationLimiter(
+            child: ListView.builder(
+              itemCount: snapshot.data.documents.length,
+              itemBuilder: (context, index) {
+                final game = Game.fromJson(snapshot.data.documents[index].data);
+                game.id = snapshot.data.documents[index].documentID;
 
-              return LobbyListTile(
-                game: game,
-                onRoomClick: () async {
-                  final user =
-                      Provider.of<FirebaseUser>(context, listen: false);
-                  Navigator.of(context).pushNamed(Router.room,
-                      arguments: [game, false, user.uid]);
-                },
-              );
-            },
+                return AnimationConfiguration.staggeredList(
+                  position: index,
+                  duration: const Duration(milliseconds: 650),
+                  child: SlideAnimation(
+                    verticalOffset: 50.0,
+                    child: FadeInAnimation(
+                      child: LobbyListTile(
+                        game: game,
+                        onRoomClick: () async {
+                          final user =
+                              Provider.of<FirebaseUser>(context, listen: false);
+                          Navigator.of(context).pushNamed(Router.room,
+                              arguments: [game, false, user.uid]);
+                        },
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
           );
         },
       ),
@@ -146,11 +163,13 @@ class _LobbyListTileState extends State<LobbyListTile> {
   }
 
   void getName() async {
-    String name = await Repository.instance.getUserName(widget.game.createdBy);
+    final name = await Repository.instance.getUserName(widget.game.createdBy);
 
-    setState(() {
-      _createdBy = name;
-    });
+    if (mounted) {
+      setState(() {
+        _createdBy = name;
+      });
+    }
   }
 
   @override
@@ -165,13 +184,20 @@ class _LobbyListTileState extends State<LobbyListTile> {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
           child: ListTile(
-            title: Text(widget.game.name),
+            title: Text(
+              widget.game.name,
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             subtitle: Text(_createdBy),
             trailing: Column(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text('${widget.game.timeLimit} mins'),
+                const SizedBox(height: 8.0),
                 StreamBuilder<QuerySnapshot>(
                   stream: Firestore.instance
                       .collection('games')

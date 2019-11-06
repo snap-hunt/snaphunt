@@ -28,6 +28,8 @@ class HuntGame extends StatelessWidget {
           context,
           title: 'Times up!',
           body: 'Times up! Hunting stops now!',
+          gameTitle: title,
+          duration: model.timeDuration,
         );
       } else if (model.isGameEnd && model.isHuntComplete) {
         pushMultiPlayerResult(
@@ -35,6 +37,8 @@ class HuntGame extends StatelessWidget {
           context,
           title: 'Congrats!',
           body: 'All items found! You are a champion!',
+          gameTitle: title,
+          duration: model.timeDuration,
         );
       } else if (model.isGameEnd && !model.isHuntComplete) {
         pushMultiPlayerResult(
@@ -42,6 +46,8 @@ class HuntGame extends StatelessWidget {
           context,
           title: 'Hunt Ended!',
           body: 'Someone completed the hunt!',
+          gameTitle: title,
+          duration: model.timeDuration,
         );
       }
     } else {
@@ -90,10 +96,12 @@ class HuntGame extends StatelessWidget {
     BuildContext context, {
     String title,
     String body,
+    String gameTitle,
+    int duration,
   }) {
     Navigator.of(context).pushReplacementNamed(
       Router.resultMulti,
-      arguments: [model.gameId],
+      arguments: [model.gameId, gameTitle, duration],
     );
 
     showAlertDialog(
@@ -213,7 +221,6 @@ class ExpandedWordList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      // margin: const EdgeInsets.only(top: 2.0),
       child: ExpandablePanel(
         collapsed: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -228,7 +235,7 @@ class ExpandedWordList extends StatelessWidget {
                   color: Colors.white,
                 ),
               ),
-              WordTile(word: hunt)
+              if (hunt != null) WordTile(word: hunt)
             ],
           ),
         ),
@@ -338,7 +345,7 @@ class PlayerUpdate extends StatelessWidget {
                 return ScoreAvatar(
                   photoUrl: player.user.photoUrl,
                   score: player.score,
-                  userBorderColor: user_colors[index],
+                  userBorderColor: user_colors[index % 4],
                 );
               },
             ),

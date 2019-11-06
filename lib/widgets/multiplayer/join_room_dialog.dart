@@ -29,7 +29,15 @@ class JoinRoom extends StatelessWidget {
         borderRadius: BorderRadius.circular(18.0),
       ),
       elevation: 5,
-      title: Center(child: Text('Enter Room Code')),
+      title: Center(
+        child: Text(
+          'Enter Room Code',
+          style: TextStyle(
+            fontSize: 28,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
       content: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Column(
@@ -37,7 +45,7 @@ class JoinRoom extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             DialogCardTextField(controller: controller),
-            SizedBox(height: 15),
+            const SizedBox(height: 15),
             DialogFancyButton(
               text: 'Join Room',
               color: Colors.deepOrangeAccent,
@@ -48,9 +56,9 @@ class JoinRoom extends StatelessWidget {
                 }
               },
             ),
-            SizedBox(height: 10),
-            DividerDialog(),
-            SizedBox(height: 20),
+            const SizedBox(height: 10),
+            const DividerDialog(),
+            const SizedBox(height: 20),
             DialogFancyButton(
               text: 'Scan QR Code',
               color: Colors.orange,
@@ -100,7 +108,7 @@ class DialogFancyButton extends StatelessWidget {
           ),
         ),
       ),
-      size: 50,
+      size: 60,
       color: color,
       onPressed: onPressed,
     );
@@ -155,6 +163,8 @@ class DialogCardTextField extends StatelessWidget {
 }
 
 class DividerDialog extends StatelessWidget {
+  const DividerDialog({Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -170,7 +180,12 @@ class DividerDialog extends StatelessWidget {
         ),
         SizedBox(
           width: 60,
-          child: Center(child: Text('or')),
+          child: Center(
+            child: Text(
+              'or',
+              style: TextStyle(fontSize: 18),
+            ),
+          ),
         ),
         Expanded(
           child: Container(

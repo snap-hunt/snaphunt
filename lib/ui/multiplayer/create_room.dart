@@ -16,12 +16,12 @@ class _CreateRoomState extends State<CreateRoom> {
   final nameController = TextEditingController();
   final maxPlayersController = TextEditingController();
   final itemsController = TextEditingController();
-  int dropdownValue = 10;
+  int dropdownValue = 3;
 
   @override
   void initState() {
-    nameController.text = 'Snap Hunt!';
-    maxPlayersController.text = '5';
+    nameController.text = 'Snap Attack \'19';
+    maxPlayersController.text = '3';
     itemsController.text = '8';
     super.initState();
   }
@@ -88,7 +88,7 @@ class _CreateRoomState extends State<CreateRoom> {
                   dropdownValue = newVal;
                 });
               },
-              items: <int>[5, 10, 15, 30, 60]
+              items: <int>[3, 5, 8, 12, 15]
                   .map<DropdownMenuItem<int>>((int value) {
                 return DropdownMenuItem<int>(
                   value: value,

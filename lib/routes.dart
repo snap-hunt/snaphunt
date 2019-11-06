@@ -69,6 +69,8 @@ class Router {
         return MaterialPageRoute(
           builder: (_) => ResultMultiPlayer(
             gameId: args[0],
+            title: args[1],
+            duration: args[2],
           ),
         );
 

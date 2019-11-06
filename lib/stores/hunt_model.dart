@@ -15,13 +15,23 @@ class HuntModel with ChangeNotifier {
     this.isMultiplayer = false,
     this.gameId,
     this.userId,
+    this.timeDuration,
   });
 
   final List<Hunt> objects;
 
   int get objectsFound => objects.where((hunt) => hunt.isFound).length;
 
-  Hunt get nextNotFound => objects.where((hunt) => !hunt.isFound).first;
+  Hunt get nextNotFound {
+    Hunt hunt;
+
+    try {
+      hunt = objects.where((hunt) => !hunt.isFound).first;
+    } catch (e) {
+      hunt = null;
+    }
+    return hunt;
+  }
 
   final DateTime timeLimit;
 
@@ -31,6 +41,8 @@ class HuntModel with ChangeNotifier {
   final String gameId;
 
   final String userId;
+
+  final int timeDuration;
 
   bool isGameEnd = false;
 
