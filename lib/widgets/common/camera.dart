@@ -54,7 +54,7 @@ class _CameraScreenState extends State<CameraScreen>
           Container(
             width: double.infinity,
             height: double.infinity,
-            child: controller != null || controller.value.isInitialized
+            child: controller != null && controller.value.isInitialized
                 ? AspectRatio(
                     aspectRatio: controller.value.aspectRatio,
                     child: CameraPreview(controller),
