@@ -85,6 +85,7 @@ flutter:
     - assets/default.json
     - assets/top.png
     - assets/main.png
+    - assets/trophy.png
   
   fonts:
   - family: SF_Atarian_System
