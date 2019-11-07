@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:snaphunt/stores/game_model.dart';
 import 'package:snaphunt/ui/home.dart';
 import 'package:snaphunt/ui/login.dart';
+import 'package:snaphunt/ui/how_to_play.dart';
 import 'package:snaphunt/ui/multiplayer/create_room.dart';
 import 'package:snaphunt/ui/multiplayer/lobby.dart';
 import 'package:snaphunt/ui/multiplayer/multiplayer.dart';
@@ -16,6 +17,7 @@ class Router {
   static const String home = '/';
 
   static const String login = '/login';
+  static const String howToPlay = '/howToPlay';
 
   static const String lobby = '/multiplayer';
   static const String create = '/createRoom';
@@ -97,6 +99,9 @@ class Router {
             duration: args[2],
           ),
         );
+
+      case howToPlay:
+        return MaterialPageRoute(builder: (_) => HowToPlay());
 
       case login:
       default:

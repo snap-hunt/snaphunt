@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:snaphunt/routes.dart';
 import 'package:snaphunt/services/auth.dart';
 import 'package:snaphunt/widgets/common/fancy_button.dart';
 
@@ -59,6 +60,10 @@ class _LoginState extends State<Login> {
     });
   }
 
+  void _onHowToPlay() {
+    Navigator.of(context).pushNamed(Router.howToPlay);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -93,7 +98,8 @@ class _LoginState extends State<Login> {
                         margin: const EdgeInsets.only(top: 18.0),
                         child: LoginFancyButton(
                           text: 'How to Play',
-                          color: Colors.grey
+                          color: Colors.grey,
+                          onPressed: _onHowToPlay,
                         ),
                       ),
                       if (snapshot.hasError)
@@ -128,10 +134,10 @@ class _LoginState extends State<Login> {
                   Container(
                     margin: EdgeInsets.only(bottom: 12),
                     child: Text("Flutter PH Hackathon Entry",
-                      style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold)),
+                        style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold)),
                   ),
                   CustomWaveWidget(),
                 ])),

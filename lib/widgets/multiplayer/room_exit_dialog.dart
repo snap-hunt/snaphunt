@@ -33,7 +33,7 @@ class RoomExitDialog extends StatelessWidget {
           Text(
             body,
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 24),
+            style: TextStyle(fontSize: 24, height: 0.9),
           ),
           const SizedBox(height: 40),
           Row(

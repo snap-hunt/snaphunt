@@ -169,20 +169,23 @@ class RoomDetails extends StatelessWidget {
                 Container(
                     color: Colors.white,
                     width: MediaQuery.of(context).size.width / 1.575,
-                    padding: EdgeInsets.fromLTRB(15, 25, 15, 25),
+                    padding: EdgeInsets.fromLTRB(15, 25, 15, 5),
                     height: 255,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Text(
                           model.game.name,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            fontSize: 42,
+                            fontSize: 38,
+                            height: 0.8,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        const SizedBox(height: 40),
+                        const SizedBox(height: 25),
                         Text('Code:', style: TextStyle(fontSize: 24, color: Colors.grey),),
                         const SizedBox(height: 10),
                         Text(
