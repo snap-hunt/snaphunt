@@ -47,9 +47,9 @@ class _ResultMultiPlayerState extends State<ResultMultiPlayer> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
+      body: Container(
+        color: Colors.white,
         child: Container(
-          color: Colors.white,
           child: _players == null
               ? RoomLoading()
               : Column(
@@ -156,8 +156,9 @@ class ResultHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16.0),
-      height: MediaQuery.of(context).size.height * 0.2,
+      padding: EdgeInsets.fromLTRB(
+          16.0, MediaQuery.of(context).padding.top + 8, 16.0, 16.0),
+      height: MediaQuery.of(context).size.height * 0.23,
       color: Colors.orange,
       child: Row(
         children: <Widget>[
@@ -221,10 +222,9 @@ class ResultHeaderLogo extends StatelessWidget {
         height: 120,
         width: 120,
         alignment: Alignment.center,
-        child: Icon(
-          Icons.local_florist,
-          color: Colors.white,
-          size: 60,
+        child: Image.asset(
+          'assets/trophy.png',
+          height: 80,
         ),
       ),
     );
@@ -298,7 +298,7 @@ class ResultPlayers extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
       height: MediaQuery.of(context).size.height * 0.25,
       child: ListView.builder(
         itemCount: players.length,
@@ -307,6 +307,7 @@ class ResultPlayers extends StatelessWidget {
 
           return ListTile(
             leading: UserAvatar(
+              borderColor: user_colors[(index + 1) % 4],
               photoUrl: player.user.photoUrl,
               height: 50,
             ),
