@@ -52,6 +52,7 @@ class _CameraScreenState extends State<CameraScreen>
       body: Stack(
         children: <Widget>[
           Container(
+            color: Colors.black,
             width: double.infinity,
             height: double.infinity,
             child: controller != null && controller.value.isInitialized

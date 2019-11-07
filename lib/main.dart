@@ -10,6 +10,7 @@ import 'package:snaphunt/services/connectivity.dart';
 import 'package:snaphunt/ui/home.dart';
 import 'package:snaphunt/ui/login.dart';
 import 'package:snaphunt/utils/utils.dart';
+import 'package:snaphunt/widgets/common/custom_scroll.dart';
 
 List<CameraDescription> cameras;
 
@@ -91,6 +92,12 @@ class _AppState extends State<App> {
         ),
         navigatorKey: _navigatorKey,
         onGenerateRoute: Router.generateRoute,
+        builder: (context, child) {
+          return ScrollConfiguration(
+            behavior: NoOverFlowScrollBehavior(),
+            child: child,
+          );
+        },
         home: currentUser == null ? const Login() : const Home(),
       ),
     );
