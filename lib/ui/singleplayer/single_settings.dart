@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:snaphunt/routes.dart';
 import 'package:snaphunt/widgets/common/card_textfield.dart';
 import 'package:snaphunt/widgets/multiplayer/create_buttons.dart';
@@ -26,6 +27,8 @@ class _SinglePlayerSettingsState extends State<SinglePlayerSettings> {
 
   @override
   Widget build(BuildContext context) {
+    final objectCount = Hive.box('words').get('words').length;
+
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       appBar: AppBar(
@@ -83,10 +86,18 @@ class _SinglePlayerSettingsState extends State<SinglePlayerSettings> {
           CreateButtons(
             createLabel: 'Play!',
             onCreate: () {
+              int numObjects = int.parse(itemsController.text);
+
+              if (numObjects == 0) {
+                numObjects = 1;
+              } else if (numObjects > objectCount) {
+                numObjects = objectCount;
+              }
+              
               Navigator.of(context).pushReplacementNamed(
                 Router.singlePlayer,
                 arguments: [
-                  int.parse(itemsController.text),
+                  numObjects,
                   dropdownValue,
                 ],
               );

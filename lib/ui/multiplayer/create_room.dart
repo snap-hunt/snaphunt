@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 import 'package:snaphunt/model/game.dart';
 import 'package:snaphunt/routes.dart';
@@ -37,6 +38,7 @@ class _CreateRoomState extends State<CreateRoom> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<FirebaseUser>(context, listen: false);
+    final objectCount = Hive.box('words').get('words').length;
 
     return Scaffold(
       resizeToAvoidBottomPadding: false,
@@ -111,10 +113,18 @@ class _CreateRoomState extends State<CreateRoom> {
           const SizedBox(height: 20),
           CreateButtons(
             onCreate: () async {
+              int numObjects = int.parse(itemsController.text);
+
+              if (numObjects == 0) {
+                numObjects = 1;
+              } else if (numObjects > objectCount) {
+                numObjects = objectCount;
+              }
+
               Game game = Game(
                 name: nameController.text,
                 maxPlayers: int.parse(maxPlayersController.text),
-                noOfItems: int.parse(itemsController.text),
+                noOfItems: numObjects,
                 timeLimit: dropdownValue,
                 status: 'waiting',
                 createdBy: user.uid,
