@@ -99,11 +99,17 @@ class LobbyList extends StatelessWidget {
           if (snapshot.data.documents.isEmpty) {
             return Container(
               child: Center(
-                child: Text('No rooms available'),
+                child: Text(
+                  'No rooms available',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey,
+                  ),
+                ),
               ),
             );
           }
-
           return AnimationLimiter(
             child: ListView.builder(
               itemCount: snapshot.data.documents.length,
@@ -175,7 +181,7 @@ class _LobbyListTileState extends State<LobbyListTile> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8.0),
