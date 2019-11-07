@@ -105,7 +105,6 @@ class Room extends StatelessWidget {
             child: Column(
               children: <Widget>[
                 RoomDetails(),
-                RoomBody(),
                 PlayerRow(),
                 Expanded(child: PlayerList()),
               ],
@@ -124,80 +123,80 @@ class RoomDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<GameModel>(builder: (context, model, child) {
       return Container(
-        height: MediaQuery.of(context).size.height * 0.5,
+        height: MediaQuery.of(context).size.height * 0.35,
         width: double.infinity,
-        padding: const EdgeInsets.fromLTRB(16.0, 32.0, 16.0, 32.0),
+        // padding: const EdgeInsets.fromLTRB(16.0, 32.0, 16.0, 32.0),
         child: Column(
           mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Text(
-              model.game.name,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 42,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 18),
             Row(
-              mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Text(
-                      '${model.game.timeLimit} min',
-                      style: TextStyle(
-                        fontSize: 24,
-                        color: Colors.red,
-                      ),
-                    ),
-                    Text(
-                      'Hunt time',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(width: 45),
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Text(
-                      '${model.game.noOfItems}',
-                      style: TextStyle(
-                        fontSize: 24,
-                        color: Colors.red,
-                      ),
-                    ),
-                    Text(
-                      'objects',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                      ),
-                    ),
-                  ],
-                ),
+                Container(
+                    color: Color(0xFEEBEBEB),
+                    width: MediaQuery.of(context).size.width / 2.75,
+                    height: 255,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        const SizedBox(height: 20),
+                        QrImage(
+                          data: model.game.id,
+                          version: QrVersions.auto,
+                          size: 120.0,
+                          padding: EdgeInsets.all(10),
+                          backgroundColor: Colors.white,
+                        ),
+                        const SizedBox(height: 32),
+                        Text(
+                          '${model.game.timeLimit} min',
+                          style: TextStyle(
+                              fontSize: 32,
+                              color: Colors.red,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          'Hunt time',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 24,
+                          ),
+                        ),
+                      ],
+                    )),
+                Container(
+                    color: Colors.white,
+                    width: MediaQuery.of(context).size.width / 1.575,
+                    padding: EdgeInsets.fromLTRB(15, 25, 15, 25),
+                    height: 255,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          model.game.name,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 42,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 40),
+                        Text('Code:', style: TextStyle(fontSize: 24, color: Colors.grey),),
+                        const SizedBox(height: 10),
+                        Text(
+                          model.game.id,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
+                        ),
+                        const SizedBox(height: 40),
+                        RoomBody(),
+                      ],
+                    )),
               ],
-            ),
-            const SizedBox(height: 2),
-            QrImage(
-              data: model.game.id,
-              version: QrVersions.auto,
-              size: 170.0,
-            ),
-            Text('code:'),
-            Text(
-              model.game.id,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
-              ),
             )
           ],
         ),
