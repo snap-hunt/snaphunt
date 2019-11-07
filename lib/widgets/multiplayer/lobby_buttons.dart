@@ -12,33 +12,46 @@ class LobbyButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.all(4.0),
+      margin: const EdgeInsets.fromLTRB(4, 12, 4, 2),
       child: Row(
-        mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-          Text(
-            'Snap Rooms',
-            style: TextStyle(fontSize: 24),
-          ),
-          FancyButton(
-            child: Text(
-              'Join Room',
-              style: fancy_button_style,
+          Expanded(
+            child: Center(
+              child: Text(
+                'Snap Rooms',
+                maxLines: 2,
+                style: TextStyle(fontSize: 28),
+              ),
             ),
-            color: Colors.orange,
-            size: 40,
-            onPressed: onJoinRoom,
           ),
-          FancyButton(
-            child: Text(
-              'Create Room',
-              style: fancy_button_style,
+          Expanded(
+            child: FancyButton(
+              child: Center(
+                child: Text(
+                  'Join Room',
+                  style: fancy_button_style,
+                ),
+              ),
+              color: Colors.orange,
+              size: 60,
+              onPressed: onJoinRoom,
             ),
-            color: Colors.red,
-            size: 40,
-            onPressed: onCreateRoom,
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: FancyButton(
+              child: Center(
+                child: Text(
+                  'Create Room',
+                  style: fancy_button_style,
+                ),
+              ),
+              color: Colors.red,
+              size: 60,
+              onPressed: onCreateRoom,
+            ),
           ),
         ],
       ),

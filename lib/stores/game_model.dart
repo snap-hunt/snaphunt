@@ -23,12 +23,6 @@ class GameModel with ChangeNotifier {
   GameStatus _status = GameStatus.waiting;
   GameStatus get status => _status;
 
-  bool _isCancelled = false;
-  bool get isCancelled => _isCancelled;
-
-  bool _isKicked = false;
-  bool get isKicked => _isKicked;
-
   bool _isGameStart = false;
   bool get isGameStart => _isGameStart;
 
@@ -79,13 +73,15 @@ class GameModel with ChangeNotifier {
     playerStream = repository.playersSnapshot(_game.id).listen(playerListener);
   }
 
-  void gameStatusListener(DocumentSnapshot snapshot) {
+  void gameStatusListener(DocumentSnapshot snapshot) async {
     final status = snapshot.data['status'];
     if (status == 'cancelled') {
       _status = GameStatus.cancelled;
       notifyListeners();
     } else if (status == 'in_game') {
       _status = GameStatus.game;
+      _game = Game.fromJson(snapshot.data);
+      _game.id = snapshot.documentID;
       notifyListeners();
     }
   }
@@ -114,7 +110,7 @@ class GameModel with ChangeNotifier {
   }
 
   void checkCanStartGame() {
-    if (players.length > 2) {
+    if (players.length >= 2) {
       _canStartGame = true;
     } else {
       _canStartGame = false;
@@ -126,10 +122,12 @@ class GameModel with ChangeNotifier {
   }
 
   void onDispose() {
-    if (_isHost) {
-      repository.cancelRoom(_game.id);
-    } else {
-      repository.leaveRoom(_game.id, _userId);
+    if (GameStatus.game != _status) {
+      if (_isHost) {
+        repository.cancelRoom(_game.id);
+      } else {
+        repository.leaveRoom(_game.id, _userId);
+      }
     }
 
     gameStream.cancel();
@@ -138,7 +136,8 @@ class GameModel with ChangeNotifier {
 
   void onGameStart() {
     if (_canStartGame) {
-      repository.startGame(_game.id);
+      _isGameStart = true;
+      repository.startGame(_game.id, numOfItems: _game.noOfItems);
     }
   }
 

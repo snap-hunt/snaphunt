@@ -14,10 +14,17 @@ class FancyAlertDialog extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(18.0),
       ),
-      elevation: 0,
+      elevation: 5,
       title: Center(
-        child: Text(title),
+        child: Text(
+          title,
+          style: TextStyle(
+            fontSize: 32,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
+      contentPadding: const EdgeInsets.fromLTRB(24, 32, 24, 18),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -25,9 +32,9 @@ class FancyAlertDialog extends StatelessWidget {
           Text(
             body,
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 18),
+            style: TextStyle(fontSize: 20),
           ),
-          SizedBox(height: 25),
+          const SizedBox(height: 30),
           DialogFancyButtonExit(
             text: 'OKAY',
             color: Colors.orange,
@@ -62,7 +69,7 @@ class DialogFancyButtonExit extends StatelessWidget {
           style: fancy_button_style,
         ),
       ),
-      size: 50,
+      size: 60,
       color: color,
       onPressed: onPressed,
     );

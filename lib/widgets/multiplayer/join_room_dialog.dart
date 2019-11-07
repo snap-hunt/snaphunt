@@ -28,8 +28,16 @@ class JoinRoom extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(18.0),
       ),
-      elevation: 0,
-      title: Center(child: Text('Enter Room Code')),
+      elevation: 5,
+      title: Center(
+        child: Text(
+          'Enter Room Code',
+          style: TextStyle(
+            fontSize: 28,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
       content: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Column(
@@ -37,7 +45,7 @@ class JoinRoom extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             DialogCardTextField(controller: controller),
-            SizedBox(height: 15),
+            const SizedBox(height: 15),
             DialogFancyButton(
               text: 'Join Room',
               color: Colors.deepOrangeAccent,
@@ -48,9 +56,9 @@ class JoinRoom extends StatelessWidget {
                 }
               },
             ),
-            SizedBox(height: 10),
-            DividerDialog(),
-            SizedBox(height: 20),
+            const SizedBox(height: 10),
+            const DividerDialog(),
+            const SizedBox(height: 20),
             DialogFancyButton(
               text: 'Scan QR Code',
               color: Colors.orange,
@@ -100,7 +108,7 @@ class DialogFancyButton extends StatelessWidget {
           ),
         ),
       ),
-      size: 50,
+      size: 60,
       color: color,
       onPressed: onPressed,
     );
@@ -118,7 +126,7 @@ class DialogCardTextField extends StatelessWidget {
         horizontal: 8.0,
         vertical: 2.0,
       ),
-      height: 55,
+      height: 65,
       child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8.0),
@@ -133,9 +141,9 @@ class DialogCardTextField extends StatelessWidget {
             textBaseline: TextBaseline.alphabetic,
             children: <Widget>[
               Expanded(
-                flex: 5,
                 child: Container(
                   child: TextField(
+                    textAlign: TextAlign.center,
                     controller: controller,
                     keyboardType: TextInputType.text,
                     maxLines: 1,
@@ -155,6 +163,8 @@ class DialogCardTextField extends StatelessWidget {
 }
 
 class DividerDialog extends StatelessWidget {
+  const DividerDialog({Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -170,7 +180,12 @@ class DividerDialog extends StatelessWidget {
         ),
         SizedBox(
           width: 60,
-          child: Center(child: Text('or')),
+          child: Center(
+            child: Text(
+              'or',
+              style: TextStyle(fontSize: 18),
+            ),
+          ),
         ),
         Expanded(
           child: Container(

@@ -25,7 +25,7 @@ class HostStartButton extends StatelessWidget {
               style: fancy_button_style,
             ),
             color: canStartGame ? Colors.deepOrangeAccent : Colors.grey,
-            size: 60,
+            size: 70,
             onPressed: canStartGame ? onGameStart : null,
           ),
           SizedBox(height: 10),

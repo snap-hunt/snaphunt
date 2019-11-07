@@ -14,20 +14,28 @@ class RoomExitDialog extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(18.0),
       ),
-      elevation: 0,
+      elevation: 5,
       title: Center(
-        child: Text(title),
+        child: Text(
+          title,
+          style: TextStyle(
+            fontSize: 32,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
+      contentPadding: const EdgeInsets.fromLTRB(24, 32, 24, 18),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
+          const SizedBox(height: 20),
           Text(
             body,
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 18),
+            style: TextStyle(fontSize: 24),
           ),
-          SizedBox(height: 25),
+          const SizedBox(height: 40),
           Row(
             mainAxisSize: MainAxisSize.max,
             children: <Widget>[
@@ -79,7 +87,7 @@ class DialogFancyButtonExit extends StatelessWidget {
           style: fancy_button_style,
         ),
       ),
-      size: 50,
+      size: 60,
       color: color,
       onPressed: onPressed,
     );

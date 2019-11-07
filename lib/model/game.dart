@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Game {
   String id;
   String name;
@@ -8,18 +10,19 @@ class Game {
   String status;
   DateTime timeCreated;
   DateTime gameStartTime;
+  List<String> words;
 
-  Game({
-    this.id,
-    this.name,
-    this.createdBy,
-    this.maxPlayers,
-    this.timeLimit,
-    this.noOfItems,
-    this.status,
-    this.timeCreated,
-    this.gameStartTime,
-  });
+  Game(
+      {this.id,
+      this.name,
+      this.createdBy,
+      this.maxPlayers,
+      this.timeLimit,
+      this.noOfItems,
+      this.status,
+      this.timeCreated,
+      this.gameStartTime,
+      this.words});
 
   Game.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -29,8 +32,13 @@ class Game {
     timeLimit = json['timeLimit'];
     noOfItems = json['noOfItems'];
     status = json['status'];
-    timeCreated = json['timeCreated'];
-    gameStartTime = json['gameStartTime'];
+    timeCreated = DateTime.fromMillisecondsSinceEpoch(
+        (json['timeCreated'] as Timestamp).millisecondsSinceEpoch);
+    gameStartTime = json['gameStartTime'] != null
+        ? DateTime.fromMillisecondsSinceEpoch(
+            (json['gameStartTime'] as Timestamp).millisecondsSinceEpoch)
+        : null;
+    words = json['words']?.cast<String>();
   }
 
   Map<String, dynamic> toJson() {
@@ -44,6 +52,7 @@ class Game {
     data['status'] = this.status;
     data['timeCreated'] = this.timeCreated;
     data['gameStartTime'] = this.gameStartTime;
+    data['words'] = this.words;
     return data;
   }
 }

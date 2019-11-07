@@ -1,16 +1,31 @@
+import 'package:camera/camera.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:snaphunt/data/repository.dart';
 import 'package:snaphunt/routes.dart';
 import 'package:snaphunt/services/auth.dart';
+import 'package:snaphunt/services/connectivity.dart';
 import 'package:snaphunt/ui/home.dart';
 import 'package:snaphunt/ui/login.dart';
-  
+import 'package:snaphunt/utils/utils.dart';
+import 'package:snaphunt/widgets/common/custom_scroll.dart';
+
+List<CameraDescription> cameras;
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
 
-  runApp(App(auth: await Auth.create()));
+  cameras = await availableCameras();
+  openDB().then((_) async {
+    initDB();
+    runApp(App(auth: await Auth.create()));
+  });
 }
 
 class App extends StatefulWidget {
@@ -32,6 +47,7 @@ class _AppState extends State<App> {
   @override
   void initState() {
     super.initState();
+    Repository.instance.updateLocalWords();
     currentUser = widget.auth.init(_onUserChanged);
   }
 
@@ -62,15 +78,26 @@ class _AppState extends State<App> {
         Provider<Auth>.value(value: widget.auth),
         ValueListenableProvider<FirebaseUser>.value(
             value: widget.auth.currentUser),
+        StreamProvider<ConnectivityStatus>.controller(
+          builder: (context) =>
+              ConnectivityService().connectionStatusController,
+        )
       ],
       child: MaterialApp(
         title: 'SnapHunt',
         theme: ThemeData(
           primaryColor: Colors.orange,
-          textTheme: TextTheme()
+          textTheme: TextTheme(),
+          fontFamily: 'SF_Atarian_System',
         ),
         navigatorKey: _navigatorKey,
         onGenerateRoute: Router.generateRoute,
+        builder: (context, child) {
+          return ScrollConfiguration(
+            behavior: NoOverFlowScrollBehavior(),
+            child: child,
+          );
+        },
         home: currentUser == null ? const Login() : const Home(),
       ),
     );

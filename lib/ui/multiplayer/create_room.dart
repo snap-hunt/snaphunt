@@ -1,8 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:snaphunt/model/game.dart';
 import 'package:snaphunt/routes.dart';
+import 'package:snaphunt/widgets/common/card_textfield.dart';
 import 'package:snaphunt/widgets/multiplayer/create_buttons.dart';
 
 class CreateRoom extends StatefulWidget {
@@ -14,12 +16,12 @@ class _CreateRoomState extends State<CreateRoom> {
   final nameController = TextEditingController();
   final maxPlayersController = TextEditingController();
   final itemsController = TextEditingController();
-  int dropdownValue = 10;
+  int dropdownValue = 3;
 
   @override
   void initState() {
-    nameController.text = 'Snap Hunt!';
-    maxPlayersController.text = '5';
+    nameController.text = 'Snap Attack \'19';
+    maxPlayersController.text = '3';
     itemsController.text = '8';
     super.initState();
   }
@@ -86,7 +88,7 @@ class _CreateRoomState extends State<CreateRoom> {
                   dropdownValue = newVal;
                 });
               },
-              items: <int>[5, 10, 15, 30, 60]
+              items: <int>[3, 5, 8, 12, 15]
                   .map<DropdownMenuItem<int>>((int value) {
                 return DropdownMenuItem<int>(
                   value: value,
@@ -116,6 +118,8 @@ class _CreateRoomState extends State<CreateRoom> {
                 timeLimit: dropdownValue,
                 status: 'waiting',
                 createdBy: user.uid,
+                timeCreated: DateTime.fromMillisecondsSinceEpoch(
+                    Timestamp.now().millisecondsSinceEpoch),
               );
               Navigator.of(context).pushReplacementNamed(
                 Router.room,
@@ -124,61 +128,6 @@ class _CreateRoomState extends State<CreateRoom> {
             },
           )
         ],
-      ),
-    );
-  }
-}
-
-class CardTextField extends StatelessWidget {
-  final String label;
-  final Widget widget;
-
-  const CardTextField({
-    Key key,
-    this.label,
-    this.widget,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(
-        horizontal: 8.0,
-        vertical: 2.0,
-      ),
-      height: 60,
-      child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8.0),
-        ),
-        elevation: 3,
-        child: Container(
-          margin: EdgeInsets.all(8.0),
-          child: Row(
-            mainAxisSize: MainAxisSize.max,
-            crossAxisAlignment: CrossAxisAlignment.baseline,
-            textBaseline: TextBaseline.alphabetic,
-            children: <Widget>[
-              Expanded(
-                flex: 2,
-                child: Center(
-                  child: Text(label),
-                ),
-              ),
-              const VerticalDivider(
-                width: 10,
-                thickness: 1,
-              ),
-              Expanded(
-                flex: 5,
-                child: Container(
-                  child: widget,
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                ),
-              )
-            ],
-          ),
-        ),
       ),
     );
   }

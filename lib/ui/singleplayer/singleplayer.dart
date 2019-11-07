@@ -1,22 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:snaphunt/widgets/common/fancy_button.dart';
+import 'package:provider/provider.dart';
+import 'package:snaphunt/stores/hunt_model.dart';
+import 'package:snaphunt/utils/utils.dart';
+import 'package:snaphunt/widgets/common/hunt_game.dart';
 
 class SinglePlayer extends StatelessWidget {
+  final int numOfObjects;
+  final int duration;
+
+  const SinglePlayer({Key key, this.numOfObjects, this.duration})
+      : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: FancyButton(
-          child: Text(
-            "Back",
-            style: TextStyle(color: Colors.white),
-          ),
-          size: 50,
-          color: Colors.blue,
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
+    return ChangeNotifierProvider(
+      builder: (_) => new HuntModel(
+        objects: generateHuntObjects(numOfObjects),
+        timeLimit: DateTime.now().add(Duration(minutes: duration)),
+      ),
+      child: HuntGame(
+        title: 'SinglePlayer!',
       ),
     );
   }

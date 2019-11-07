@@ -3,14 +3,12 @@ class User {
   String email;
   String photoUrl;
   String displayName;
-  // String lastSeen;
 
   User({
     this.uid,
     this.email,
     this.photoUrl,
     this.displayName,
-    // this.lastSeen,
   });
 
   User.fromJson(Map<String, dynamic> json) {
@@ -18,7 +16,6 @@ class User {
     email = json['email'];
     photoUrl = json['photoURL'];
     displayName = json['displayName'];
-    // lastSeen = json['lastSeen'] as String;
   }
 
   Map<String, dynamic> toJson() {
@@ -27,7 +24,6 @@ class User {
     data['email'] = this.email;
     data['photoURL'] = this.photoUrl;
     data['displayName'] = this.displayName;
-    // data['lastSeen'] = this.lastSeen;
     return data;
   }
 }
