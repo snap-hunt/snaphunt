@@ -107,7 +107,7 @@ class Room extends StatelessWidget {
                 RoomDetails(),
                 RoomBody(),
                 PlayerRow(),
-                PlayerList(),
+                Expanded(child: PlayerList()),
               ],
             ),
           ),
@@ -126,21 +126,79 @@ class RoomDetails extends StatelessWidget {
       return Container(
         height: MediaQuery.of(context).size.height * 0.5,
         width: double.infinity,
-        padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
+        padding: const EdgeInsets.fromLTRB(16.0, 32.0, 16.0, 32.0),
         child: Column(
           mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Text(model.game.name),
-            Text('${model.game.timeLimit} min'),
-            Text('Hunt time'),
+            Text(
+              model.game.name,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 42,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 18),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Text(
+                      '${model.game.timeLimit} min',
+                      style: TextStyle(
+                        fontSize: 24,
+                        color: Colors.red,
+                      ),
+                    ),
+                    Text(
+                      'Hunt time',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(width: 45),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Text(
+                      '${model.game.noOfItems}',
+                      style: TextStyle(
+                        fontSize: 24,
+                        color: Colors.red,
+                      ),
+                    ),
+                    Text(
+                      'objects',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 2),
             QrImage(
               data: model.game.id,
               version: QrVersions.auto,
-              size: 150.0,
+              size: 170.0,
             ),
-            Text(model.game.id)
+            Text('code:'),
+            Text(
+              model.game.id,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+              ),
+            )
           ],
         ),
       );
@@ -163,7 +221,6 @@ class RoomBody extends StatelessWidget {
 
         return HostStartButton(
           canStartGame: model.canStartGame,
-          // canStartGame: true,
           onGameStart: model.onGameStart,
         );
       },
@@ -218,7 +275,6 @@ class PlayerList extends StatelessWidget {
     return Consumer<GameModel>(
       builder: (context, model, child) {
         return Container(
-          height: 150, //TODO dynamic height
           child: ListView.builder(
             itemCount: model.players.length,
             itemBuilder: (context, index) {
@@ -240,9 +296,6 @@ class PlayerList extends StatelessWidget {
                     height: 45,
                     borderColor: user_colors[index % 4],
                   ),
-                  // leading: CircleAvatar(
-                  //   backgroundImage: NetworkImage(player.user.photoUrl),
-                  // ),
                   trailing: model.isHost
                       ? !isMe
                           ? FancyButton(
@@ -251,7 +304,7 @@ class PlayerList extends StatelessWidget {
                                 style: fancy_button_style,
                               ),
                               color: Colors.red,
-                              size: 30,
+                              size: 40,
                               onPressed: () =>
                                   model.onKickPlayer(player.user.uid),
                             )

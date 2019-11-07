@@ -110,7 +110,7 @@ class GameModel with ChangeNotifier {
   }
 
   void checkCanStartGame() {
-    if (players.length > 2) {
+    if (players.length >= 2) {
       _canStartGame = true;
     } else {
       _canStartGame = false;
@@ -135,11 +135,10 @@ class GameModel with ChangeNotifier {
   }
 
   void onGameStart() {
-    // if (_canStartGame) { //TODO uncomment, for debug onli
-    _isGameStart = true;
-    repository.startGame(_game.id, numOfItems: _game.noOfItems);
-
-    // }
+    if (_canStartGame) {
+      _isGameStart = true;
+      repository.startGame(_game.id, numOfItems: _game.noOfItems);
+    }
   }
 
   Future joinRoom() async {
