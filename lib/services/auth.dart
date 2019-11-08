@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 
+// src: https://gist.github.com/slightfoot/6f97d6c1ec4eb52ce880c6394adb1386
 class Auth {
   static Future<Auth> create() async {
     final currentUser = await FirebaseAuth.instance.currentUser();
