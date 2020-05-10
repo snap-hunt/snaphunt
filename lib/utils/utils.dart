@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:snaphunt/model/hunt.dart';
 import 'package:snaphunt/widgets/common/fancy_alert_dialog.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -23,8 +23,7 @@ Future<String> loadAsset() async {
 }
 
 Future openDB() async {
-  final dir = await getApplicationDocumentsDirectory();
-  Hive.init(dir.path);
+  await Hive.initFlutter();
 
   return Future.wait([
     Hive.openBox('words'),

@@ -1,50 +1,53 @@
 name: snaphunt
 description: SnapHunt - Flutter Philippines Hackathon 2019 Entry
 
-version: 1.0.0
+publish_to: 'none' 
+
+version: 1.0.0+1
 
 environment:
-  sdk: ">=2.2.2 <3.0.0"
+  sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
 
   # firebase
-  firebase_core: ^0.4.0+9
+  firebase_core: ^0.4.4+3
 
   # realtime db
-  cloud_firestore: ^0.12.9+5
+  cloud_firestore: ^0.13.5
 
   # ml
-  firebase_ml_vision: ^0.9.2+2
+  firebase_ml_vision: ^0.9.3+8
 
   # auth
-  firebase_auth: ^0.14.0+5
-  google_sign_in: ^4.0.7
+  firebase_auth: ^0.16.0
+  google_sign_in: ^4.4.4
 
   # di
   provider: ^3.1.0+1
 
   # qr
-  qr_flutter: ^3.0.1
-  flutter_barcode_scanner: ^0.1.7
+  qr_flutter: ^3.2.0
+  flutter_barcode_scanner: ^1.0.0
 
   # camera feed
-  camera: ^0.5.6+2
-  path_provider: ^1.4.0
+  camera: ^0.5.7+4
+  path_provider: ^1.6.7
 
   # vibrator
-  vibration: ^1.2.2
+  vibration: ^1.2.4
 
   # check connectivity
-  connectivity: ^0.4.5+2
+  connectivity: ^0.4.8+5
 
   # autosize text
   auto_size_text: ^2.1.0
 
   # local db
-  hive: ^1.1.1
+  hive: ^1.4.1+1
+  hive_flutter: ^0.3.0+2
 
   # screenshot widget
   screenshot: ^0.1.1
@@ -60,17 +63,12 @@ dependencies:
   # list animations are <3
   flutter_staggered_animations: ^0.1.2
 
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^0.1.2
-
   # introduction
-  intro_views_flutter: '^2.8.0'
+  intro_views_flutter: '^2.8.1'
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
   flutter_native_splash: ^0.1.9
 
 flutter_native_splash:
