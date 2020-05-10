@@ -94,7 +94,7 @@ class _FancyButtonState extends State<FancyButton>
 
     return Container(
       padding: widget.onPressed != null
-          ? EdgeInsets.only(bottom: 2, left: 0.5, right: 0.5)
+          ? const EdgeInsets.only(bottom: 2, left: 0.5, right: 0.5)
           : null,
       decoration: BoxDecoration(
         color: Colors.black87,
@@ -134,7 +134,7 @@ class _FancyButtonState extends State<FancyButton>
                                 color: _hslRelativeColor(l: 0.06),
                                 borderRadius: radius,
                               ),
-                              child: SizedBox.expand(),
+                              child: const SizedBox.expand(),
                             ),
                             Transform.translate(
                               offset: Offset(0.0, vertPadding * 2),
@@ -143,7 +143,7 @@ class _FancyButtonState extends State<FancyButton>
                                   color: _hslRelativeColor(),
                                   borderRadius: radius,
                                 ),
-                                child: SizedBox.expand(),
+                                child: const SizedBox.expand(),
                               ),
                             ),
                           ],

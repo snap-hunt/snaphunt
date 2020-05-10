@@ -14,10 +14,10 @@ class Player {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['user'] = this.user.toJson();
-    data['score'] = this.score;
-    data['status'] = this.status;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['user'] = user.toJson();
+    data['score'] = score;
+    data['status'] = status;
     return data;
   }
 }

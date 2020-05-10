@@ -10,7 +10,7 @@ class SinglePlayerSettings extends StatefulWidget {
 }
 
 class _SinglePlayerSettingsState extends State<SinglePlayerSettings> {
-  final itemsController = TextEditingController();
+  final TextEditingController itemsController = TextEditingController();
   int dropdownValue = 3;
 
   @override
@@ -41,7 +41,7 @@ class _SinglePlayerSettingsState extends State<SinglePlayerSettings> {
         elevation: 0,
       ),
       body: ListView(
-        physics: NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         children: <Widget>[
           const SizedBox(height: 10),
           CardTextField(
@@ -63,7 +63,7 @@ class _SinglePlayerSettingsState extends State<SinglePlayerSettings> {
                   value: value,
                   child: Text(
                     '$value mins',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 16,
                     ),
                   ),
@@ -76,7 +76,6 @@ class _SinglePlayerSettingsState extends State<SinglePlayerSettings> {
             widget: TextField(
               controller: itemsController,
               keyboardType: TextInputType.number,
-              maxLines: 1,
               decoration: InputDecoration(
                 border: InputBorder.none,
               ),

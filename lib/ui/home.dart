@@ -42,13 +42,13 @@ class HomeFancyButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FancyButton(
+      size: 70,
+      color: color,
+      onPressed: onPressed,
       child: SizedBox(
         width: width,
         child: child,
       ),
-      size: 70,
-      color: color,
-      onPressed: onPressed,
     );
   }
 }
@@ -68,7 +68,7 @@ class _HomeState extends State<Home> {
             mainAxisSize: MainAxisSize.max,
             children: <Widget>[
               Container(
-                padding: EdgeInsets.only(left: 30, right: 30, top: 50),
+                padding: const EdgeInsets.only(left: 30, right: 30, top: 50),
                 color: Colors.white,
                 child: Image.asset('assets/main.png', height: 185),
               ),
@@ -78,6 +78,11 @@ class _HomeState extends State<Home> {
                   const UserInfo(),
                   const SizedBox(height: 32.0),
                   HomeFancyButton(
+                    color: Colors.orange,
+                    onPressed: () {
+                      Navigator.of(context)
+                          .pushNamed(Router.singlePlayerSettings);
+                    },
                     child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
@@ -86,22 +91,9 @@ class _HomeState extends State<Home> {
                             style: TextStyle(color: Colors.white, fontSize: 18),
                           ),
                         ]),
-                    color: Colors.orange,
-                    onPressed: () {
-                      Navigator.of(context)
-                          .pushNamed(Router.singlePlayerSettings);
-                    },
                   ),
                   const SizedBox(height: 18.0),
                   HomeFancyButton(
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Text(
-                            "Multiplayer",
-                            style: TextStyle(color: Colors.white, fontSize: 18),
-                          ),
-                        ]),
                     color: connectionStatus == ConnectivityStatus.Offline
                         ? Colors.grey
                         : Colors.blue,
@@ -117,35 +109,41 @@ class _HomeState extends State<Home> {
                         : () {
                             Navigator.of(context).pushNamed(Router.lobby);
                           },
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            "Multiplayer",
+                            style: TextStyle(color: Colors.white, fontSize: 18),
+                          ),
+                        ]),
                   ),
                   const SizedBox(height: 18.0),
-                  Container(
-                    child: HomeFancyButton(
-                      width: 125,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.all(0),
-                            child: Icon(
-                              Icons.power_settings_new,
-                              color: Colors.white,
-                              size: 18,
-                            ),
+                  HomeFancyButton(
+                    width: 125,
+                    onPressed: () {
+                      Auth.of(context).logout();
+                    },
+                    color: Colors.red,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.all(0),
+                          child: Icon(
+                            Icons.power_settings_new,
+                            color: Colors.white,
+                            size: 18,
                           ),
-                          Container(
-                              margin: EdgeInsets.only(left: 2),
-                              child: Text(
-                                "Logout",
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 18),
-                              ))
-                        ],
-                      ),
-                      onPressed: () {
-                        Auth.of(context).logout();
-                      },
-                      color: Colors.red,
+                        ),
+                        Container(
+                            margin: const EdgeInsets.only(left: 2),
+                            child: Text(
+                              "Logout",
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 18),
+                            ))
+                      ],
                     ),
                   ),
                 ],
@@ -168,26 +166,24 @@ class UserInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     final user = Provider.of<FirebaseUser>(context, listen: false);
 
-    return Container(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisSize: MainAxisSize.max,
-        children: <Widget>[
-          UserAvatar(
-            photoUrl: user.photoUrl,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisSize: MainAxisSize.max,
+      children: <Widget>[
+        UserAvatar(
+          photoUrl: user.photoUrl,
+        ),
+        const SizedBox(width: 15),
+        Text(
+          user.displayName,
+          style: TextStyle(
+            fontSize: 28,
+            fontWeight: FontWeight.w400,
           ),
-          SizedBox(width: 15),
-          Text(
-            user.displayName,
-            style: TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.w400,
-            ),
-            maxLines: 2,
-          )
-        ],
-      ),
+          maxLines: 2,
+        )
+      ],
     );
   }
 }

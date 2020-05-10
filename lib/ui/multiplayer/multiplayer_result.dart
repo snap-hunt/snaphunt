@@ -36,7 +36,7 @@ class _ResultMultiPlayerState extends State<ResultMultiPlayer> {
     initPlayers();
   }
 
-  void initPlayers() async {
+  Future<void> initPlayers() async {
     final players = await Repository.instance.getPlayers(widget.gameId);
     players.sort((a, b) => b.score.compareTo(a.score));
     setState(() {
@@ -60,9 +60,6 @@ class _ResultMultiPlayerState extends State<ResultMultiPlayer> {
                         color: Colors.white,
                         width: double.infinity,
                         child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.max,
                           children: <Widget>[
                             ResultHeader(
                               title: widget.title,
@@ -86,6 +83,17 @@ class _ResultMultiPlayerState extends State<ResultMultiPlayer> {
                     FancyButton(
                       color: Colors.orange,
                       size: 50,
+                      onPressed: () async {
+                        screenshotController.capture().then((File image) async {
+                          await Share.file(
+                              'SnapHunt',
+                              'snaphunt.png',
+                              image.readAsBytesSync().buffer.asUint8List(),
+                              'image/png');
+                        }).catchError((onError) {
+                          print(onError);
+                        });
+                      },
                       child: Container(
                         width: 150,
                         child: Row(
@@ -102,22 +110,14 @@ class _ResultMultiPlayerState extends State<ResultMultiPlayer> {
                           ],
                         ),
                       ),
-                      onPressed: () async {
-                        screenshotController.capture().then((File image) async {
-                          await Share.file(
-                              'SnapHunt',
-                              'snaphunt.png',
-                              image.readAsBytesSync().buffer.asUint8List(),
-                              'image/png');
-                        }).catchError((onError) {
-                          print(onError);
-                        });
-                      },
                     ),
                     const SizedBox(height: 20),
                     FancyButton(
                       color: Colors.deepOrange,
                       size: 50,
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
                       child: Container(
                         width: 150,
                         child: Row(
@@ -135,9 +135,6 @@ class _ResultMultiPlayerState extends State<ResultMultiPlayer> {
                           ],
                         ),
                       ),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
                     ),
                   ],
                 ),
@@ -253,7 +250,7 @@ class ResultWinner extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(width: 20),
+          const SizedBox(width: 20),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -266,10 +263,10 @@ class ResultWinner extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Text(
-                '${winner.user.displayName}',
-                style: TextStyle(
+                winner.user.displayName,
+                style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w500,
                 ),
@@ -277,7 +274,7 @@ class ResultWinner extends StatelessWidget {
               const SizedBox(height: 10.0),
               Text(
                 '${winner.score} points',
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.orange,
                   fontSize: 18,
                   fontWeight: FontWeight.w300,
@@ -321,7 +318,7 @@ class ResultPlayers extends StatelessWidget {
             ),
             trailing: Text(
               '${player.score} points',
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.orange,
                 fontSize: 16,
                 fontWeight: FontWeight.w300,

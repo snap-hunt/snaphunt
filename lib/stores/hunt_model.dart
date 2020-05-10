@@ -49,7 +49,7 @@ class HuntModel with ChangeNotifier {
   StreamSubscription<DocumentSnapshot> gameStream;
 
   final ImageLabeler _imageLabeler = FirebaseVision.instance.imageLabeler(
-    ImageLabelerOptions(
+    const ImageLabelerOptions(
       confidenceThreshold: 0.65,
     ),
   );
@@ -60,7 +60,7 @@ class HuntModel with ChangeNotifier {
 
   final Stopwatch duration = Stopwatch();
 
-  final repository = Repository.instance;
+  final Repository repository = Repository.instance;
 
   Timer timer;
 
@@ -108,7 +108,7 @@ class HuntModel with ChangeNotifier {
     gameStream.cancel();
   }
 
-  void gameStatusListener(DocumentSnapshot snapshot) async {
+  Future<void> gameStatusListener(DocumentSnapshot snapshot) async {
     final status = snapshot.data['status'];
     if (status == 'end') {
       isGameEnd = true;
@@ -116,7 +116,7 @@ class HuntModel with ChangeNotifier {
     }
   }
 
-  void _scanImage(File image) async {
+  Future<void> _scanImage(File image) async {
     final FirebaseVisionImage visionImage = FirebaseVisionImage.fromFile(image);
     final results = await _imageLabeler.processImage(visionImage);
 
@@ -148,14 +148,14 @@ class HuntModel with ChangeNotifier {
   Future<int> hasMatch(List<ImageLabel> scanResults) async {
     int count = 0;
 
-    scanResults.forEach((results) {
+    for (final results in scanResults) {
       objects.where((hunt) => !hunt.isFound).forEach((words) {
         if (results.text.toLowerCase() == words.word.toLowerCase()) {
           count++;
           words.isFound = true;
         }
       });
-    });
+    }
 
     return count;
   }

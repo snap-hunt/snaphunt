@@ -15,7 +15,7 @@ class _LoadingTextFieldState extends State<LoadingTextField>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 1),
+      duration: const Duration(seconds: 1),
     );
 
     animation = Tween<double>(begin: -1.0, end: 2.0).animate(
@@ -40,7 +40,7 @@ class _LoadingTextFieldState extends State<LoadingTextField>
 
   @override
   Widget build(BuildContext context) {
-    var brightness = Theme.of(context).brightness;
+    final brightness = Theme.of(context).brightness;
 
     return AnimatedBuilder(
       animation: animation,
@@ -59,7 +59,7 @@ class _LoadingTextFieldState extends State<LoadingTextField>
 }
 
 Decoration myBoxDec(Animation<double> animation,
-    {bool isCircle = false, brightness}) {
+    {bool isCircle = false, Brightness brightness}) {
   final dark = [
     Colors.grey[700],
     Colors.grey[600],
@@ -67,9 +67,9 @@ Decoration myBoxDec(Animation<double> animation,
   ];
 
   final light = [
-    Color(0xfff6f7f9),
-    Color(0xffe9ebee),
-    Color(0xfff6f7f9),
+    const Color(0xfff6f7f9),
+    const Color(0xffe9ebee),
+    const Color(0xfff6f7f9),
   ];
   return BoxDecoration(
     shape: isCircle ? BoxShape.circle : BoxShape.rectangle,

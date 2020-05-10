@@ -42,17 +42,17 @@ class Game {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['createdBy'] = this.createdBy;
-    data['maxPlayers'] = this.maxPlayers;
-    data['timeLimit'] = this.timeLimit;
-    data['noOfItems'] = this.noOfItems;
-    data['status'] = this.status;
-    data['timeCreated'] = this.timeCreated;
-    data['gameStartTime'] = this.gameStartTime;
-    data['words'] = this.words;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['name'] = name;
+    data['createdBy'] = createdBy;
+    data['maxPlayers'] = maxPlayers;
+    data['timeLimit'] = timeLimit;
+    data['noOfItems'] = noOfItems;
+    data['status'] = status;
+    data['timeCreated'] = timeCreated;
+    data['gameStartTime'] = gameStartTime;
+    data['words'] = words;
     return data;
   }
 }

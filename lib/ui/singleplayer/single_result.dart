@@ -14,13 +14,13 @@ class ResultScreenSinglePlayer extends StatelessWidget {
       : super(key: key);
 
   String formatHHMMSS(int seconds) {
-    int hours = (seconds / 3600).truncate();
+    final int hours = (seconds / 3600).truncate();
     seconds = (seconds % 3600).truncate();
-    int minutes = (seconds / 60).truncate();
+    final int minutes = (seconds / 60).truncate();
 
-    String hoursStr = (hours).toString().padLeft(2, '0');
-    String minutesStr = (minutes).toString().padLeft(2, '0');
-    String secondsStr = (seconds % 60).toString().padLeft(2, '0');
+    final String hoursStr = (hours).toString().padLeft(2, '0');
+    final String minutesStr = (minutes).toString().padLeft(2, '0');
+    final String secondsStr = (seconds % 60).toString().padLeft(2, '0');
 
     if (hours == 0) {
       return "$minutesStr:$secondsStr";
@@ -72,6 +72,11 @@ class ResultScreenSinglePlayer extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               FancyButton(
+                size: 70,
+                color: Colors.blue,
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
                 child: Text(
                   "Back",
                   style: TextStyle(
@@ -79,11 +84,6 @@ class ResultScreenSinglePlayer extends StatelessWidget {
                     fontSize: 18,
                   ),
                 ),
-                size: 70,
-                color: Colors.blue,
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
               ),
               CustomWaveWidget()
             ],

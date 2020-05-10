@@ -14,23 +14,21 @@ class HostStartButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          FancyButton(
-            child: Text(
-              'BEGIN HUNT',
-              style: fancy_button_style,
-            ),
-            color: canStartGame ? Colors.deepOrangeAccent : Colors.grey,
-            size: 70,
-            onPressed: canStartGame ? onGameStart : null,
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        FancyButton(
+          color: canStartGame ? Colors.deepOrangeAccent : Colors.grey,
+          size: 70,
+          onPressed: canStartGame ? onGameStart : null,
+          child: Text(
+            'BEGIN HUNT',
+            style: fancy_button_style,
           ),
-          SizedBox(height: 10),
-        ],
-      ),
+        ),
+        const SizedBox(height: 10),
+      ],
     );
   }
 }

@@ -87,28 +87,26 @@ class Room extends StatelessWidget {
           centerTitle: true,
           elevation: 0,
         ),
-        body: Container(
-          child: Consumer<GameModel>(
-            builder: (context, model, child) {
-              _isHost = model.isHost;
+        body: Consumer<GameModel>(
+          builder: (context, model, child) {
+            _isHost = model.isHost;
 
-              if (model.isLoading) {
-                return RoomLoading();
-              }
+            if (model.isLoading) {
+              return RoomLoading();
+            }
 
-              WidgetsBinding.instance.addPostFrameCallback(
-                (_) => gameStatusListener(model, context),
-              );
+            WidgetsBinding.instance.addPostFrameCallback(
+              (_) => gameStatusListener(model, context),
+            );
 
-              return child;
-            },
-            child: Column(
-              children: <Widget>[
-                RoomDetails(),
-                PlayerRow(),
-                Expanded(child: PlayerList()),
-              ],
-            ),
+            return child;
+          },
+          child: Column(
+            children: const <Widget>[
+              RoomDetails(),
+              PlayerRow(),
+              Expanded(child: PlayerList()),
+            ],
           ),
         ),
       ),
@@ -134,7 +132,7 @@ class RoomDetails extends StatelessWidget {
             Row(
               children: <Widget>[
                 Container(
-                    color: Color(0xFEEBEBEB),
+                    color: const Color(0xFEEBEBEB),
                     width: MediaQuery.of(context).size.width / 2.75,
                     height: 255,
                     child: Column(
@@ -145,7 +143,7 @@ class RoomDetails extends StatelessWidget {
                           data: model.game.id,
                           version: QrVersions.auto,
                           size: 120.0,
-                          padding: EdgeInsets.all(10),
+                          padding: const EdgeInsets.all(10),
                           backgroundColor: Colors.white,
                         ),
                         const SizedBox(height: 32),
@@ -169,7 +167,7 @@ class RoomDetails extends StatelessWidget {
                 Container(
                     color: Colors.white,
                     width: MediaQuery.of(context).size.width / 1.575,
-                    padding: EdgeInsets.fromLTRB(15, 25, 15, 5),
+                    padding: const EdgeInsets.fromLTRB(15, 25, 15, 5),
                     height: 255,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -186,7 +184,10 @@ class RoomDetails extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 25),
-                        Text('Code:', style: TextStyle(fontSize: 24, color: Colors.grey),),
+                        Text(
+                          'Code:',
+                          style: TextStyle(fontSize: 24, color: Colors.grey),
+                        ),
                         const SizedBox(height: 10),
                         Text(
                           model.game.id,
@@ -196,7 +197,7 @@ class RoomDetails extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 40),
-                        RoomBody(),
+                        const RoomBody(),
                       ],
                     )),
               ],
@@ -276,52 +277,50 @@ class PlayerList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<GameModel>(
       builder: (context, model, child) {
-        return Container(
-          child: ListView.builder(
-            itemCount: model.players.length,
-            itemBuilder: (context, index) {
-              final player = model.players[index];
-              final isMe = player.user.uid == model.userId;
+        return ListView.builder(
+          itemCount: model.players.length,
+          itemBuilder: (context, index) {
+            final player = model.players[index];
+            final isMe = player.user.uid == model.userId;
 
-              return Container(
-                padding: EdgeInsets.symmetric(vertical: 8, horizontal: 4),
-                child: ListTile(
-                  title: Text(
-                    player.user.displayName,
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
+            return Container(
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+              child: ListTile(
+                title: Text(
+                  player.user.displayName,
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
                   ),
-                  leading: UserAvatar(
-                    photoUrl: player.user.photoUrl,
-                    height: 45,
-                    borderColor: user_colors[index % 4],
-                  ),
-                  trailing: model.isHost
-                      ? !isMe
-                          ? FancyButton(
-                              child: Text(
-                                'REMOVE',
-                                style: fancy_button_style,
-                              ),
-                              color: Colors.red,
-                              size: 40,
-                              onPressed: () =>
-                                  model.onKickPlayer(player.user.uid),
-                            )
-                          : Container(
-                              height: 0,
-                              width: 0,
-                            )
-                      : Container(
-                          height: 0,
-                          width: 0,
-                        ),
                 ),
-              );
-            },
-          ),
+                leading: UserAvatar(
+                  photoUrl: player.user.photoUrl,
+                  height: 45,
+                  borderColor: user_colors[index % 4],
+                ),
+                trailing: model.isHost
+                    ? !isMe
+                        ? FancyButton(
+                            color: Colors.red,
+                            size: 40,
+                            onPressed: () =>
+                                model.onKickPlayer(player.user.uid),
+                            child: Text(
+                              'REMOVE',
+                              style: fancy_button_style,
+                            ),
+                          )
+                        : Container(
+                            height: 0,
+                            width: 0,
+                          )
+                    : Container(
+                        height: 0,
+                        width: 0,
+                      ),
+              ),
+            );
+          },
         );
       },
     );

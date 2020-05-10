@@ -8,7 +8,7 @@ class RoomLoading extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
+        children: const <Widget>[
           CircularProgressIndicator(),
           SizedBox(height: 10),
           Text('Retrieving game')

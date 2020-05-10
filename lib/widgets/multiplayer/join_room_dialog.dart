@@ -69,7 +69,7 @@ class JoinRoom extends StatelessWidget {
                 }
               },
             ),
-            SizedBox(height: 15),
+            const SizedBox(height: 15),
             DialogFancyButton(
               text: 'Close',
               color: Colors.blueGrey,
@@ -99,6 +99,9 @@ class DialogFancyButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FancyButton(
+      size: 60,
+      color: color,
+      onPressed: onPressed,
       child: SizedBox(
         width: 150,
         child: Center(
@@ -108,9 +111,6 @@ class DialogFancyButton extends StatelessWidget {
           ),
         ),
       ),
-      size: 60,
-      color: color,
-      onPressed: onPressed,
     );
   }
 }
@@ -134,7 +134,7 @@ class DialogCardTextField extends StatelessWidget {
         elevation: 3,
         child: Container(
           width: 300,
-          margin: EdgeInsets.all(8.0),
+          margin: const EdgeInsets.all(8.0),
           child: Row(
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.baseline,
@@ -142,6 +142,7 @@ class DialogCardTextField extends StatelessWidget {
             children: <Widget>[
               Expanded(
                 child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: TextField(
                     textAlign: TextAlign.center,
                     controller: controller,
@@ -151,7 +152,6 @@ class DialogCardTextField extends StatelessWidget {
                       border: InputBorder.none,
                     ),
                   ),
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 ),
               )
             ],
@@ -178,7 +178,7 @@ class DividerDialog extends StatelessWidget {
             color: Colors.blueGrey,
           ),
         ),
-        SizedBox(
+        const SizedBox(
           width: 60,
           child: Center(
             child: Text(

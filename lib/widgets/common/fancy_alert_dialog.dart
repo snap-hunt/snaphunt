@@ -32,7 +32,7 @@ class FancyAlertDialog extends StatelessWidget {
           Text(
             body,
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 20),
+            style: const TextStyle(fontSize: 20),
           ),
           const SizedBox(height: 30),
           DialogFancyButtonExit(
@@ -63,15 +63,15 @@ class DialogFancyButtonExit extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FancyButton(
+      size: 60,
+      color: color,
+      onPressed: onPressed,
       child: Center(
         child: Text(
           text,
           style: fancy_button_style,
         ),
       ),
-      size: 60,
-      color: color,
-      onPressed: onPressed,
     );
   }
 }

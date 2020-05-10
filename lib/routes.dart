@@ -35,7 +35,7 @@ class Router {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case home:
-        return MaterialPageRoute(builder: (_) => Home());
+        return MaterialPageRoute(builder: (_) => const Home());
 
       case lobby:
         return MaterialPageRoute(builder: (_) => Lobby());
@@ -61,8 +61,8 @@ class Router {
           builder: (_) => ChangeNotifierProvider(
             builder: (_) => GameModel(
               args[0] as Game,
-              args[1] as bool,
               args[2] as String,
+              isHost: args[1] as bool,
             ),
             child: Room(),
           ),
@@ -108,7 +108,7 @@ class Router {
 
       case login:
       default:
-        return MaterialPageRoute(builder: (_) => Login());
+        return MaterialPageRoute(builder: (_) => const Login());
     }
   }
 }

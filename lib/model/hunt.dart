@@ -13,9 +13,9 @@ class Hunt {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['word'] = this.word;
-    data['isFound'] = this.isFound;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['word'] = word;
+    data['isFound'] = isFound;
     return data;
   }
 }

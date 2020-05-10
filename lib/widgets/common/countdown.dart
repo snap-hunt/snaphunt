@@ -5,7 +5,8 @@ class CountDownTimer extends StatefulWidget {
 
   const CountDownTimer({Key key, this.timeLimit}) : super(key: key);
 
-  State createState() => new _CountDownTimerState();
+  @override
+  State createState() => _CountDownTimerState();
 }
 
 class _CountDownTimerState extends State<CountDownTimer>
@@ -15,18 +16,18 @@ class _CountDownTimerState extends State<CountDownTimer>
   Duration duration;
 
   String get timerDisplayString {
-    Duration duration = _controller.duration * _controller.value;
+    final Duration duration = _controller.duration * _controller.value;
     return formatHHMMSS(duration.inSeconds);
   }
 
   String formatHHMMSS(int seconds) {
-    int hours = (seconds / 3600).truncate();
+    final int hours = (seconds / 3600).truncate();
     seconds = (seconds % 3600).truncate();
-    int minutes = (seconds / 60).truncate();
+    final int minutes = (seconds / 60).truncate();
 
-    String hoursStr = (hours).toString().padLeft(2, '0');
-    String minutesStr = (minutes).toString().padLeft(2, '0');
-    String secondsStr = (seconds % 60).toString().padLeft(2, '0');
+    final String hoursStr = (hours).toString().padLeft(2, '0');
+    final String minutesStr = (minutes).toString().padLeft(2, '0');
+    final String secondsStr = (seconds % 60).toString().padLeft(2, '0');
 
     if (hours == 0) {
       return "$minutesStr:$secondsStr";
@@ -41,8 +42,8 @@ class _CountDownTimerState extends State<CountDownTimer>
     final now = DateTime.now();
 
     secondsRemaining = widget.timeLimit.difference(now).inSeconds;
-    duration = new Duration(seconds: secondsRemaining);
-    _controller = new AnimationController(
+    duration = Duration(seconds: secondsRemaining);
+    _controller = AnimationController(
       vsync: this,
       duration: duration,
     );
@@ -55,9 +56,9 @@ class _CountDownTimerState extends State<CountDownTimer>
 
     if (secondsRemaining != secondsRemaining) {
       setState(() {
-        duration = new Duration(seconds: secondsRemaining);
+        duration = Duration(seconds: secondsRemaining);
         _controller.dispose();
-        _controller = new AnimationController(
+        _controller = AnimationController(
           vsync: this,
           duration: duration,
         );

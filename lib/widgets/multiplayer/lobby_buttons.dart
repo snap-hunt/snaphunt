@@ -17,7 +17,7 @@ class LobbyButtons extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-          Expanded(
+          const Expanded(
             child: Center(
               child: Text(
                 'Snap Rooms',
@@ -28,29 +28,29 @@ class LobbyButtons extends StatelessWidget {
           ),
           Expanded(
             child: FancyButton(
+              color: Colors.orange,
+              size: 60,
+              onPressed: onJoinRoom,
               child: Center(
                 child: Text(
                   'Join Room',
                   style: fancy_button_style,
                 ),
               ),
-              color: Colors.orange,
-              size: 60,
-              onPressed: onJoinRoom,
             ),
           ),
           const SizedBox(width: 10),
           Expanded(
             child: FancyButton(
+              color: Colors.red,
+              size: 60,
+              onPressed: onCreateRoom,
               child: Center(
                 child: Text(
                   'Create Room',
                   style: fancy_button_style,
                 ),
               ),
-              color: Colors.red,
-              size: 60,
-              onPressed: onCreateRoom,
             ),
           ),
         ],

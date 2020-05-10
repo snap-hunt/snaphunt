@@ -9,14 +9,14 @@ class CustomWaveWidget extends StatelessWidget {
         duration: 1,
         config: CustomConfig(
           gradients: [
-            [Colors.orange, Color(0xEEF44336)],
-            [Colors.red[200], Color(0x77E57373)],
-            [Colors.orange, Color(0x66FF9800)],
-            [Colors.yellow[800], Color(0x55FFEB3B)]
+            [Colors.orange, const Color(0xEEF44336)],
+            [Colors.red[200], const Color(0x77E57373)],
+            [Colors.orange, const Color(0x66FF9800)],
+            [Colors.yellow[800], const Color(0x55FFEB3B)]
           ],
           durations: [35000, 19440, 10800, 6000],
           heightPercentages: [0.20, 0.23, 0.25, 0.30],
-          blur: MaskFilter.blur(BlurStyle.solid, 2),
+          blur: const MaskFilter.blur(BlurStyle.solid, 2),
           gradientBegin: Alignment.bottomLeft,
           gradientEnd: Alignment.topRight,
         ),

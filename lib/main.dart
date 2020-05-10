@@ -87,7 +87,6 @@ class _AppState extends State<App> {
         title: 'SnapHunt',
         theme: ThemeData(
           primaryColor: Colors.orange,
-          textTheme: TextTheme(),
           fontFamily: 'SF_Atarian_System',
         ),
         navigatorKey: _navigatorKey,

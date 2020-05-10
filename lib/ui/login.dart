@@ -35,6 +35,9 @@ class LoginFancyButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FancyButton(
+      size: 70,
+      color: color,
+      onPressed: onPressed,
       child: SizedBox(
         width: 200,
         child: Center(
@@ -44,9 +47,6 @@ class LoginFancyButton extends StatelessWidget {
           ),
         ),
       ),
-      size: 70,
-      color: color,
-      onPressed: onPressed,
     );
   }
 }
@@ -84,15 +84,13 @@ class _LoginState extends State<Login> {
                   );
                 }
                 return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 0.0),
+                  padding: const EdgeInsets.symmetric(),
                   child: Column(
                     children: <Widget>[
-                      Container(
-                        child: LoginFancyButton(
-                          text: 'Login with Google',
-                          color: Color(0xffFF951A),
-                          onPressed: _onLoginWithGooglePressed,
-                        ),
+                      LoginFancyButton(
+                        text: 'Login with Google',
+                        color: const Color(0xffFF951A),
+                        onPressed: _onLoginWithGooglePressed,
                       ),
                       Container(
                         margin: const EdgeInsets.only(top: 18.0),
@@ -132,7 +130,7 @@ class _LoginState extends State<Login> {
                 alignment: Alignment.bottomCenter,
                 child: Column(children: <Widget>[
                   Container(
-                    margin: EdgeInsets.only(bottom: 12),
+                    margin: const EdgeInsets.only(bottom: 12),
                     child: Text("Flutter PH Hackathon Entry",
                         style: TextStyle(
                             color: Colors.grey,

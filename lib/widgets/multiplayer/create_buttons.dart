@@ -25,31 +25,31 @@ class CreateButtons extends StatelessWidget {
         children: <Widget>[
           Expanded(
             child: FancyButton(
+              color: Colors.blueGrey,
+              size: 60,
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
               child: Center(
                 child: Text(
                   cancelLabel,
                   style: fancy_button_style,
                 ),
               ),
-              color: Colors.blueGrey,
-              size: 60,
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
             ),
           ),
-          SizedBox(width: 15),
+          const SizedBox(width: 15),
           Expanded(
             child: FancyButton(
+              color: Colors.deepOrangeAccent,
+              size: 60,
+              onPressed: onCreate,
               child: Center(
                 child: Text(
                   createLabel,
                   style: fancy_button_style,
                 ),
               ),
-              color: Colors.deepOrangeAccent,
-              size: 60,
-              onPressed: onCreate,
             ),
           ),
         ],

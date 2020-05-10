@@ -14,7 +14,7 @@ class PlayHuntModel with ChangeNotifier {
 
   StreamSubscription<QuerySnapshot> playerStream;
 
-  final repository = Repository.instance;
+  final Repository repository = Repository.instance;
 
   @override
   void addListener(listener) {
@@ -33,9 +33,9 @@ class PlayHuntModel with ChangeNotifier {
   }
 
   void playerListener(QuerySnapshot snapshot) {
-    snapshot.documentChanges.forEach((DocumentChange change) async {
+    for (final change in snapshot.documentChanges) {
       if (DocumentChangeType.modified == change.type) {
-        int index = players.indexWhere(
+        final int index = players.indexWhere(
             (player) => player.user.uid == change.document.documentID);
 
         if (index != -1) {
@@ -44,7 +44,7 @@ class PlayHuntModel with ChangeNotifier {
           notifyListeners();
         }
       }
-    });
+    }
   }
 
   void sort() {

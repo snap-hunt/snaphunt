@@ -60,7 +60,7 @@ class _CameraScreenState extends State<CameraScreen>
                     aspectRatio: controller.value.aspectRatio,
                     child: CameraPreview(controller),
                   )
-                : Center(child: CircularProgressIndicator()),
+                : const Center(child: CircularProgressIndicator()),
           ),
           Align(
             alignment: Alignment.bottomCenter,
@@ -80,7 +80,7 @@ class _CameraScreenState extends State<CameraScreen>
     onNewCameraSelected(cameras[selectedCameraIdx]);
   }
 
-  void onNewCameraSelected(CameraDescription cameraDescription) async {
+  Future<void> onNewCameraSelected(CameraDescription cameraDescription) async {
     if (controller != null) {
       await controller.dispose();
     }
@@ -124,15 +124,14 @@ class CameraRow extends StatelessWidget {
       child: Stack(
         children: <Widget>[
           Align(
-            alignment: Alignment.center,
             child: CameraButton(controller: controller),
           ),
           Positioned(
+            height: 100,
+            left: MediaQuery.of(context).size.width * 0.75,
             child: CameraSwapButton(
               onPressed: onCameraSwitch,
             ),
-            height: 100,
-            left: MediaQuery.of(context).size.width * 0.75,
           )
         ],
       ),

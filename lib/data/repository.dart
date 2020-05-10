@@ -9,15 +9,15 @@ import 'package:snaphunt/utils/utils.dart';
 class Repository {
   static final Repository _singleton = Repository._();
 
-  Repository._();
-
   factory Repository() => _singleton;
+
+  Repository._();
 
   static Repository get instance => _singleton;
 
   final Firestore _db = Firestore.instance;
 
-  void updateUserData(FirebaseUser user) async {
+  Future<void> updateUserData(FirebaseUser user) async {
     final DocumentReference ref = _db.collection('users').document(user.uid);
 
     return ref.setData(<String, dynamic>{
@@ -58,11 +58,11 @@ class Repository {
         .setData({'status': 'active', 'score': 0});
   }
 
-  void cancelRoom(String roomId) async {
+  Future<void> cancelRoom(String roomId) async {
     await _db.document('games/$roomId').updateData({'status': 'cancelled'});
   }
 
-  void leaveRoom(String roomId, String userId) async {
+  Future<void> leaveRoom(String roomId, String userId) async {
     await _db
         .document('games/$roomId')
         .collection('players')
@@ -70,11 +70,11 @@ class Repository {
         .delete();
   }
 
-  void endGame(String roomId) async {
+  Future<void> endGame(String roomId) async {
     await _db.document('games/$roomId').updateData({'status': 'end'});
   }
 
-  void startGame(String roomId, {int numOfItems = 8}) async {
+  Future<void> startGame(String roomId, {int numOfItems = 8}) async {
     await _db.document('games/$roomId').updateData({
       'status': 'in_game',
       'gameStartTime': Timestamp.now(),
@@ -106,7 +106,7 @@ class Repository {
         .snapshots();
   }
 
-  void kickPlayer(String gameId, String userId) async {
+  Future<void> kickPlayer(String gameId, String userId) async {
     await _db
         .collection('games')
         .document(gameId)
@@ -124,7 +124,7 @@ class Repository {
     return players.documents.length;
   }
 
-  void updateLocalWords() async {
+  Future<void> updateLocalWords() async {
     final box = Hive.box('words');
 
     final DocumentSnapshot doc = await _db.document('words/words').get();
@@ -146,14 +146,14 @@ class Repository {
   }
 
   Future<List<Player>> getPlayers(String gameId) async {
-    List<Player> players = [];
+    final List<Player> players = [];
     final QuerySnapshot ref = await _db
         .collection('games')
         .document(gameId)
         .collection('players')
         .getDocuments();
 
-    for (var document in ref.documents) {
+    for (final document in ref.documents) {
       final DocumentSnapshot userRef =
           await _db.collection('users').document(document.documentID).get();
 

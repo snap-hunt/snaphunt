@@ -14,14 +14,14 @@ class CreateRoom extends StatefulWidget {
 }
 
 class _CreateRoomState extends State<CreateRoom> {
-  final nameController = TextEditingController();
-  final maxPlayersController = TextEditingController();
-  final itemsController = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController maxPlayersController = TextEditingController();
+  final TextEditingController itemsController = TextEditingController();
   int dropdownValue = 3;
 
   @override
   void initState() {
-    nameController.text = 'Snap Attack \'19';
+    nameController.text = "Snap Attack '19";
     maxPlayersController.text = '3';
     itemsController.text = '8';
     super.initState();
@@ -52,7 +52,7 @@ class _CreateRoomState extends State<CreateRoom> {
         elevation: 0,
       ),
       body: ListView(
-        physics: NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         children: <Widget>[
           const SizedBox(height: 10),
           CardTextField(
@@ -71,7 +71,6 @@ class _CreateRoomState extends State<CreateRoom> {
             widget: TextField(
               controller: maxPlayersController,
               keyboardType: TextInputType.number,
-              maxLines: 1,
               decoration: InputDecoration(
                 border: InputBorder.none,
               ),
@@ -104,7 +103,6 @@ class _CreateRoomState extends State<CreateRoom> {
             widget: TextField(
               controller: itemsController,
               keyboardType: TextInputType.number,
-              maxLines: 1,
               decoration: InputDecoration(
                 border: InputBorder.none,
               ),
@@ -121,7 +119,7 @@ class _CreateRoomState extends State<CreateRoom> {
                 numObjects = objectCount as int;
               }
 
-              Game game = Game(
+              final Game game = Game(
                 name: nameController.text,
                 maxPlayers: int.parse(maxPlayersController.text),
                 noOfItems: numObjects,

@@ -11,10 +11,10 @@ class GameModel with ChangeNotifier {
   Game _game;
   Game get game => _game;
 
-  bool _isHost;
-  bool get isHost => _isHost;
+  final bool isHost;
+  // bool get isHost => _isHost;
 
-  String _userId;
+  final String _userId;
   String get userId => _userId;
 
   bool _isLoading = false;
@@ -32,12 +32,12 @@ class GameModel with ChangeNotifier {
   StreamSubscription<DocumentSnapshot> gameStream;
   StreamSubscription<QuerySnapshot> playerStream;
 
-  List<Player> _players = [];
+  final List<Player> _players = [];
   List<Player> get players => _players;
 
-  final repository = Repository.instance;
+  final Repository repository = Repository.instance;
 
-  GameModel(this._game, this._isHost, this._userId);
+  GameModel(this._game, this._userId, {this.isHost});
 
   @override
   void addListener(listener) {
@@ -45,12 +45,12 @@ class GameModel with ChangeNotifier {
     super.addListener(listener);
   }
 
-  void initRoom() async {
+  Future<void> initRoom() async {
     _isLoading = true;
     notifyListeners();
 
-    if (_isHost) {
-      String id = await repository.createRoom(_game);
+    if (isHost) {
+      final String id = await repository.createRoom(_game);
       _game.id = id;
     }
 
@@ -73,7 +73,7 @@ class GameModel with ChangeNotifier {
     playerStream = repository.playersSnapshot(_game.id).listen(playerListener);
   }
 
-  void gameStatusListener(DocumentSnapshot snapshot) async {
+  Future<void> gameStatusListener(DocumentSnapshot snapshot) async {
     final status = snapshot.data['status'];
     if (status == 'cancelled') {
       _status = GameStatus.cancelled;
@@ -88,9 +88,6 @@ class GameModel with ChangeNotifier {
 
   void playerListener(QuerySnapshot snapshot) {
     snapshot.documentChanges.forEach((DocumentChange change) async {
-      print(change.type);
-      print(change.document.documentID);
-
       if (DocumentChangeType.added == change.type) {
         players.add(
             Player(user: await repository.getUser(change.document.documentID)));
@@ -123,7 +120,7 @@ class GameModel with ChangeNotifier {
 
   void onDispose() {
     if (GameStatus.game != _status) {
-      if (_isHost) {
+      if (isHost) {
         repository.cancelRoom(_game.id);
       } else {
         repository.leaveRoom(_game.id, _userId);

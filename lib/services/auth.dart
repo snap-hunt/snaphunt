@@ -19,7 +19,7 @@ class Auth {
 
   Auth._(
     FirebaseUser currentUser,
-  ) : this.currentUser = ValueNotifier<FirebaseUser>(currentUser);
+  ) : currentUser = ValueNotifier<FirebaseUser>(currentUser);
 
   final ValueNotifier<FirebaseUser> currentUser;
 
@@ -42,7 +42,8 @@ class Auth {
 
   Future<void> loginWithEmailAndPassword(String email, String password) async {
     try {
-      await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
+      await _firebaseAuth.signInWithEmailAndPassword(
+          email: email, password: password);
     } catch (e, st) {
       throw _getAuthException(e, st);
     }
@@ -56,7 +57,8 @@ class Auth {
       }
       final auth = await account.authentication;
       await _firebaseAuth.signInWithCredential(
-        GoogleAuthProvider.getCredential(idToken: auth.idToken, accessToken: auth.accessToken),
+        GoogleAuthProvider.getCredential(
+            idToken: auth.idToken, accessToken: auth.accessToken),
       );
     } catch (e, st) {
       throw _getAuthException(e, st);
@@ -84,11 +86,14 @@ class Auth {
         case 'ERROR_WRONG_PASSWORD':
           throw const AuthException('Please check your password.');
         case 'ERROR_USER_NOT_FOUND':
-          throw const AuthException('User not found. Is that the correct email address?');
+          throw const AuthException(
+              'User not found. Is that the correct email address?');
         case 'ERROR_USER_DISABLED':
-          throw const AuthException('Your account has been disabled. Please contact support');
+          throw const AuthException(
+              'Your account has been disabled. Please contact support');
         case 'ERROR_TOO_MANY_REQUESTS':
-          throw const AuthException('You have tried to login too many times. Please try again later.');
+          throw const AuthException(
+              'You have tried to login too many times. Please try again later.');
       }
     }
     throw const AuthException('Sorry, an error occurred. Please try again.');

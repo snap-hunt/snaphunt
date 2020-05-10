@@ -19,7 +19,7 @@ void showAlertDialog({BuildContext context, String title, String body}) {
 }
 
 Future<String> loadAsset() async {
-  return await rootBundle.loadString('assets/default.json');
+  return rootBundle.loadString('assets/default.json');
 }
 
 Future openDB() async {
@@ -30,11 +30,11 @@ Future openDB() async {
   ]);
 }
 
-void initDB() async {
+Future initDB() async {
   final box = Hive.box('words');
 
   if (box.isEmpty) {
-    Map<String, dynamic> data =
+    final Map<String, dynamic> data =
         json.decode(await loadAsset()) as Map<String, dynamic>;
 
     box.put('version', data['version']);

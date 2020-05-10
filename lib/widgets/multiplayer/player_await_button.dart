@@ -10,15 +10,13 @@ class PlayerAwaitButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          CircularProgressIndicator(),
-          const SizedBox(height: 14),
-          Text(canStartGame ? 'Waiting for host' : 'Waiting for player')
-        ],
-      ),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        const CircularProgressIndicator(),
+        const SizedBox(height: 14),
+        Text(canStartGame ? 'Waiting for host' : 'Waiting for player')
+      ],
     );
   }
 }

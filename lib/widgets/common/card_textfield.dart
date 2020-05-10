@@ -24,7 +24,7 @@ class CardTextField extends StatelessWidget {
         ),
         elevation: 3,
         child: Container(
-          margin: EdgeInsets.all(8.0),
+          margin: const EdgeInsets.all(8.0),
           child: Row(
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.baseline,
@@ -35,10 +35,7 @@ class CardTextField extends StatelessWidget {
                 child: Center(
                   child: Text(
                     label,
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold
-                    ),
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
@@ -49,8 +46,8 @@ class CardTextField extends StatelessWidget {
               Expanded(
                 flex: 5,
                 child: Container(
-                  child: widget,
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: widget,
                 ),
               )
             ],

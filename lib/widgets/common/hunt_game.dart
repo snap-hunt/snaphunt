@@ -119,7 +119,7 @@ class HuntGame extends StatelessWidget {
           context: context,
           barrierDismissible: false,
           builder: (BuildContext context) {
-            return RoomExitDialog(
+            return const RoomExitDialog(
               title: 'Leave game?',
               body:
                   'Are you sure you want to leave the game? Your progress will be lost',
@@ -164,7 +164,7 @@ class HuntGame extends StatelessWidget {
               ],
             );
           },
-          child: CameraScreen(),
+          child: const CameraScreen(),
         ),
       ),
     );
@@ -220,32 +220,30 @@ class ExpandedWordList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: ExpandablePanel(
-        collapsed: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Text(
-                'Items ($objectsFound/$totalObjects)',
-                style: TextStyle(
-                  fontSize: 20,
-                  color: Colors.white,
-                ),
+    return ExpandablePanel(
+      collapsed: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Text(
+              'Items ($objectsFound/$totalObjects)',
+              style: TextStyle(
+                fontSize: 20,
+                color: Colors.white,
               ),
-              if (hunt != null) WordTile(word: hunt)
-            ],
-          ),
+            ),
+            if (hunt != null) WordTile(word: hunt)
+          ],
         ),
-        expanded: WordList(),
-        headerAlignment: ExpandablePanelHeaderAlignment.center,
-        tapBodyToCollapse: true,
-        tapHeaderToExpand: true,
-        hasIcon: true,
-        iconColor: Colors.white,
       ),
+      expanded: WordList(),
+      headerAlignment: ExpandablePanelHeaderAlignment.center,
+      tapBodyToCollapse: true,
+      tapHeaderToExpand: true,
+      hasIcon: true,
+      iconColor: Colors.white,
     );
   }
 }
@@ -292,28 +290,26 @@ class WordTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Icon(
-            word.isFound ? Icons.check : Icons.fiber_manual_record,
-            color: word.isFound ? Colors.green : Colors.red,
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Icon(
+          word.isFound ? Icons.check : Icons.fiber_manual_record,
+          color: word.isFound ? Colors.green : Colors.red,
+        ),
+        const SizedBox(width: 10),
+        AutoSizeText(
+          word.word,
+          maxLines: 1,
+          minFontSize: 10,
+          style: TextStyle(
+            fontSize: 20,
+            color: Colors.white,
+            decoration: word.isFound ? TextDecoration.lineThrough : null,
           ),
-          SizedBox(width: 10),
-          AutoSizeText(
-            word.word,
-            maxLines: 1,
-            minFontSize: 10,
-            style: TextStyle(
-              fontSize: 20,
-              color: Colors.white,
-              decoration: word.isFound ? TextDecoration.lineThrough : null,
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
@@ -377,7 +373,7 @@ class ScoreAvatar extends StatelessWidget {
             photoUrl: photoUrl,
             height: 50,
           ),
-          SizedBox(width: 10),
+          const SizedBox(width: 10),
           Text(
             '$score',
             style: TextStyle(

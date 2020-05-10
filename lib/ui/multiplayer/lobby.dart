@@ -31,7 +31,7 @@ class Lobby extends StatelessWidget {
               Expanded(
                 child: LobbyList(),
               ),
-              Divider(
+              const Divider(
                 thickness: 1.5,
               ),
               LobbyButtons(
@@ -39,7 +39,7 @@ class Lobby extends StatelessWidget {
                   Navigator.of(context).pushNamed(Router.create);
                 },
                 onJoinRoom: () async {
-                  String roomCode = await showDialog<String>(
+                  final String roomCode = await showDialog<String>(
                     context: context,
                     barrierDismissible: false,
                     builder: (BuildContext context) => JoinRoom(),
@@ -84,62 +84,59 @@ class Lobby extends StatelessWidget {
 class LobbyList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: StreamBuilder<QuerySnapshot>(
-        stream: Firestore.instance
-            .collection('games')
-            .where('status', isEqualTo: 'waiting')
-            .snapshots(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData)
-            return Center(
-              child: CircularProgressIndicator(),
-            );
+    return StreamBuilder<QuerySnapshot>(
+      stream: Firestore.instance
+          .collection('games')
+          .where('status', isEqualTo: 'waiting')
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
 
-          if (snapshot.data.documents.isEmpty) {
-            return Container(
-              child: Center(
-                child: Text(
-                  'No rooms available',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey,
-                  ),
-                ),
+        if (snapshot.data.documents.isEmpty) {
+          return Center(
+            child: Text(
+              'No rooms available',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.grey,
               ),
-            );
-          }
-          return AnimationLimiter(
-            child: ListView.builder(
-              itemCount: snapshot.data.documents.length,
-              itemBuilder: (context, index) {
-                final game = Game.fromJson(snapshot.data.documents[index].data);
-                game.id = snapshot.data.documents[index].documentID;
-
-                return AnimationConfiguration.staggeredList(
-                  position: index,
-                  duration: const Duration(milliseconds: 650),
-                  child: SlideAnimation(
-                    verticalOffset: 50.0,
-                    child: FadeInAnimation(
-                      child: LobbyListTile(
-                        game: game,
-                        onRoomClick: () async {
-                          final user =
-                              Provider.of<FirebaseUser>(context, listen: false);
-                          Navigator.of(context).pushNamed(Router.room,
-                              arguments: [game, false, user.uid]);
-                        },
-                      ),
-                    ),
-                  ),
-                );
-              },
             ),
           );
-        },
-      ),
+        }
+        return AnimationLimiter(
+          child: ListView.builder(
+            itemCount: snapshot.data.documents.length,
+            itemBuilder: (context, index) {
+              final game = Game.fromJson(snapshot.data.documents[index].data);
+              game.id = snapshot.data.documents[index].documentID;
+
+              return AnimationConfiguration.staggeredList(
+                position: index,
+                duration: const Duration(milliseconds: 650),
+                child: SlideAnimation(
+                  verticalOffset: 50.0,
+                  child: FadeInAnimation(
+                    child: LobbyListTile(
+                      game: game,
+                      onRoomClick: () async {
+                        final user =
+                            Provider.of<FirebaseUser>(context, listen: false);
+                        Navigator.of(context).pushNamed(Router.room,
+                            arguments: [game, false, user.uid]);
+                      },
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        );
+      },
     );
   }
 }
@@ -160,7 +157,7 @@ class LobbyListTile extends StatefulWidget {
 
 class _LobbyListTileState extends State<LobbyListTile> {
   String _createdBy = '';
-  bool _isRoomFull = false;
+  final bool _isRoomFull = false;
 
   @override
   void initState() {
@@ -168,7 +165,7 @@ class _LobbyListTileState extends State<LobbyListTile> {
     super.initState();
   }
 
-  void getName() async {
+  Future<void> getName() async {
     final name = await Repository.instance.getUserName(widget.game.createdBy);
 
     if (mounted) {
