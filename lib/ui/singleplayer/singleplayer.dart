@@ -14,7 +14,7 @@ class SinglePlayer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      builder: (_) => HuntModel(
+      create: (_) => HuntModel(
         objects: generateHuntObjects(numOfObjects),
         timeLimit: DateTime.now().add(Duration(minutes: duration)),
       ),

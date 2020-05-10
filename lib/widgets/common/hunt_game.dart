@@ -324,7 +324,7 @@ class PlayerUpdate extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      builder: (_) => PlayHuntModel(
+      create: (_) => PlayHuntModel(
         gameId: gameId,
         players: players,
       ),

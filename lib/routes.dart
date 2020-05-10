@@ -59,7 +59,7 @@ class Router {
 
         return MaterialPageRoute(
           builder: (_) => ChangeNotifierProvider(
-            builder: (_) => GameModel(
+            create: (_) => GameModel(
               args[0] as Game,
               args[2] as String,
               isHost: args[1] as bool,

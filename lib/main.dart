@@ -74,14 +74,14 @@ class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: <SingleChildCloneableWidget>[
+      providers: [
         Provider<Auth>.value(value: widget.auth),
         ValueListenableProvider<FirebaseUser>.value(
             value: widget.auth.currentUser),
-        StreamProvider<ConnectivityStatus>.controller(
-          builder: (context) =>
-              ConnectivityService().connectionStatusController,
-        )
+        StreamProvider<ConnectivityStatus>(
+          create: (_) =>
+              ConnectivityService().connectionStatusController.stream,
+        ),
       ],
       child: MaterialApp(
         title: 'SnapHunt',

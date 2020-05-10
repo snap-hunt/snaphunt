@@ -21,7 +21,7 @@ class MultiPlayer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      builder: (_) => HuntModel(
+      create: (_) => HuntModel(
         objects: generateHuntObjectsFromList(game.words),
         timeLimit: game.gameStartTime.add(Duration(minutes: game.timeLimit)),
         isMultiplayer: true,
