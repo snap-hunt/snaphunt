@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:snaphunt/model/game.dart';
+import 'package:snaphunt/model/hunt.dart';
+import 'package:snaphunt/model/player.dart';
 import 'package:snaphunt/stores/game_model.dart';
 import 'package:snaphunt/ui/home.dart';
 import 'package:snaphunt/ui/login.dart';
@@ -45,9 +48,9 @@ class Router {
 
         return MaterialPageRoute(
           builder: (_) => MultiPlayer(
-            game: args[0],
-            userId: args[1],
-            players: args[2],
+            game: args[0] as Game,
+            userId: args[1] as String,
+            players: args[2] as List<Player>,
           ),
         );
 
@@ -57,9 +60,9 @@ class Router {
         return MaterialPageRoute(
           builder: (_) => ChangeNotifierProvider(
             builder: (_) => GameModel(
-              args[0],
-              args[1],
-              args[2],
+              args[0] as Game,
+              args[1] as bool,
+              args[2] as String,
             ),
             child: Room(),
           ),
@@ -70,9 +73,9 @@ class Router {
 
         return MaterialPageRoute(
           builder: (_) => ResultMultiPlayer(
-            gameId: args[0],
-            title: args[1],
-            duration: args[2],
+            gameId: args[0] as String,
+            title: args[1] as String,
+            duration: args[2] as int,
           ),
         );
 
@@ -84,8 +87,8 @@ class Router {
 
         return MaterialPageRoute(
           builder: (_) => SinglePlayer(
-            numOfObjects: args[0],
-            duration: args[1],
+            numOfObjects: args[0] as int,
+            duration: args[1] as int,
           ),
         );
 
@@ -94,9 +97,9 @@ class Router {
 
         return MaterialPageRoute(
           builder: (_) => ResultScreenSinglePlayer(
-            isHuntFinished: args[0],
-            objects: args[1],
-            duration: args[2],
+            isHuntFinished: args[0] as bool,
+            objects: args[1] as List<Hunt>,
+            duration: args[2] as Duration,
           ),
         );
 

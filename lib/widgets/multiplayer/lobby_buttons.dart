@@ -3,8 +3,8 @@ import 'package:snaphunt/constants/app_theme.dart';
 import 'package:snaphunt/widgets/common/fancy_button.dart';
 
 class LobbyButtons extends StatelessWidget {
-  final Function onJoinRoom;
-  final Function onCreateRoom;
+  final VoidCallback onJoinRoom;
+  final VoidCallback onCreateRoom;
 
   const LobbyButtons({Key key, this.onJoinRoom, this.onCreateRoom})
       : super(key: key);

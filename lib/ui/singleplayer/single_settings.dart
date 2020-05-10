@@ -90,10 +90,10 @@ class _SinglePlayerSettingsState extends State<SinglePlayerSettings> {
 
               if (numObjects == 0) {
                 numObjects = 1;
-              } else if (numObjects > objectCount) {
-                numObjects = objectCount;
+              } else if (numObjects > (objectCount as num)) {
+                numObjects = objectCount as int;
               }
-              
+
               Navigator.of(context).pushReplacementNamed(
                 Router.singlePlayer,
                 arguments: [

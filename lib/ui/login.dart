@@ -23,7 +23,7 @@ class Login extends StatefulWidget {
 class LoginFancyButton extends StatelessWidget {
   final String text;
   final Color color;
-  final Function onPressed;
+  final VoidCallback onPressed;
 
   const LoginFancyButton({
     Key key,

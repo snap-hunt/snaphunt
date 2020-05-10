@@ -26,7 +26,7 @@ class Home extends StatefulWidget {
 class HomeFancyButton extends StatelessWidget {
   final String text;
   final Color color;
-  final Function onPressed;
+  final VoidCallback onPressed;
   final Widget child;
   final double width;
 
@@ -56,7 +56,7 @@ class HomeFancyButton extends StatelessWidget {
 class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
-    var connectionStatus = Provider.of<ConnectivityStatus>(context);
+    final connectionStatus = Provider.of<ConnectivityStatus>(context);
 
     return Scaffold(
       backgroundColor: Colors.white,

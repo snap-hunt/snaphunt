@@ -51,7 +51,7 @@ class FancyAlertDialog extends StatelessWidget {
 class DialogFancyButtonExit extends StatelessWidget {
   final String text;
   final Color color;
-  final Function onPressed;
+  final VoidCallback onPressed;
 
   const DialogFancyButtonExit({
     Key key,

@@ -117,8 +117,8 @@ class _CreateRoomState extends State<CreateRoom> {
 
               if (numObjects == 0) {
                 numObjects = 1;
-              } else if (numObjects > objectCount) {
-                numObjects = objectCount;
+              } else if (numObjects > (objectCount as num)) {
+                numObjects = objectCount as int;
               }
 
               Game game = Game(

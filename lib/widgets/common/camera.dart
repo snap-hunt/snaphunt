@@ -108,7 +108,7 @@ class _CameraScreenState extends State<CameraScreen>
 
 class CameraRow extends StatelessWidget {
   final CameraController controller;
-  final Function onCameraSwitch;
+  final VoidCallback onCameraSwitch;
 
   const CameraRow({
     Key key,
@@ -141,7 +141,7 @@ class CameraRow extends StatelessWidget {
 }
 
 class CameraSwapButton extends StatelessWidget {
-  final Function onPressed;
+  final VoidCallback onPressed;
 
   const CameraSwapButton({Key key, this.onPressed}) : super(key: key);
 

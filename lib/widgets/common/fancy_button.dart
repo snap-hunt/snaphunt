@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 // source: https://gist.github.com/mkiisoft/0d5c013114a2101d69f5d4a780d936cd
@@ -23,7 +22,8 @@ class FancyButton extends StatefulWidget {
   _FancyButtonState createState() => _FancyButtonState();
 }
 
-class _FancyButtonState extends State<FancyButton> with TickerProviderStateMixin {
+class _FancyButtonState extends State<FancyButton>
+    with TickerProviderStateMixin {
   AnimationController _animationController;
   Animation<double> _pressedAnimation;
 
@@ -93,7 +93,9 @@ class _FancyButtonState extends State<FancyButton> with TickerProviderStateMixin
     final radius = BorderRadius.circular(horzPadding * 0.5);
 
     return Container(
-      padding: widget.onPressed != null ?  EdgeInsets.only(bottom: 2, left: 0.5, right: 0.5) : null,
+      padding: widget.onPressed != null
+          ? EdgeInsets.only(bottom: 2, left: 0.5, right: 0.5)
+          : null,
       decoration: BoxDecoration(
         color: Colors.black87,
         borderRadius: radius,
@@ -165,11 +167,12 @@ class _FancyButtonState extends State<FancyButton> with TickerProviderStateMixin
     );
   }
 
-  Color _hslRelativeColor({double h = 0.0, s = 0.0, l = 0.0}) {
+  Color _hslRelativeColor({double h = 0.0, double s = 0.0, double l = 0.0}) {
     final hslColor = HSLColor.fromColor(widget.color);
-    h = (hslColor.hue + h).clamp(0.0, 360.0);
-    s = (hslColor.saturation + s).clamp(0.0, 1.0);
-    l = (hslColor.lightness + l).clamp(0.0, 1.0);
-    return HSLColor.fromAHSL(hslColor.alpha, h, s, l).toColor();
+
+    final hh = (hslColor.hue + h).clamp(0.0, 360.0) as double;
+    final ss = (hslColor.saturation + s).clamp(0.0, 1.0) as double;
+    final ll = (hslColor.lightness + l).clamp(0.0, 1.0) as double;
+    return HSLColor.fromAHSL(hslColor.alpha, hh, ss, ll).toColor();
   }
 }

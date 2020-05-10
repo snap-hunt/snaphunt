@@ -20,7 +20,7 @@ class Repository {
   void updateUserData(FirebaseUser user) async {
     final DocumentReference ref = _db.collection('users').document(user.uid);
 
-    return ref.setData({
+    return ref.setData(<String, dynamic>{
       'uid': user.uid,
       'email': user.email,
       'photoURL': user.photoUrl,
@@ -85,7 +85,7 @@ class Repository {
   Future<String> getUserName(String uuid) async {
     final DocumentSnapshot ref =
         await _db.collection('users').document(uuid).get();
-    return ref['displayName'];
+    return ref['displayName'] as String;
   }
 
   Future<User> getUser(String uuid) async {

@@ -87,7 +87,7 @@ class JoinRoom extends StatelessWidget {
 class DialogFancyButton extends StatelessWidget {
   final String text;
   final Color color;
-  final Function onPressed;
+  final VoidCallback onPressed;
 
   const DialogFancyButton({
     Key key,

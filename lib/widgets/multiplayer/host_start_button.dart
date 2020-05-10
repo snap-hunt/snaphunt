@@ -4,7 +4,7 @@ import 'package:snaphunt/widgets/common/fancy_button.dart';
 
 class HostStartButton extends StatelessWidget {
   final bool canStartGame;
-  final Function onGameStart;
+  final VoidCallback onGameStart;
 
   const HostStartButton({
     Key key,

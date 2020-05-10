@@ -34,7 +34,8 @@ void initDB() async {
   final box = Hive.box('words');
 
   if (box.isEmpty) {
-    Map<String, dynamic> data = json.decode(await loadAsset());
+    Map<String, dynamic> data =
+        json.decode(await loadAsset()) as Map<String, dynamic>;
 
     box.put('version', data['version']);
     box.put('words', data['words']);
@@ -44,22 +45,22 @@ void initDB() async {
 List<String> generateWords([int numOfWords = 8]) {
   final box = Hive.box('words');
 
-  final List words = box.get('words');
+  final List words = box.get('words') as List<dynamic>;
   words.shuffle();
 
-  return List<String>.generate(numOfWords, (index) => words[index]);
+  return List<String>.generate(numOfWords, (index) => words[index] as String);
 }
 
 List<Hunt> generateHuntObjects([int numOfWords = 8]) {
-  final List words = generateWords(numOfWords);
+  final List<String> words = generateWords(numOfWords);
 
-  return new List<Hunt>.generate(numOfWords, (index) {
+  return List<Hunt>.generate(numOfWords, (index) {
     return Hunt(word: words[index]);
   });
 }
 
 List<Hunt> generateHuntObjectsFromList(List<String> words) {
-  return new List<Hunt>.generate(words.length, (index) {
+  return List<Hunt>.generate(words.length, (index) {
     return Hunt(word: words[index]);
   });
 }

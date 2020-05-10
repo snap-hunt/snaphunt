@@ -58,7 +58,8 @@ class _LoadingTextFieldState extends State<LoadingTextField>
   }
 }
 
-Decoration myBoxDec(animation, {isCircle = false, brightness}) {
+Decoration myBoxDec(Animation<double> animation,
+    {bool isCircle = false, brightness}) {
   final dark = [
     Colors.grey[700],
     Colors.grey[600],

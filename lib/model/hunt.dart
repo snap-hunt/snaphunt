@@ -8,8 +8,8 @@ class Hunt {
   });
 
   Hunt.fromJson(Map<String, dynamic> json) {
-    word = json['word'];
-    isFound = json['isFound'];
+    word = json['word'] as String;
+    isFound = json['isFound'] as bool;
   }
 
   Map<String, dynamic> toJson() {

@@ -146,7 +146,7 @@ class LobbyList extends StatelessWidget {
 
 class LobbyListTile extends StatefulWidget {
   final Game game;
-  final Function onRoomClick;
+  final VoidCallback onRoomClick;
 
   const LobbyListTile({
     Key key,

@@ -12,10 +12,10 @@ class User {
   });
 
   User.fromJson(Map<String, dynamic> json) {
-    uid = json['uid'];
-    email = json['email'];
-    photoUrl = json['photoURL'];
-    displayName = json['displayName'];
+    uid = json['uid'] as String;
+    email = json['email'] as String;
+    photoUrl = json['photoURL'] as String;
+    displayName = json['displayName'] as String;
   }
 
   Map<String, dynamic> toJson() {

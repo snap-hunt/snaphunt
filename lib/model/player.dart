@@ -9,8 +9,8 @@ class Player {
 
   Player.fromJson(Map<String, dynamic> json, Map<String, dynamic> userJson) {
     user = User.fromJson(userJson);
-    score = json['score'];
-    status = json['status'];
+    score = json['score'] as int;
+    status = json['status'] as String;
   }
 
   Map<String, dynamic> toJson() {

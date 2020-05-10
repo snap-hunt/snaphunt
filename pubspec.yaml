@@ -71,6 +71,8 @@ dev_dependencies:
     sdk: flutter
   flutter_native_splash: ^0.1.9
 
+  lint: ^1.0.0
+
 flutter_native_splash:
   image: assets/splash.png
   color: "ffffff"

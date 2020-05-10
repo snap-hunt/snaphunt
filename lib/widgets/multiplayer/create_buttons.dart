@@ -3,7 +3,7 @@ import 'package:snaphunt/constants/app_theme.dart';
 import 'package:snaphunt/widgets/common/fancy_button.dart';
 
 class CreateButtons extends StatelessWidget {
-  final Function onCreate;
+  final VoidCallback onCreate;
   final String cancelLabel;
   final String createLabel;
 
