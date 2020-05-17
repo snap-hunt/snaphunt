@@ -1,7 +1,8 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:snaphunt/routes.dart';
+import 'package:snaphunt/router.gr.dart';
 import 'package:snaphunt/services/auth.dart';
 import 'package:snaphunt/services/connectivity.dart';
 import 'package:snaphunt/utils/utils.dart';
@@ -9,12 +10,6 @@ import 'package:snaphunt/widgets/common/fancy_button.dart';
 import 'package:snaphunt/widgets/common/wave.dart';
 
 class Home extends StatefulWidget {
-  static Route<dynamic> route() {
-    return MaterialPageRoute(
-      builder: (BuildContext context) => const Home(),
-    );
-  }
-
   const Home({
     Key key,
   }) : super(key: key);
@@ -80,8 +75,7 @@ class _HomeState extends State<Home> {
                   HomeFancyButton(
                     color: Colors.orange,
                     onPressed: () {
-                      Navigator.of(context)
-                          .pushNamed(Router.singlePlayerSettings);
+                      ExtendedNavigator.of(context).pushSinglePlayerSettings();
                     },
                     child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -94,10 +88,10 @@ class _HomeState extends State<Home> {
                   ),
                   const SizedBox(height: 18.0),
                   HomeFancyButton(
-                    color: connectionStatus == ConnectivityStatus.Offline
+                    color: connectionStatus == ConnectivityStatus.offline
                         ? Colors.grey
                         : Colors.blue,
-                    onPressed: connectionStatus == ConnectivityStatus.Offline
+                    onPressed: connectionStatus == ConnectivityStatus.offline
                         ? () {
                             showAlertDialog(
                               context: context,
@@ -107,7 +101,7 @@ class _HomeState extends State<Home> {
                             );
                           }
                         : () {
-                            Navigator.of(context).pushNamed(Router.lobby);
+                            ExtendedNavigator.of(context).pushLobby();
                           },
                     child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,

@@ -1,16 +1,15 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:camera/camera.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:snaphunt/data/repository.dart';
-import 'package:snaphunt/routes.dart';
 import 'package:snaphunt/services/auth.dart';
 import 'package:snaphunt/services/connectivity.dart';
-import 'package:snaphunt/ui/home.dart';
-import 'package:snaphunt/ui/login.dart';
 import 'package:snaphunt/utils/utils.dart';
 import 'package:snaphunt/widgets/common/custom_scroll.dart';
+import 'package:snaphunt/router.gr.dart';
 
 List<CameraDescription> cameras;
 
@@ -41,7 +40,6 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-  final _navigatorKey = GlobalKey<NavigatorState>();
   FirebaseUser currentUser;
 
   @override
@@ -54,15 +52,13 @@ class _AppState extends State<App> {
   void _onUserChanged() {
     final user = widget.auth.currentUser.value;
 
-    if (currentUser == null && user != null) {
-      Repository.instance.updateUserData(user);
-      _navigatorKey.currentState
-          .pushAndRemoveUntil(Home.route(), (route) => false);
-    } else if (currentUser != null && user == null) {
-      _navigatorKey.currentState
-          .pushAndRemoveUntil(Login.route(), (route) => false);
+    if (user != null) {
+      ExtendedNavigator.rootNavigator
+          .pushNamedAndRemoveUntil(Routes.home, (route) => false);
+    } else {
+      ExtendedNavigator.rootNavigator
+          .pushNamedAndRemoveUntil(Routes.login, (route) => false);
     }
-    currentUser = user;
   }
 
   @override
@@ -89,15 +85,12 @@ class _AppState extends State<App> {
           primaryColor: Colors.orange,
           fontFamily: 'SF_Atarian_System',
         ),
-        navigatorKey: _navigatorKey,
-        onGenerateRoute: Router.generateRoute,
         builder: (context, child) {
           return ScrollConfiguration(
             behavior: NoOverFlowScrollBehavior(),
-            child: child,
+            child: ExtendedNavigator<Router>(router: Router()),
           );
         },
-        home: currentUser == null ? const Login() : const Home(),
       ),
     );
   }

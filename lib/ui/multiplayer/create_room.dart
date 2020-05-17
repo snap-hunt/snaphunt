@@ -1,10 +1,11 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 import 'package:snaphunt/model/game.dart';
-import 'package:snaphunt/routes.dart';
+import 'package:snaphunt/router.gr.dart';
 import 'package:snaphunt/widgets/common/card_textfield.dart';
 import 'package:snaphunt/widgets/multiplayer/create_buttons.dart';
 
@@ -129,9 +130,14 @@ class _CreateRoomState extends State<CreateRoom> {
                 timeCreated: DateTime.fromMillisecondsSinceEpoch(
                     Timestamp.now().millisecondsSinceEpoch),
               );
-              Navigator.of(context).pushReplacementNamed(
-                Router.room,
-                arguments: [game, true, user.uid],
+
+              ExtendedNavigator.of(context).pushReplacementNamed(
+                Routes.room,
+                arguments: RoomArguments(
+                  game: game,
+                  userId: user.uid,
+                  isHost: true,
+                ),
               );
             },
           )

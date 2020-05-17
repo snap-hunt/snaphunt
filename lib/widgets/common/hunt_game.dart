@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
@@ -5,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:snaphunt/constants/app_theme.dart';
 import 'package:snaphunt/model/hunt.dart';
 import 'package:snaphunt/model/player.dart';
-import 'package:snaphunt/routes.dart';
+import 'package:snaphunt/router.gr.dart';
 import 'package:snaphunt/stores/hunt_model.dart';
 import 'package:snaphunt/stores/player_hunt_model.dart';
 import 'package:snaphunt/ui/home.dart';
@@ -75,13 +76,13 @@ class HuntGame extends StatelessWidget {
     String title,
     String body,
   }) {
-    Navigator.of(context).pushReplacementNamed(
-      Router.resultSingle,
-      arguments: [
-        model.isHuntComplete,
-        model.objects,
-        model.duration.elapsed,
-      ],
+    ExtendedNavigator.rootNavigator.pushReplacementNamed(
+      Routes.resultScreenSinglePlayer,
+      arguments: ResultScreenSinglePlayerArguments(
+        isHuntFinished: model.isHuntComplete,
+        duration: model.duration.elapsed,
+        objects: model.objects,
+      ),
     );
 
     showAlertDialog(
@@ -99,9 +100,13 @@ class HuntGame extends StatelessWidget {
     String gameTitle,
     int duration,
   }) {
-    Navigator.of(context).pushReplacementNamed(
-      Router.resultMulti,
-      arguments: [model.gameId, gameTitle, duration],
+    ExtendedNavigator.rootNavigator.pushReplacementNamed(
+      Routes.resultMultiPlayer,
+      arguments: ResultMultiPlayerArguments(
+        duration: duration,
+        gameId: model.gameId,
+        title: gameTitle,
+      ),
     );
 
     showAlertDialog(

@@ -1,9 +1,11 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:snaphunt/constants/app_theme.dart';
 import 'package:snaphunt/constants/game_status_enum.dart';
-import 'package:snaphunt/routes.dart';
+import 'package:snaphunt/model/game.dart';
+import 'package:snaphunt/router.gr.dart';
 import 'package:snaphunt/stores/game_model.dart';
 import 'package:snaphunt/ui/home.dart';
 import 'package:snaphunt/utils/utils.dart';
@@ -13,7 +15,27 @@ import 'package:snaphunt/widgets/multiplayer/player_await_button.dart';
 import 'package:snaphunt/widgets/multiplayer/room_exit_dialog.dart';
 import 'package:snaphunt/widgets/multiplayer/room_loading.dart';
 
-class Room extends StatelessWidget {
+class Room extends StatelessWidget implements AutoRouteWrapper {
+  final Game game;
+
+  final String userId;
+
+  final bool isHost;
+
+  const Room({Key key, this.game, this.userId, this.isHost}) : super(key: key);
+
+  @override
+  Widget wrappedRoute(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (_) => GameModel(
+        game,
+        userId,
+        isHost: isHost,
+      ),
+      child: this,
+    );
+  }
+
   void gameStatusListener(GameModel model, BuildContext context) {
     if (GameStatus.full == model.status) {
       Navigator.of(context).pop();
@@ -25,13 +47,13 @@ class Room extends StatelessWidget {
     }
 
     if (GameStatus.game == model.status) {
-      Navigator.of(context).pushReplacementNamed(
-        Router.game,
-        arguments: [
-          model.game,
-          model.userId,
-          model.players,
-        ],
+      ExtendedNavigator.of(context).pushReplacementNamed(
+        Routes.multiPlayer,
+        arguments: MultiPlayerArguments(
+          game: model.game,
+          userId: model.userId,
+          players: model.players,
+        ),
       );
     }
 

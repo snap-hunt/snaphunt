@@ -1,6 +1,8 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:snaphunt/routes.dart';
+import 'package:snaphunt/router.gr.dart';
+// import 'package:snaphunt/routes.dart';
 import 'package:snaphunt/widgets/common/card_textfield.dart';
 import 'package:snaphunt/widgets/multiplayer/create_buttons.dart';
 
@@ -11,7 +13,7 @@ class SinglePlayerSettings extends StatefulWidget {
 
 class _SinglePlayerSettingsState extends State<SinglePlayerSettings> {
   final TextEditingController itemsController = TextEditingController();
-  int dropdownValue = 3;
+  int gameDuration = 3;
 
   @override
   void initState() {
@@ -48,13 +50,13 @@ class _SinglePlayerSettingsState extends State<SinglePlayerSettings> {
             label: 'Time Limit',
             widget: DropdownButton<int>(
               isExpanded: true,
-              value: dropdownValue,
+              value: gameDuration,
               iconSize: 24,
               elevation: 16,
               underline: Container(),
               onChanged: (newVal) {
                 setState(() {
-                  dropdownValue = newVal;
+                  gameDuration = newVal;
                 });
               },
               items: <int>[3, 5, 8, 12, 15]
@@ -92,13 +94,12 @@ class _SinglePlayerSettingsState extends State<SinglePlayerSettings> {
               } else if (numObjects > (objectCount as num)) {
                 numObjects = objectCount as int;
               }
-
-              Navigator.of(context).pushReplacementNamed(
-                Router.singlePlayer,
-                arguments: [
-                  numObjects,
-                  dropdownValue,
-                ],
+              ExtendedNavigator.of(context).pushReplacementNamed(
+                Routes.singlePlayer,
+                arguments: SinglePlayerArguments(
+                  numOfObjects: numObjects,
+                  duration: gameDuration,
+                ),
               );
             },
           )

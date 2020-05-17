@@ -1,17 +1,12 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:snaphunt/routes.dart';
+import 'package:snaphunt/router.gr.dart';
 import 'package:snaphunt/services/auth.dart';
 import 'package:snaphunt/widgets/common/fancy_button.dart';
 
 import '../widgets/common/wave.dart';
 
 class Login extends StatefulWidget {
-  static Route<dynamic> route() {
-    return MaterialPageRoute(
-      builder: (BuildContext context) => const Login(),
-    );
-  }
-
   const Login({
     Key key,
   }) : super(key: key);
@@ -61,7 +56,7 @@ class _LoginState extends State<Login> {
   }
 
   void _onHowToPlay() {
-    Navigator.of(context).pushNamed(Router.howToPlay);
+    ExtendedNavigator.rootNavigator.pushNamed(Routes.howToPlay);
   }
 
   @override

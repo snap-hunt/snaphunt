@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -5,7 +6,7 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:provider/provider.dart';
 import 'package:snaphunt/data/repository.dart';
 import 'package:snaphunt/model/game.dart';
-import 'package:snaphunt/routes.dart';
+import 'package:snaphunt/router.gr.dart';
 import 'package:snaphunt/utils/utils.dart';
 import 'package:snaphunt/widgets/multiplayer/join_room_dialog.dart';
 import 'package:snaphunt/widgets/multiplayer/lobby_buttons.dart';
@@ -36,7 +37,7 @@ class Lobby extends StatelessWidget {
               ),
               LobbyButtons(
                 onCreateRoom: () {
-                  Navigator.of(context).pushNamed(Router.create);
+                  ExtendedNavigator.of(context).pushCreateRoom();
                 },
                 onJoinRoom: () async {
                   final String roomCode = await showDialog<String>(
@@ -66,8 +67,11 @@ class Lobby extends StatelessWidget {
                         final user =
                             Provider.of<FirebaseUser>(context, listen: false);
 
-                        Navigator.of(context).pushNamed(Router.room,
-                            arguments: [game, false, user.uid]);
+                        ExtendedNavigator.of(context).pushRoom(
+                          game: game,
+                          userId: user.uid,
+                          isHost: false,
+                        );
                       }
                     }
                   }
@@ -126,8 +130,12 @@ class LobbyList extends StatelessWidget {
                       onRoomClick: () async {
                         final user =
                             Provider.of<FirebaseUser>(context, listen: false);
-                        Navigator.of(context).pushNamed(Router.room,
-                            arguments: [game, false, user.uid]);
+
+                        ExtendedNavigator.of(context).pushRoom(
+                          game: game,
+                          userId: user.uid,
+                          isHost: false,
+                        );
                       },
                     ),
                   ),
