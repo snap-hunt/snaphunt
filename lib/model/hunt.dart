@@ -1,21 +1,15 @@
-class Hunt {
-  String word;
-  bool isFound;
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:flutter/foundation.dart';
 
-  Hunt({
-    this.word,
-    this.isFound = false,
-  });
+part 'hunt.freezed.dart';
+part 'hunt.g.dart';
 
-  Hunt.fromJson(Map<String, dynamic> json) {
-    word = json['word'] as String;
-    isFound = json['isFound'] as bool;
-  }
+@freezed
+abstract class Hunt with _$Hunt {
+  const factory Hunt({
+    String word,
+    @Default(false) bool isFound,
+  }) = _Hunt;
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['word'] = word;
-    data['isFound'] = isFound;
-    return data;
-  }
+  factory Hunt.fromJson(Map<String, dynamic> json) => _$HuntFromJson(json);
 }

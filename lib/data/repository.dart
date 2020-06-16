@@ -41,7 +41,8 @@ class Repository {
       final DocumentSnapshot ref = await _db.document('games/$roomId').get();
 
       if (ref.data != null) {
-        game = Game.fromJson(ref.data)..id = ref.documentID;
+        // game = Game.fromJson(ref.data)..id = ref.documentID;
+        game = Game.fromFirestore(ref);
       }
     } catch (e) {
       print(e);
@@ -156,8 +157,8 @@ class Repository {
     for (final document in ref.documents) {
       final DocumentSnapshot userRef =
           await _db.collection('users').document(document.documentID).get();
-
-      players.add(Player.fromJson(document.data, userRef.data));
+      document.data["user"] = userRef.data;
+      players.add(Player.fromJson(document.data));
     }
 
     return players;

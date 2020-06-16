@@ -1,23 +1,17 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:snaphunt/model/user.dart';
+import 'package:flutter/foundation.dart';
 
-class Player {
-  User user;
-  int score;
-  String status;
+part 'player.g.dart';
+part 'player.freezed.dart';
 
-  Player({this.user, this.score = 0, this.status = 'active'});
+@freezed
+abstract class Player with _$Player {
+  const factory Player({
+    User user,
+    @Default(0) int score,
+    @Default('active') String status,
+  }) = _Player;
 
-  Player.fromJson(Map<String, dynamic> json, Map<String, dynamic> userJson) {
-    user = User.fromJson(userJson);
-    score = json['score'] as int;
-    status = json['status'] as String;
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['user'] = user.toJson();
-    data['score'] = score;
-    data['status'] = status;
-    return data;
-  }
+  factory Player.fromJson(Map<String, dynamic> json) => _$PlayerFromJson(json);
 }

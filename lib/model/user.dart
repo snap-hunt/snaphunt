@@ -1,29 +1,17 @@
-class User {
-  String uid;
-  String email;
-  String photoUrl;
-  String displayName;
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:flutter/foundation.dart';
 
-  User({
-    this.uid,
-    this.email,
-    this.photoUrl,
-    this.displayName,
-  });
+part 'user.freezed.dart';
+part 'user.g.dart';
 
-  User.fromJson(Map<String, dynamic> json) {
-    uid = json['uid'] as String;
-    email = json['email'] as String;
-    photoUrl = json['photoURL'] as String;
-    displayName = json['displayName'] as String;
-  }
+@freezed
+abstract class User with _$User {
+  const factory User({
+    String uid,
+    String email,
+    @JsonKey(name: 'photoURL') String photoUrl,
+    String displayName,
+  }) = _User;
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['uid'] = uid;
-    data['email'] = email;
-    data['photoURL'] = photoUrl;
-    data['displayName'] = displayName;
-    return data;
-  }
+  factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 }

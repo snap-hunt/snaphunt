@@ -39,7 +39,11 @@ class PlayHuntModel with ChangeNotifier {
             (player) => player.user.uid == change.document.documentID);
 
         if (index != -1) {
-          players[index].score = change.document.data['score'] as int;
+          // players[index].score = change.document.data['score'] as int;
+          players.replaceRange(index, index + 1, [
+            players[index]
+                .copyWith(score: change.document.data['score'] as int),
+          ]);
           sort();
           notifyListeners();
         }

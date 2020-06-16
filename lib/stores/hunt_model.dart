@@ -152,7 +152,12 @@ class HuntModel with ChangeNotifier {
       objects.where((hunt) => !hunt.isFound).forEach((words) {
         if (results.text.toLowerCase() == words.word.toLowerCase()) {
           count++;
-          words.isFound = true;
+          // words.isFound = true;
+
+          final int index = objects.indexOf(words);
+          objects.replaceRange(index, index + 1, [
+            words.copyWith(isFound: true),
+          ]);
         }
       });
     }

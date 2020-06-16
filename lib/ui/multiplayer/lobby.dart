@@ -116,8 +116,9 @@ class LobbyList extends StatelessWidget {
           child: ListView.builder(
             itemCount: snapshot.data.documents.length,
             itemBuilder: (context, index) {
-              final game = Game.fromJson(snapshot.data.documents[index].data);
-              game.id = snapshot.data.documents[index].documentID;
+              // final game = Game.fromJson(snapshot.data.documents[index].data);
+              // game.id = snapshot.data.documents[index].documentID;
+              final game = Game.fromFirestore(snapshot.data.documents[index]);
 
               return AnimationConfiguration.staggeredList(
                 position: index,

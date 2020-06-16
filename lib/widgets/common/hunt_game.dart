@@ -234,7 +234,7 @@ class ExpandedWordList extends StatelessWidget {
           children: <Widget>[
             Text(
               'Items ($objectsFound/$totalObjects)',
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 20,
                 color: Colors.white,
               ),
@@ -244,11 +244,13 @@ class ExpandedWordList extends StatelessWidget {
         ),
       ),
       expanded: WordList(),
-      headerAlignment: ExpandablePanelHeaderAlignment.center,
-      tapBodyToCollapse: true,
-      tapHeaderToExpand: true,
-      hasIcon: true,
-      iconColor: Colors.white,
+      theme: const ExpandableThemeData(
+        headerAlignment: ExpandablePanelHeaderAlignment.center,
+        tapBodyToCollapse: true,
+        tapHeaderToExpand: true,
+        hasIcon: true,
+        iconColor: Colors.white,
+      ),
     );
   }
 }

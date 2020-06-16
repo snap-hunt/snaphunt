@@ -51,7 +51,8 @@ class GameModel with ChangeNotifier {
 
     if (isHost) {
       final String id = await repository.createRoom(_game);
-      _game.id = id;
+      // _game.id = id;
+      _game = _game.copyWith(id: id);
     }
 
     await joinRoom();
@@ -80,8 +81,9 @@ class GameModel with ChangeNotifier {
       notifyListeners();
     } else if (status == 'in_game') {
       _status = GameStatus.game;
-      _game = Game.fromJson(snapshot.data);
-      _game.id = snapshot.documentID;
+      _game = Game.fromFirestore(snapshot);
+      // _game = Game.fromJson(snapshot.data);
+      // _game.id = snapshot.documentID;
       notifyListeners();
     }
   }
@@ -89,8 +91,9 @@ class GameModel with ChangeNotifier {
   void playerListener(QuerySnapshot snapshot) {
     snapshot.documentChanges.forEach((DocumentChange change) async {
       if (DocumentChangeType.added == change.type) {
-        players.add(
-            Player(user: await repository.getUser(change.document.documentID)));
+        _players.add(
+          Player(user: await repository.getUser(change.document.documentID)),
+        );
       } else if (DocumentChangeType.removed == change.type) {
         if (change.document.documentID == _userId) {
           _status = GameStatus.kicked;
@@ -98,7 +101,7 @@ class GameModel with ChangeNotifier {
           return;
         }
 
-        players.removeWhere(
+        _players.removeWhere(
             (player) => player.user.uid == change.document.documentID);
       }
       checkCanStartGame();
