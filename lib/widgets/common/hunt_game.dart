@@ -226,7 +226,7 @@ class ExpandedWordList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ExpandablePanel(
-      collapsed: Container(
+      header: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -266,7 +266,7 @@ class WordList extends StatelessWidget {
           width: double.infinity,
           color: Colors.transparent,
           constraints: BoxConstraints(maxHeight: size.height * 0.4),
-          padding: const EdgeInsets.only(left: 16.0),
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: ListView(
             shrinkWrap: true,
             children: [

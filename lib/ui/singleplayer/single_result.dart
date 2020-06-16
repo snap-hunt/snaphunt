@@ -1,8 +1,11 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:snaphunt/model/hunt.dart';
 import 'package:snaphunt/ui/home.dart';
 import 'package:snaphunt/widgets/common/fancy_button.dart';
 import 'package:snaphunt/widgets/common/wave.dart';
+
+import '../../router.gr.dart';
 
 class ResultScreenSinglePlayer extends StatelessWidget {
   final bool isHuntFinished;
@@ -75,7 +78,8 @@ class ResultScreenSinglePlayer extends StatelessWidget {
                 size: 70,
                 color: Colors.blue,
                 onPressed: () {
-                  Navigator.of(context).pop();
+                  ExtendedNavigator.of(context)
+                      .popUntil(ModalRoute.withName(Routes.home));
                 },
                 child: Text(
                   "Back",

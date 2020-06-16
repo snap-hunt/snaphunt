@@ -1,11 +1,13 @@
 import 'dart:io';
 
+import 'package:auto_route/auto_route.dart';
 import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:flutter/material.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:snaphunt/constants/app_theme.dart';
 import 'package:snaphunt/data/repository.dart';
 import 'package:snaphunt/model/player.dart';
+import 'package:snaphunt/router.gr.dart';
 import 'package:snaphunt/ui/home.dart';
 import 'package:snaphunt/widgets/common/fancy_button.dart';
 import 'package:snaphunt/widgets/multiplayer/room_loading.dart';
@@ -116,7 +118,8 @@ class _ResultMultiPlayerState extends State<ResultMultiPlayer> {
                       color: Colors.deepOrange,
                       size: 50,
                       onPressed: () {
-                        Navigator.of(context).pop();
+                        ExtendedNavigator.of(context)
+                            .popUntil(ModalRoute.withName(Routes.lobby));
                       },
                       child: Container(
                         width: 150,
