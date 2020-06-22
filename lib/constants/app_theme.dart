@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-const fancy_button_style =
+const TextStyle fancyButtonStyle =
     TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold);
 
-const List<Color> user_colors = [
+const List<Color> userColors = [
   Colors.orange,
   Colors.purple,
   Colors.yellow,

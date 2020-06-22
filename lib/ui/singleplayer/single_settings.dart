@@ -2,7 +2,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:snaphunt/router.gr.dart';
-// import 'package:snaphunt/routes.dart';
 import 'package:snaphunt/widgets/common/card_textfield.dart';
 import 'package:snaphunt/widgets/multiplayer/create_buttons.dart';
 
@@ -34,7 +33,7 @@ class _SinglePlayerSettingsState extends State<SinglePlayerSettings> {
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'Single player',
           style: TextStyle(color: Colors.white),
         ),

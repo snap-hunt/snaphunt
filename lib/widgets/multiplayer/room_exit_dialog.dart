@@ -18,7 +18,7 @@ class RoomExitDialog extends StatelessWidget {
       title: Center(
         child: Text(
           title,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 32,
             fontWeight: FontWeight.bold,
           ),
@@ -87,7 +87,7 @@ class DialogFancyButtonExit extends StatelessWidget {
       child: Center(
         child: Text(
           text,
-          style: fancy_button_style,
+          style: fancyButtonStyle,
         ),
       ),
     );

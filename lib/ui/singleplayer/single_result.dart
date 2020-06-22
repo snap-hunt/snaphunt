@@ -53,7 +53,7 @@ class ResultScreenSinglePlayer extends StatelessWidget {
                     ? 'Congrats! You found all items'
                     : 'Better luck next time!',
                 maxLines: 2,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 32,
                   fontWeight: FontWeight.w300,
                 ),
@@ -61,14 +61,14 @@ class ResultScreenSinglePlayer extends StatelessWidget {
               const SizedBox(height: 25),
               Text(
                 '$found/${objects.length} found',
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w300,
                 ),
               ),
               Text(
                 'in ${formatHHMMSS(duration.inSeconds)}!',
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w300,
                 ),

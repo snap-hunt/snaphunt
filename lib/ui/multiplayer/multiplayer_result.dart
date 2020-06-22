@@ -107,7 +107,7 @@ class _ResultMultiPlayerState extends State<ResultMultiPlayer> {
                             ),
                             Text(
                               'Share',
-                              style: fancy_button_style,
+                              style: fancyButtonStyle,
                             )
                           ],
                         ),
@@ -133,7 +133,7 @@ class _ResultMultiPlayerState extends State<ResultMultiPlayer> {
                             ),
                             Text(
                               'Return to Lobby',
-                              style: fancy_button_style,
+                              style: fancyButtonStyle,
                             )
                           ],
                         ),
@@ -189,7 +189,7 @@ class ResultHeader extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 4),
-                Text(
+                const Text(
                   'Hunt Time',
                   style: TextStyle(
                     color: Colors.white,
@@ -307,7 +307,7 @@ class ResultPlayers extends StatelessWidget {
 
           return ListTile(
             leading: UserAvatar(
-              borderColor: user_colors[(index + 1) % 4],
+              borderColor: userColors[(index + 1) % 4],
               photoUrl: player.user.photoUrl,
               height: 50,
             ),

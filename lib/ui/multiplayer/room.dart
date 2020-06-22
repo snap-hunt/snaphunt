@@ -9,6 +9,7 @@ import 'package:snaphunt/router.gr.dart';
 import 'package:snaphunt/stores/game_model.dart';
 import 'package:snaphunt/ui/home.dart';
 import 'package:snaphunt/utils/utils.dart';
+import 'package:snaphunt/widgets/animations/popup_dialog.dart';
 import 'package:snaphunt/widgets/common/fancy_button.dart';
 import 'package:snaphunt/widgets/multiplayer/host_start_button.dart';
 import 'package:snaphunt/widgets/multiplayer/player_await_button.dart';
@@ -82,27 +83,24 @@ class Room extends StatelessWidget implements AutoRouteWrapper {
 
     return WillPopScope(
       onWillPop: () async {
-        final roomCode = await showDialog<bool>(
-          context: context,
-          barrierDismissible: false,
-          builder: (BuildContext context) {
-            return RoomExitDialog(
-              title: _isHost ? 'Delete room' : 'Leave room',
-              body: _isHost
-                  ? 'Leaving the room will cancel the game'
-                  : 'Are you sure you want to leave from the room?',
-            );
-          },
+        final roomCode = await showPopupDialog<bool>(
+          context,
+          RoomExitDialog(
+            title: _isHost ? 'Delete room' : 'Leave room',
+            body: _isHost
+                ? 'Leaving the room will cancel the game'
+                : 'Are you sure you want to leave from the room?',
+          ),
         );
 
         return roomCode;
       },
       child: Scaffold(
         appBar: AppBar(
-          iconTheme: IconThemeData(
+          iconTheme: const IconThemeData(
             color: Colors.white,
           ),
-          title: Text(
+          title: const Text(
             'Room',
             style: TextStyle(color: Colors.white),
           ),
@@ -318,7 +316,7 @@ class PlayerList extends StatelessWidget {
                 leading: UserAvatar(
                   photoUrl: player.user.photoUrl,
                   height: 45,
-                  borderColor: user_colors[index % 4],
+                  borderColor: userColors[index % 4],
                 ),
                 trailing: model.isHost
                     ? !isMe
@@ -329,7 +327,7 @@ class PlayerList extends StatelessWidget {
                                 model.onKickPlayer(player.user.uid),
                             child: Text(
                               'REMOVE',
-                              style: fancy_button_style,
+                              style: fancyButtonStyle,
                             ),
                           )
                         : Container(

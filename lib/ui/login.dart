@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:snaphunt/router.gr.dart';
 import 'package:snaphunt/services/auth.dart';
+import 'package:snaphunt/widgets/animations/logo_animations.dart';
 import 'package:snaphunt/widgets/common/fancy_button.dart';
 
 import '../widgets/common/wave.dart';
@@ -69,7 +70,11 @@ class _LoginState extends State<Login> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Image.asset('assets/top.png', scale: 1),
-            Image.asset('assets/main.png', height: 185),
+            AnimateScaleItem(
+              delay: 750,
+              duration: 400,
+              child: Image.asset('assets/main.png', height: 185),
+            ),
             FutureBuilder(
               future: _loginFuture,
               builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -82,16 +87,22 @@ class _LoginState extends State<Login> {
                   padding: const EdgeInsets.symmetric(),
                   child: Column(
                     children: <Widget>[
-                      LoginFancyButton(
-                        text: 'Login with Google',
-                        color: const Color(0xffFF951A),
-                        onPressed: _onLoginWithGooglePressed,
+                      AnimateScaleItem(
+                        delay: 750,
+                        duration: 600,
+                        child: LoginFancyButton(
+                          text: 'Login with Google',
+                          color: const Color(0xffFF951A),
+                          onPressed: _onLoginWithGooglePressed,
+                        ),
                       ),
-                      Container(
-                        margin: const EdgeInsets.only(top: 18.0),
+                      const SizedBox(height: 18.0),
+                      AnimateScaleItem(
+                        delay: 750,
+                        duration: 800,
                         child: LoginFancyButton(
                           text: 'How to Play',
-                          color: Colors.grey,
+                          color: Colors.blue,
                           onPressed: _onHowToPlay,
                         ),
                       ),

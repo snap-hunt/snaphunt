@@ -11,6 +11,7 @@ import 'package:snaphunt/stores/hunt_model.dart';
 import 'package:snaphunt/stores/player_hunt_model.dart';
 import 'package:snaphunt/ui/home.dart';
 import 'package:snaphunt/utils/utils.dart';
+import 'package:snaphunt/widgets/animations/popup_dialog.dart';
 import 'package:snaphunt/widgets/common/camera.dart';
 import 'package:snaphunt/widgets/common/countdown.dart';
 import 'package:snaphunt/widgets/multiplayer/room_exit_dialog.dart';
@@ -120,16 +121,13 @@ class HuntGame extends StatelessWidget {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        final roomCode = await showDialog<bool>(
-          context: context,
-          barrierDismissible: false,
-          builder: (BuildContext context) {
-            return const RoomExitDialog(
-              title: 'Leave game?',
-              body:
-                  'Are you sure you want to leave the game? Your progress will be lost',
-            );
-          },
+        final roomCode = await showPopupDialog<bool>(
+          context,
+          const RoomExitDialog(
+            title: 'Leave game?',
+            body:
+                'Are you sure you want to leave the game? Your progress will be lost',
+          ),
         );
 
         return roomCode;
@@ -197,7 +195,7 @@ class HeaderRow extends StatelessWidget {
         children: <Widget>[
           Text(
             title,
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.white,
               fontSize: 24,
             ),
@@ -348,7 +346,7 @@ class PlayerUpdate extends StatelessWidget {
                 return ScoreAvatar(
                   photoUrl: player.user.photoUrl,
                   score: player.score,
-                  userBorderColor: user_colors[index % 4],
+                  userBorderColor: userColors[index % 4],
                 );
               },
             ),
@@ -404,7 +402,7 @@ class AvatarScore extends StatelessWidget {
     return Container(
       height: 20,
       width: 20,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: Colors.white,
         shape: BoxShape.circle,
       ),

@@ -44,7 +44,7 @@ class _CreateRoomState extends State<CreateRoom> {
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'New Hunt Room',
           style: TextStyle(color: Colors.white),
         ),
@@ -61,7 +61,6 @@ class _CreateRoomState extends State<CreateRoom> {
             widget: TextField(
               controller: nameController,
               keyboardType: TextInputType.text,
-              maxLines: 1,
               decoration: InputDecoration(
                 border: InputBorder.none,
               ),

@@ -107,7 +107,7 @@ class DialogFancyButton extends StatelessWidget {
         child: Center(
           child: Text(
             text,
-            style: fancy_button_style,
+            style: fancyButtonStyle,
           ),
         ),
       ),

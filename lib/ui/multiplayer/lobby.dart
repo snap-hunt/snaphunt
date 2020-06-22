@@ -8,6 +8,7 @@ import 'package:snaphunt/data/repository.dart';
 import 'package:snaphunt/model/game.dart';
 import 'package:snaphunt/router.gr.dart';
 import 'package:snaphunt/utils/utils.dart';
+import 'package:snaphunt/widgets/animations/popup_dialog.dart';
 import 'package:snaphunt/widgets/multiplayer/join_room_dialog.dart';
 import 'package:snaphunt/widgets/multiplayer/lobby_buttons.dart';
 
@@ -16,7 +17,7 @@ class Lobby extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'SNAPHUNT LOBBY',
           style: TextStyle(color: Colors.white),
         ),
@@ -40,10 +41,9 @@ class Lobby extends StatelessWidget {
                   ExtendedNavigator.of(context).pushCreateRoom();
                 },
                 onJoinRoom: () async {
-                  final String roomCode = await showDialog<String>(
-                    context: context,
-                    barrierDismissible: false,
-                    builder: (BuildContext context) => JoinRoom(),
+                  final String roomCode = await showPopupDialog<String>(
+                    context,
+                    JoinRoom(),
                   );
 
                   if (roomCode != null && roomCode.isNotEmpty) {

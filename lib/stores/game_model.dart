@@ -88,8 +88,8 @@ class GameModel with ChangeNotifier {
     }
   }
 
-  void playerListener(QuerySnapshot snapshot) {
-    snapshot.documentChanges.forEach((DocumentChange change) async {
+  Future<void> playerListener(QuerySnapshot snapshot) async {
+    for (final DocumentChange change in snapshot.documentChanges) {
       if (DocumentChangeType.added == change.type) {
         _players.add(
           Player(user: await repository.getUser(change.document.documentID)),
@@ -106,7 +106,7 @@ class GameModel with ChangeNotifier {
       }
       checkCanStartGame();
       notifyListeners();
-    });
+    }
   }
 
   void checkCanStartGame() {

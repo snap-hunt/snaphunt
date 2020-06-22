@@ -24,7 +24,7 @@ class HostStartButton extends StatelessWidget {
           onPressed: canStartGame ? onGameStart : null,
           child: Text(
             'BEGIN HUNT',
-            style: fancy_button_style,
+            style: fancyButtonStyle,
           ),
         ),
         const SizedBox(height: 10),
