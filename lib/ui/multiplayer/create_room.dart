@@ -126,6 +126,7 @@ class _CreateRoomState extends State<CreateRoom> {
                 timeLimit: dropdownValue,
                 status: 'waiting',
                 createdBy: user.uid,
+                hostName: user.displayName,
                 timeCreated: DateTime.fromMillisecondsSinceEpoch(
                     Timestamp.now().millisecondsSinceEpoch),
               );

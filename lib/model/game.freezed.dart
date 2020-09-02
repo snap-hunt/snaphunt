@@ -19,6 +19,7 @@ class _$GameTearOff {
       {String id,
       String name,
       String createdBy,
+      String hostName,
       int maxPlayers,
       int timeLimit,
       int noOfItems,
@@ -30,6 +31,7 @@ class _$GameTearOff {
       id: id,
       name: name,
       createdBy: createdBy,
+      hostName: hostName,
       maxPlayers: maxPlayers,
       timeLimit: timeLimit,
       noOfItems: noOfItems,
@@ -48,6 +50,7 @@ mixin _$Game {
   String get id;
   String get name;
   String get createdBy;
+  String get hostName;
   int get maxPlayers;
   int get timeLimit;
   int get noOfItems;
@@ -69,6 +72,7 @@ abstract class $GameCopyWith<$Res> {
       {String id,
       String name,
       String createdBy,
+      String hostName,
       int maxPlayers,
       int timeLimit,
       int noOfItems,
@@ -90,6 +94,7 @@ class _$GameCopyWithImpl<$Res> implements $GameCopyWith<$Res> {
     Object id = freezed,
     Object name = freezed,
     Object createdBy = freezed,
+    Object hostName = freezed,
     Object maxPlayers = freezed,
     Object timeLimit = freezed,
     Object noOfItems = freezed,
@@ -102,6 +107,7 @@ class _$GameCopyWithImpl<$Res> implements $GameCopyWith<$Res> {
       id: id == freezed ? _value.id : id as String,
       name: name == freezed ? _value.name : name as String,
       createdBy: createdBy == freezed ? _value.createdBy : createdBy as String,
+      hostName: hostName == freezed ? _value.hostName : hostName as String,
       maxPlayers: maxPlayers == freezed ? _value.maxPlayers : maxPlayers as int,
       timeLimit: timeLimit == freezed ? _value.timeLimit : timeLimit as int,
       noOfItems: noOfItems == freezed ? _value.noOfItems : noOfItems as int,
@@ -124,6 +130,7 @@ abstract class _$GameCopyWith<$Res> implements $GameCopyWith<$Res> {
       {String id,
       String name,
       String createdBy,
+      String hostName,
       int maxPlayers,
       int timeLimit,
       int noOfItems,
@@ -146,6 +153,7 @@ class __$GameCopyWithImpl<$Res> extends _$GameCopyWithImpl<$Res>
     Object id = freezed,
     Object name = freezed,
     Object createdBy = freezed,
+    Object hostName = freezed,
     Object maxPlayers = freezed,
     Object timeLimit = freezed,
     Object noOfItems = freezed,
@@ -158,6 +166,7 @@ class __$GameCopyWithImpl<$Res> extends _$GameCopyWithImpl<$Res>
       id: id == freezed ? _value.id : id as String,
       name: name == freezed ? _value.name : name as String,
       createdBy: createdBy == freezed ? _value.createdBy : createdBy as String,
+      hostName: hostName == freezed ? _value.hostName : hostName as String,
       maxPlayers: maxPlayers == freezed ? _value.maxPlayers : maxPlayers as int,
       timeLimit: timeLimit == freezed ? _value.timeLimit : timeLimit as int,
       noOfItems: noOfItems == freezed ? _value.noOfItems : noOfItems as int,
@@ -178,6 +187,7 @@ class _$_Game implements _Game {
       {this.id,
       this.name,
       this.createdBy,
+      this.hostName,
       this.maxPlayers,
       this.timeLimit,
       this.noOfItems,
@@ -195,6 +205,8 @@ class _$_Game implements _Game {
   final String name;
   @override
   final String createdBy;
+  @override
+  final String hostName;
   @override
   final int maxPlayers;
   @override
@@ -214,7 +226,7 @@ class _$_Game implements _Game {
 
   @override
   String toString() {
-    return 'Game(id: $id, name: $name, createdBy: $createdBy, maxPlayers: $maxPlayers, timeLimit: $timeLimit, noOfItems: $noOfItems, status: $status, timeCreated: $timeCreated, gameStartTime: $gameStartTime, words: $words)';
+    return 'Game(id: $id, name: $name, createdBy: $createdBy, hostName: $hostName, maxPlayers: $maxPlayers, timeLimit: $timeLimit, noOfItems: $noOfItems, status: $status, timeCreated: $timeCreated, gameStartTime: $gameStartTime, words: $words)';
   }
 
   @override
@@ -228,6 +240,9 @@ class _$_Game implements _Game {
             (identical(other.createdBy, createdBy) ||
                 const DeepCollectionEquality()
                     .equals(other.createdBy, createdBy)) &&
+            (identical(other.hostName, hostName) ||
+                const DeepCollectionEquality()
+                    .equals(other.hostName, hostName)) &&
             (identical(other.maxPlayers, maxPlayers) ||
                 const DeepCollectionEquality()
                     .equals(other.maxPlayers, maxPlayers)) &&
@@ -255,6 +270,7 @@ class _$_Game implements _Game {
       const DeepCollectionEquality().hash(id) ^
       const DeepCollectionEquality().hash(name) ^
       const DeepCollectionEquality().hash(createdBy) ^
+      const DeepCollectionEquality().hash(hostName) ^
       const DeepCollectionEquality().hash(maxPlayers) ^
       const DeepCollectionEquality().hash(timeLimit) ^
       const DeepCollectionEquality().hash(noOfItems) ^
@@ -278,6 +294,7 @@ abstract class _Game implements Game {
       {String id,
       String name,
       String createdBy,
+      String hostName,
       int maxPlayers,
       int timeLimit,
       int noOfItems,
@@ -294,6 +311,8 @@ abstract class _Game implements Game {
   String get name;
   @override
   String get createdBy;
+  @override
+  String get hostName;
   @override
   int get maxPlayers;
   @override

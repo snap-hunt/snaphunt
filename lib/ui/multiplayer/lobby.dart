@@ -27,7 +27,6 @@ class Lobby extends StatelessWidget {
       ),
       body: SafeArea(
         child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: Column(
             children: <Widget>[
               Expanded(
@@ -114,10 +113,9 @@ class LobbyList extends StatelessWidget {
         }
         return AnimationLimiter(
           child: ListView.builder(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
             itemCount: snapshot.data.documents.length,
             itemBuilder: (context, index) {
-              // final game = Game.fromJson(snapshot.data.documents[index].data);
-              // game.id = snapshot.data.documents[index].documentID;
               final game = Game.fromFirestore(snapshot.data.documents[index]);
 
               return AnimationConfiguration.staggeredList(
@@ -175,7 +173,8 @@ class _LobbyListTileState extends State<LobbyListTile> {
   }
 
   Future<void> getName() async {
-    final name = await Repository.instance.getUserName(widget.game.createdBy);
+    final name = widget.game.hostName ??
+        await Repository.instance.getUserName(widget.game.createdBy);
 
     if (mounted) {
       setState(() {
