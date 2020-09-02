@@ -63,8 +63,7 @@ class Lobby extends StatelessWidget {
                           body: 'Game has already started or ended!',
                         );
                       } else {
-                        final user =
-                            Provider.of<FirebaseUser>(context, listen: false);
+                        final user = Provider.of<User>(context, listen: false);
 
                         ExtendedNavigator.of(context).pushRoom(
                           game: game,
@@ -88,7 +87,7 @@ class LobbyList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: Firestore.instance
+      stream: FirebaseFirestore.instance
           .collection('games')
           .where('status', isEqualTo: 'waiting')
           .snapshots(),
@@ -99,7 +98,7 @@ class LobbyList extends StatelessWidget {
           );
         }
 
-        if (snapshot.data.documents.isEmpty) {
+        if (snapshot.data.docs.isEmpty) {
           return Center(
             child: Text(
               'No rooms available',
@@ -114,9 +113,9 @@ class LobbyList extends StatelessWidget {
         return AnimationLimiter(
           child: ListView.builder(
             padding: const EdgeInsets.symmetric(vertical: 8.0),
-            itemCount: snapshot.data.documents.length,
+            itemCount: snapshot.data.docs.length,
             itemBuilder: (context, index) {
-              final game = Game.fromFirestore(snapshot.data.documents[index]);
+              final game = Game.fromFirestore(snapshot.data.docs[index]);
 
               return AnimationConfiguration.staggeredList(
                 position: index,
@@ -127,8 +126,7 @@ class LobbyList extends StatelessWidget {
                     child: LobbyListTile(
                       game: game,
                       onRoomClick: () async {
-                        final user =
-                            Provider.of<FirebaseUser>(context, listen: false);
+                        final user = Provider.of<User>(context, listen: false);
 
                         ExtendedNavigator.of(context).pushRoom(
                           game: game,
@@ -204,15 +202,14 @@ class _LobbyListTileState extends State<LobbyListTile> {
             ),
             subtitle: Text(_createdBy),
             trailing: Column(
-              mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text('${widget.game.timeLimit} mins'),
                 const SizedBox(height: 8.0),
                 StreamBuilder<QuerySnapshot>(
-                  stream: Firestore.instance
+                  stream: FirebaseFirestore.instance
                       .collection('games')
-                      .document(widget.game.id)
+                      .doc(widget.game.id)
                       .collection('players')
                       .snapshots(),
                   builder: (context, snapshot) {
@@ -220,7 +217,7 @@ class _LobbyListTileState extends State<LobbyListTile> {
                       return Text('0/${widget.game.maxPlayers}');
                     }
 
-                    final players = snapshot.data.documents.length;
+                    final players = snapshot.data.docs.length;
                     final isRoomFull = players == widget.game.maxPlayers;
 
                     return Text(

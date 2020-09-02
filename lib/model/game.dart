@@ -23,7 +23,7 @@ abstract class Game with _$Game {
   factory Game.fromJson(Map<String, dynamic> json) => _$GameFromJson(json);
 
   factory Game.fromFirestore(DocumentSnapshot doc) =>
-      Game.fromJson(doc.data).copyWith(id: doc.documentID);
+      Game.fromJson(doc.data()).copyWith(id: doc.id);
 }
 
 class TimestampConverter implements JsonConverter<DateTime, Timestamp> {

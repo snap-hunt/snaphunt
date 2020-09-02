@@ -75,7 +75,7 @@ class GameModel with ChangeNotifier {
   }
 
   Future<void> gameStatusListener(DocumentSnapshot snapshot) async {
-    final status = snapshot.data['status'];
+    final status = snapshot.data()['status'];
     if (status == 'cancelled') {
       _status = GameStatus.cancelled;
       notifyListeners();
@@ -89,20 +89,19 @@ class GameModel with ChangeNotifier {
   }
 
   Future<void> playerListener(QuerySnapshot snapshot) async {
-    for (final DocumentChange change in snapshot.documentChanges) {
+    for (final DocumentChange change in snapshot.docChanges) {
       if (DocumentChangeType.added == change.type) {
         _players.add(
-          Player(user: await repository.getUser(change.document.documentID)),
+          Player(user: await repository.getUser(change.doc.id)),
         );
       } else if (DocumentChangeType.removed == change.type) {
-        if (change.document.documentID == _userId) {
+        if (change.doc.id == _userId) {
           _status = GameStatus.kicked;
           notifyListeners();
           return;
         }
 
-        _players.removeWhere(
-            (player) => player.user.uid == change.document.documentID);
+        _players.removeWhere((player) => player.user.uid == change.doc.id);
       }
       checkCanStartGame();
       notifyListeners();

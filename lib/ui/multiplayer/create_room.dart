@@ -38,7 +38,7 @@ class _CreateRoomState extends State<CreateRoom> {
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<FirebaseUser>(context, listen: false);
+    final user = Provider.of<User>(context, listen: false);
     final objectCount = Hive.box('words').get('words').length;
 
     return Scaffold(

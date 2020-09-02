@@ -109,7 +109,7 @@ class HuntModel with ChangeNotifier {
   }
 
   Future<void> gameStatusListener(DocumentSnapshot snapshot) async {
-    final status = snapshot.data['status'];
+    final status = snapshot.data()['status'];
     if (status == 'end') {
       isGameEnd = true;
       notifyListeners();

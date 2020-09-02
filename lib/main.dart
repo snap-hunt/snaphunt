@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:camera/camera.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -15,6 +16,7 @@ List<CameraDescription> cameras;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
@@ -40,7 +42,7 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-  FirebaseUser currentUser;
+  User currentUser;
 
   @override
   void initState() {
@@ -72,8 +74,7 @@ class _AppState extends State<App> {
     return MultiProvider(
       providers: [
         Provider<Auth>.value(value: widget.auth),
-        ValueListenableProvider<FirebaseUser>.value(
-            value: widget.auth.currentUser),
+        ValueListenableProvider<User>.value(value: widget.auth.currentUser),
         StreamProvider<ConnectivityStatus>(
           create: (_) =>
               ConnectivityService().connectionStatusController.stream,

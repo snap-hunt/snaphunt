@@ -33,16 +33,15 @@ class PlayHuntModel with ChangeNotifier {
   }
 
   void playerListener(QuerySnapshot snapshot) {
-    for (final change in snapshot.documentChanges) {
+    for (final change in snapshot.docChanges) {
       if (DocumentChangeType.modified == change.type) {
-        final int index = players.indexWhere(
-            (player) => player.user.uid == change.document.documentID);
+        final int index =
+            players.indexWhere((player) => player.user.uid == change.doc.id);
 
         if (index != -1) {
           // players[index].score = change.document.data['score'] as int;
           players.replaceRange(index, index + 1, [
-            players[index]
-                .copyWith(score: change.document.data['score'] as int),
+            players[index].copyWith(score: change.doc.data()['score'] as int),
           ]);
           sort();
           notifyListeners();

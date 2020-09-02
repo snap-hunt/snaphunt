@@ -188,16 +188,12 @@ class UserInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<FirebaseUser>(context, listen: false);
+    final user = Provider.of<User>(context, listen: false);
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisSize: MainAxisSize.max,
       children: <Widget>[
-        UserAvatar(
-          photoUrl: user.photoUrl,
-        ),
+        UserAvatar(photoUrl: user.photoURL),
         const SizedBox(width: 15),
         Text(
           user.displayName,

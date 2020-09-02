@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 // src: https://gist.github.com/slightfoot/6f97d6c1ec4eb52ce880c6394adb1386
 class Auth {
   static Future<Auth> create() async {
-    final currentUser = await FirebaseAuth.instance.currentUser();
+    final currentUser = FirebaseAuth.instance.currentUser;
     return Auth._(currentUser);
   }
 
@@ -18,18 +18,18 @@ class Auth {
   }
 
   Auth._(
-    FirebaseUser currentUser,
-  ) : currentUser = ValueNotifier<FirebaseUser>(currentUser);
+    User currentUser,
+  ) : currentUser = ValueNotifier<User>(currentUser);
 
-  final ValueNotifier<FirebaseUser> currentUser;
+  final ValueNotifier<User> currentUser;
 
   final _googleSignIn = GoogleSignIn();
   final _firebaseAuth = FirebaseAuth.instance;
-  StreamSubscription<FirebaseUser> _authSub;
+  StreamSubscription<User> _authSub;
 
-  FirebaseUser init(VoidCallback onUserChanged) {
+  User init(VoidCallback onUserChanged) {
     currentUser.addListener(onUserChanged);
-    _authSub = _firebaseAuth.onAuthStateChanged.listen((FirebaseUser user) {
+    _authSub = _firebaseAuth.authStateChanges().listen((User user) {
       currentUser.value = user;
     });
     return currentUser.value;
@@ -57,7 +57,7 @@ class Auth {
       }
       final auth = await account.authentication;
       await _firebaseAuth.signInWithCredential(
-        GoogleAuthProvider.getCredential(
+        GoogleAuthProvider.credential(
             idToken: auth.idToken, accessToken: auth.accessToken),
       );
     } catch (e, st) {
